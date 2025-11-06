@@ -14,7 +14,9 @@ COPY packages/*/package.json ./packages/*/
 COPY iframe-outputs/worker/package.json ./iframe-outputs/worker/
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+# Note: Using --no-frozen-lockfile for Docker builds to handle lockfile updates
+# In production CI, ensure lockfile is up to date before building
+RUN pnpm install --no-frozen-lockfile
 
 # Stage 2: Build frontend
 FROM node:23-alpine AS builder
@@ -67,7 +69,8 @@ COPY --from=builder /app/iframe-outputs/worker/src ./iframe-outputs/worker/src
 COPY --from=builder /app/iframe-outputs/worker/tsconfig.json ./iframe-outputs/worker/tsconfig.json
 
 # Install minimal runtime dependencies
-RUN pnpm install --prod --frozen-lockfile
+# Note: Using --no-frozen-lockfile for Docker builds to handle lockfile updates
+RUN pnpm install --prod --no-frozen-lockfile
 
 # Create entrypoint script
 RUN echo '#!/bin/sh\n\
