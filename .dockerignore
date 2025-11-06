@@ -1,0 +1,50 @@
+# Dependencies
+node_modules
+.pnpm-store
+.pnpm-cache
+
+# Build outputs
+dist
+.vercel
+.netlify
+.vite
+
+# Development files
+.env
+.env.local
+.env.*.local
+.dev.vars
+.wrangler
+
+# Test files
+test-results
+coverage
+.nyc_output
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+*.md
+!README.md
+LICENSE
+

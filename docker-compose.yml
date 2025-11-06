@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173" # Frontend
+      - "8787:8787" # Backend worker
+      - "8000:8000" # Iframe outputs worker
+    environment:
+      # Backend worker configuration
+      # Set RUN_BACKEND=false to disable backend worker
+      # Set RUN_IFRAME=false to disable iframe outputs worker
+      # Set RUN_FRONTEND=false to disable frontend server
+      RUN_BACKEND: "true"
+      RUN_IFRAME: "true"
+      RUN_FRONTEND: "true"
+      # Cloudflare Worker environment variables
+      # These should match your wrangler.toml configuration
+      DEPLOYMENT_ENV: "development"
+      AUTH_ISSUER: "http://localhost:8787/local_oidc"
+      ALLOW_LOCAL_AUTH: "true"
+    volumes:
+      # Mount .dev.vars if you have local development variables
+      # - ./.dev.vars:/app/.dev.vars:ro
+      # Mount wrangler directory for local D1 database
+      # - ./.wrangler:/app/.wrangler
+    networks:
+      - anode-network
+
+networks:
+  anode-network:
+    driver: bridge
