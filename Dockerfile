@@ -24,6 +24,9 @@ RUN apk add --no-cache bash git && corepack enable && corepack prepare pnpm@late
 WORKDIR /app
 
 # Build arguments for environment variables
+# Note: These are build-time configuration values for Vite, not runtime secrets.
+# Vite embeds these values into the JavaScript bundle at build time.
+# They are safe to include in the Dockerfile as they are public configuration values.
 ARG VITE_AUTH_URI=https://auth.anaconda.com/api/auth
 ARG VITE_AUTH_CLIENT_ID=74a51ff4-5814-48fa-9ae7-6d3ef0aca3e2
 ARG VITE_AUTH_REDIRECT_URI=https://app.runt.run/oidc
@@ -33,6 +36,7 @@ ARG VITE_AI_PROVIDER=anaconda
 ARG VITE_LS_DEV=true
 
 # Set environment variables
+# Note: These ENV values are build-time configuration for Vite, not runtime secrets.
 ENV VITE_AUTH_URI=${VITE_AUTH_URI}
 ENV VITE_AUTH_CLIENT_ID=${VITE_AUTH_CLIENT_ID}
 ENV VITE_AUTH_REDIRECT_URI=${VITE_AUTH_REDIRECT_URI}
