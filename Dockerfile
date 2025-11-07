@@ -8,7 +8,10 @@ WORKDIR /app
 
 # Copy package files for workspace
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/*/package.json ./packages/*/
+COPY packages/agent-core/package.json ./packages/agent-core/
+COPY packages/ai-core/package.json ./packages/ai-core/
+COPY packages/pyodide-runtime/package.json ./packages/pyodide-runtime/
+COPY packages/schema/package.json ./packages/schema/
 
 # Copy iframe-outputs worker package (not in workspace)
 COPY iframe-outputs/worker/package.json ./iframe-outputs/worker/
