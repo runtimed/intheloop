@@ -75,3 +75,18 @@ COPY scripts ./scripts
 # Build frontend
 RUN pnpm build:production
 
+# Stage 3: Production runtime
+FROM node:23-alpine AS runtime
+RUN corepack enable && corepack prepare pnpm@latest --activate
+WORKDIR /app
+
+# Copy built files from builder stage
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./
+
+# Expose port (default Vite preview port is 4173, but we're using 5173 so auth works)
+EXPOSE 5173
+
+# Run production server (vite preview serves the built files)
+CMD ["pnpm", "preview", "--host", "0.0.0.0", "--port", "5173"]
