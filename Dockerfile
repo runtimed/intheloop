@@ -20,8 +20,26 @@ RUN pnpm install --no-frozen-lockfile
 
 # Stage 2: Build application
 FROM node:23-alpine AS builder
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN apk add --no-cache bash git && corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
+
+# Build arguments for environment variables
+ARG VITE_AUTH_URI=https://auth.anaconda.com/api/auth
+ARG VITE_AUTH_CLIENT_ID=74a51ff4-5814-48fa-9ae7-6d3ef0aca3e2
+ARG VITE_AUTH_REDIRECT_URI=https://app.runt.run/oidc
+ARG VITE_LIVESTORE_SYNC_URL=/livestore
+ARG VITE_IFRAME_OUTPUT_URI=https://runtusercontent.com
+ARG VITE_AI_PROVIDER=anaconda
+ARG VITE_LS_DEV=true
+
+# Set environment variables
+ENV VITE_AUTH_URI=${VITE_AUTH_URI}
+ENV VITE_AUTH_CLIENT_ID=${VITE_AUTH_CLIENT_ID}
+ENV VITE_AUTH_REDIRECT_URI=${VITE_AUTH_REDIRECT_URI}
+ENV VITE_LIVESTORE_SYNC_URL=${VITE_LIVESTORE_SYNC_URL}
+ENV VITE_IFRAME_OUTPUT_URI=${VITE_IFRAME_OUTPUT_URI}
+ENV VITE_AI_PROVIDER=${VITE_AI_PROVIDER}
+ENV VITE_LS_DEV=${VITE_LS_DEV}
 
 # Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
@@ -48,6 +66,7 @@ COPY public ./public
 COPY index.html ./
 COPY vite.config.ts tsconfig.json tsconfig.node.json ./
 COPY vite-plugins ./vite-plugins
+COPY scripts ./scripts
 
 # Build frontend
 RUN pnpm build:production
