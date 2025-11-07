@@ -2,9 +2,12 @@ version: "3.8"
 
 services:
   app:
+    image: intheloop:latest
     build:
       context: .
       dockerfile: Dockerfile
+      tags:
+        - intheloop:latest
     ports:
       - "5173:5173" # Frontend
       - "8787:8787" # Backend worker
@@ -22,7 +25,7 @@ services:
       DEPLOYMENT_ENV: "development"
       AUTH_ISSUER: "http://localhost:8787/local_oidc"
       ALLOW_LOCAL_AUTH: "true"
-    volumes:
+    volumes: []
       # Mount .dev.vars if you have local development variables
       # - ./.dev.vars:/app/.dev.vars:ro
       # Mount wrangler directory for local D1 database
