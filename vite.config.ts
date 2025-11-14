@@ -69,7 +69,7 @@ export default defineConfig(({ mode }) => {
       },
     }),
     tailwindcss(),
-    livestoreDevtoolsPlugin({ schemaPath: "./packages/schema/src/index.ts" }),
+    // livestoreDevtoolsPlugin({ schemaPath: "./packages/schema/src/index.ts" }),
   ];
 
   // Add bundle analyzer for bundle analysis
@@ -102,17 +102,23 @@ export default defineConfig(({ mode }) => {
       sourcemap: true,
     },
     server: {
+      host: "0.0.0.0", // Allow external access (needed for Docker)
       port: env.ANODE_DEV_SERVER_PORT
         ? parseInt(env.ANODE_DEV_SERVER_PORT)
         : 5173,
       strictPort: true,
+      // Set origin to a valid URL for plugins that need it (e.g., LiveStore devtools)
+      // In Docker, use localhost since 0.0.0.0 is not a valid URL base
+      // origin:
+      //   env.VITE_SERVER_ORIGIN ||
+      //   `http://sync:${env.ANODE_DEV_SERVER_PORT ? parseInt(env.ANODE_DEV_SERVER_PORT) : 5173}`,
       proxy: {
         "/api": {
-          target: "http://localhost:8787",
+          target: env.VITE_API_TARGET || "http://localhost:8787",
           changeOrigin: true,
         },
         "/graphql": {
-          target: "http://localhost:8787",
+          target: env.VITE_API_TARGET || "http://localhost:8787",
           changeOrigin: true,
         },
       },

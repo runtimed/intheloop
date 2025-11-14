@@ -1,0 +1,27 @@
+# Minimal Dockerfile for iframe outputs
+# Runs the iframe Vite dev server
+FROM node:23-alpine
+RUN npm install -g pnpm@latest
+WORKDIR /app
+
+# Copy workspace files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Copy package files for workspace (needed for @runtimed/schema imports)
+COPY packages/schema/package.json packages/schema/tsconfig.json ./packages/schema/
+COPY packages/schema/src ./packages/schema/src
+
+# Copy source files needed for iframe
+COPY src ./src
+COPY iframe-outputs ./iframe-outputs
+COPY vite.config.ts tsconfig.json tsconfig.node.json ./
+
+# Install all dependencies at root level
+RUN pnpm install --frozen-lockfile
+
+# Expose port for local testing
+EXPOSE 8000
+
+# Run the vite dev server
+CMD ["pnpm", "dev:iframe", "--host"]
+

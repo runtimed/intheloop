@@ -1,0 +1,44 @@
+# Single-stage Dockerfile for In the Loop
+# Copies source files and runs the dev server
+
+FROM node:23-alpine
+RUN apk add --no-cache bash git && corepack enable && corepack prepare pnpm@latest --activate
+WORKDIR /app
+
+# Copy workspace files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/agent-core/package.json ./packages/agent-core/
+COPY packages/ai-core/package.json ./packages/ai-core/
+COPY packages/pyodide-runtime/package.json ./packages/pyodide-runtime/
+COPY packages/schema/package.json ./packages/schema/
+
+# Install dependencies
+RUN pnpm install --no-frozen-lockfile
+
+# Copy all source files
+COPY src ./src
+COPY packages/agent-core ./packages/agent-core
+COPY packages/ai-core ./packages/ai-core
+COPY packages/pyodide-runtime ./packages/pyodide-runtime
+COPY packages/schema ./packages/schema
+COPY backend ./backend
+COPY public ./public
+COPY index.html ./
+COPY vite.config.ts tsconfig.json tsconfig.node.json ./
+COPY vite-plugins ./vite-plugins
+COPY scripts ./scripts
+
+# Copy env files
+COPY .env.example .env
+COPY .dev.vars.example .dev.vars
+
+# Set git commit hash to avoid git commands in container
+ENV VITE_GIT_COMMIT_HASH=docker-build
+ENV VITE_API_TARGET=http://sync:8787
+ENV VITE_SERVER_ORIGIN=http://localhost:5173
+
+# Expose port
+EXPOSE 5173
+
+# Run dev server
+CMD ["pnpm", "run", "dev:web", "--host", "0.0.0.0", "--port", "5173"]

@@ -2,28 +2,53 @@ version: "3.8"
 
 services:
   app:
-    image: intheloop:latest
+    image: intheloop-web:latest
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.web
       tags:
-        - intheloop:latest
+        - intheloop-web:latest
     ports:
       - "5173:5173" # Frontend
-      - "8787:8787" # Backend worker
-      - "8000:8000" # Iframe outputs worker
     environment:
-      # Backend worker configuration
-      # Set RUN_BACKEND=false to disable backend worker
-      # Set RUN_IFRAME=false to disable iframe outputs worker
-      # Set RUN_FRONTEND=false to disable frontend server
-      RUN_BACKEND: "true"
-      RUN_IFRAME: "true"
-      RUN_FRONTEND: "true"
+      ALLOW_LOCAL_AUTH: "true"
+      VITE_API_TARGET: "http://sync:8787"
+      VITE_SERVER_ORIGIN: "http://localhost:5173"
+      VITE_GIT_COMMIT_HASH: "docker-build"
+    volumes: []
+      # Mount .dev.vars if you have local development variables
+      # - ./.dev.vars:/app/.dev.vars:ro
+      # Mount wrangler directory for local D1 database
+      # - ./.wrangler:/app/.wrangler
+    networks:
+      - intheloop-network
+
+  iframe-outputs:
+    image: intheloop-iframe-outputs:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.iframe-outputs
+      tags:
+        - intheloop-iframe-outputs:latest
+    ports:
+      - "8000:8000" # Iframe outputs worker
+    networks:
+      - intheloop-network
+
+  sync:
+    image: intheloop-sync:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.sync
+      tags:
+        - intheloop-sync:latest
+    ports:
+      - "8787:8787" # Sync service worker
+    environment:
       # Cloudflare Worker environment variables
       # These should match your wrangler.toml configuration
-      DEPLOYMENT_ENV: "development"
-      AUTH_ISSUER: "http://localhost:8787/local_oidc"
+      # DEPLOYMENT_ENV: "development"
+      # AUTH_ISSUER: "http://localhost:8787/local_oidc"
       ALLOW_LOCAL_AUTH: "true"
     volumes: []
       # Mount .dev.vars if you have local development variables
@@ -31,8 +56,8 @@ services:
       # Mount wrangler directory for local D1 database
       # - ./.wrangler:/app/.wrangler
     networks:
-      - anode-network
+      - intheloop-network
 
 networks:
-  anode-network:
+  intheloop-network:
     driver: bridge

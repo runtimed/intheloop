@@ -1,0 +1,32 @@
+# Dockerfile for In the Loop Sync Service (Cloudflare Worker)
+# Runs the sync service on port 8787 using wrangler dev
+
+FROM node:23
+
+WORKDIR /app
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy package files (including workspace packages for workspace:* resolution)
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/agent-core/package.json ./packages/agent-core/
+COPY packages/ai-core/package.json ./packages/ai-core/
+COPY packages/pyodide-runtime/package.json ./packages/pyodide-runtime/
+COPY packages/schema/package.json ./packages/schema/
+
+# Install dependencies
+RUN pnpm install
+
+# Copy source files
+COPY . .
+
+# Copy env files
+COPY .env.example .env
+COPY .dev.vars.example .dev.vars
+
+# Expose Wrangler's default port
+EXPOSE 8787
+
+# Run migrations then start the sync service
+CMD pnpm run db:migrate && pnpm run prod:sync

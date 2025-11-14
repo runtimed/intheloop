@@ -4,13 +4,11 @@ This guide explains how to build and run the In the Loop frontend using Docker.
 
 ## Overview
 
-The Docker image builds the production frontend and serves it using Vite's preview server. The backend workers (Cloudflare Workers) should be deployed separately to Cloudflare.
+The Docker image builds the production frontend and serves it using Vite's preview server.
 
 ## Prerequisites
 
 - Docker installed and running
-- Node.js 23+ (for local development, not required for Docker)
-- pnpm 10.9+ (for local development, not required for Docker)
 
 ## Building the Docker Image
 
@@ -63,7 +61,7 @@ The frontend will be available at `http://localhost:5173`.
 ### Run with Docker Compose
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 This will build and start the container with the configuration from `docker-compose.yml`.
@@ -77,8 +75,10 @@ docker run -d -p 5173:5173 --name intheloop intheloop:latest
 ### Run with Custom Port
 
 ```bash
-docker run -p 8080:5173 intheloop:latest
+docker run -p 5174:5173 intheloop:latest
 ```
+
+Not any port will work. It has to be one of these: 5174 5175 5176 5177 5178
 
 The frontend will be available at `http://localhost:8080`.
 
@@ -220,6 +220,84 @@ The Dockerfile uses multi-stage builds to minimize the final image size:
   run: |
     docker push intheloop:${{ github.sha }}
     docker push intheloop:latest
+```
+
+## Sync Service Dockerfile
+
+The sync service is a Cloudflare Worker that handles LiveStore synchronization and WebSocket connections. A separate Dockerfile (`Dockerfile.sync`) is available for running the sync service in Docker.
+
+### Building the Sync Service Image
+
+```bash
+docker build -f Dockerfile.sync -t intheloop-sync:latest .
+```
+
+**Note**: The sync service uses `workerd` (Cloudflare's worker runtime), which is platform-specific. If you're building on a different architecture than your runtime, you may need to specify the platform:
+
+```bash
+# For ARM64 (Apple Silicon, ARM servers)
+docker build --platform linux/arm64 -f Dockerfile.sync -t intheloop-sync:latest .
+
+# For AMD64/x86_64 (Intel/AMD)
+docker build --platform linux/amd64 -f Dockerfile.sync -t intheloop-sync:latest .
+```
+
+### Running the Sync Service Container
+
+```bash
+docker run -p 8787:8787 \
+  -v $(pwd)/.wrangler:/app/.wrangler \
+  -e DEPLOYMENT_ENV=development \
+  -e AUTH_ISSUER=http://localhost:8787/local_oidc \
+  -e ALLOW_LOCAL_AUTH=true \
+  -e SERVICE_PROVIDER=local \
+  intheloop-sync:latest
+```
+
+### Sync Service Environment Variables
+
+| Variable           | Default                            | Description                          |
+| ------------------ | ---------------------------------- | ------------------------------------ |
+| `DEPLOYMENT_ENV`   | `development`                      | Deployment environment               |
+| `AUTH_ISSUER`      | `http://localhost:8787/local_oidc` | OAuth issuer URL                     |
+| `ALLOW_LOCAL_AUTH` | `true`                             | Enable local OIDC authentication     |
+| `SERVICE_PROVIDER` | `local`                            | Service provider (local or anaconda) |
+
+### Sync Service Volumes
+
+The sync service requires access to the `.wrangler` directory for local D1 database storage:
+
+```bash
+-v $(pwd)/.wrangler:/app/.wrangler
+```
+
+This allows the local SQLite database to persist between container restarts.
+
+### Sync Service Port
+
+The sync service runs on port **8787** by default, which matches the `wrangler dev` configuration.
+
+### Running Sync Service with Docker Compose
+
+You can add the sync service to your `docker-compose.yml`:
+
+```yaml
+services:
+  sync:
+    build:
+      context: .
+      dockerfile: Dockerfile.sync
+    ports:
+      - "8787:8787"
+    environment:
+      DEPLOYMENT_ENV: "development"
+      AUTH_ISSUER: "http://localhost:8787/local_oidc"
+      ALLOW_LOCAL_AUTH: "true"
+      SERVICE_PROVIDER: "local"
+    volumes:
+      - ./.wrangler:/app/.wrangler
+    networks:
+      - anode-network
 ```
 
 ## Additional Resources

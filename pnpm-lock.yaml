@@ -377,6 +377,9 @@ importers:
       happy-dom:
         specifier: ^15.11.6
         version: 15.11.7
+      http-proxy:
+        specifier: ^1.18.1
+        version: 1.18.1
       http-server:
         specifier: ^14.1.1
         version: 14.1.1
