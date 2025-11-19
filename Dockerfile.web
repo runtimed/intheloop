@@ -40,5 +40,8 @@ ENV VITE_SERVER_ORIGIN=http://localhost:5173
 # Expose port
 EXPOSE 5173
 
+# Keep container running for debugging/SSH access
+# CMD ["tail", "-f", "/dev/null"]
+
 # Run dev server
 CMD ["pnpm", "run", "dev:web", "--host", "0.0.0.0", "--port", "5173"]
