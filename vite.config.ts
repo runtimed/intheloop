@@ -69,7 +69,7 @@ export default defineConfig(({ mode }) => {
       },
     }),
     tailwindcss(),
-    process.env.ENABLE_LIVESTORE_DEVTOOLS === "true"
+    env.ENABLE_LIVESTORE_DEVTOOLS === "true"
       ? livestoreDevtoolsPlugin({
           schemaPath: "./packages/schema/src/index.ts",
         })
