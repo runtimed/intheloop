@@ -297,7 +297,7 @@ export default {
   <p>For the web client, run <span class="code">pnpm dev</span> in a separate terminal.</p>
   <h2>Available Endpoints:</h2>
   <ul>
-    <li><a href="/health">GET /health</a> - Health check</li>
+    <li><a href="/api/health">GET /api/health</a> - Health check</li>
     <li><span class="code">WS /livestore</span> - LiveStore sync</li>
   </ul>
   ${!allowLocalAuth ? '<p><em>Local OIDC endpoints are disabled. Set ALLOW_LOCAL_AUTH="true" to enable them.</em></p>' : ""}
