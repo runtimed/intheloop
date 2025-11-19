@@ -69,7 +69,7 @@ export default defineConfig(({ mode }) => {
       },
     }),
     tailwindcss(),
-    // livestoreDevtoolsPlugin({ schemaPath: "./packages/schema/src/index.ts" }),
+    livestoreDevtoolsPlugin({ schemaPath: "./packages/schema/src/index.ts" }),
   ];
 
   // Add bundle analyzer for bundle analysis
