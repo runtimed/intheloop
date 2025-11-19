@@ -6,6 +6,55 @@ Thank you for your interest in contributing to In the Loop! This guide provides 
 
 In the Loop is a real-time, collaborative notebook environment built on a modern, local-first stack. We prioritize a clean, maintainable codebase and a smooth developer experience. Our goal is to make it as easy as possible for you to contribute.
 
+## What's Experimental vs Stable
+
+### Stable Foundation
+
+- ✅ LiveStore event-sourcing architecture
+- ✅ Real-time collaboration without conflicts
+- ✅ Multi-runtime execution support
+- ✅ Rich output rendering system
+- ✅ Offline-first operation with sync
+
+### Active Development
+
+- 🧪 AI model selection and prompt engineering
+- 🧪 Runtime orchestration and health monitoring
+- 🧪 Permissions and sharing workflows
+- 🧪 Performance optimization for large notebooks
+- 🧪 Additional language runtimes
+
+## Areas to contribute
+
+We're building this in the open and welcome experimentation:
+
+**Improve AI Integration ✨**
+
+- Test AI tool calling with your workflows
+- Experiment with different model providers
+- Build custom tool registries
+
+**Runtime Development**
+
+- Create runtime agents for new languages
+- Improve Python package management
+- Build compute backends (BYOC)
+
+**Extend Capabilities**
+
+- Add SQL cell support for database workflows
+- Build interactive widgets
+- Create visualization plugins
+
+**Real-World Usage**
+
+Use In the Loop for actual data science work
+
+- Report issues and workflow friction
+- Share feedback on collaboration features
+
+Ready to contribute? The system is stable enough for real use while being open to changes.
+
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
@@ -132,7 +181,7 @@ We follow a consistent code style to keep the project maintainable.
 - **Formatting**: We use Prettier for code formatting. Please run `pnpm format` before committing.
 - **Linting**: We use ESLint to catch common errors. Run `pnpm lint` to check your code.
 - **Testing**: Run `pnpm test` to execute the test suite (60+ tests covering core functionality).
-- **Architecture**: We prefer functional programming patterns (using the Effect library) and an event-sourced architecture via LiveStore.
+- **Architecture**: We prefer functional programming patterns.
 - **Development stability**: The integrated dev server is stable with hot reload for most changes. .env file changes are ignored to prevent crashes.
 
 ## Submitting a Contribution
