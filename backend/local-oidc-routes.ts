@@ -237,14 +237,6 @@ localOidcRoutes.post("/token", async (c) => {
     const grantType = formData.get("grant_type") as string;
     const refreshToken = formData.get("refresh_token") as string;
 
-    console.log("Token endpoint request:", {
-      clientId,
-      redirectUri,
-      code,
-      grantType,
-      refreshToken,
-    });
-
     if (clientId !== "local-anode-client") {
       console.log("Invalid client_id", clientId);
       return c.text("Invalid client_id", 400);

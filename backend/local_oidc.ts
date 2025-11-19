@@ -246,15 +246,6 @@ async function handleToken(
     try {
       const tokens = await generateTokens(userData, env);
 
-      console.log("Tokens generated:", tokens);
-
-      console.log(
-        "Storing user data for silent refresh session tracking:",
-        userData
-      );
-
-      console.log("DB:", env.DB);
-
       // Store user data for silent refresh session tracking
       if (env.DB) {
         try {
