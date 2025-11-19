@@ -12,6 +12,7 @@ const DEVELOPMENT_DEFAULTS: EnvConfig = {
   VITE_IFRAME_OUTPUT_URI: "http://localhost:8000",
   VITE_AI_PROVIDER: "anaconda",
   VITE_LS_DEV: "true",
+  ENABLE_LIVESTORE_DEVTOOLS: "false",
 };
 
 const REQUIRED_ENV_VARS = Object.keys(DEVELOPMENT_DEFAULTS);
