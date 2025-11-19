@@ -74,7 +74,6 @@ export default defineConfig(({ mode }) => {
           schemaPath: "./packages/schema/src/index.ts",
         })
       : null,
-    livestoreDevtoolsPlugin({ schemaPath: "./packages/schema/src/index.ts" }),
   ];
 
   // Add bundle analyzer for bundle analysis
