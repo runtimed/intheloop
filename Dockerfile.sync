@@ -29,4 +29,4 @@ COPY .dev.vars.example .dev.vars
 EXPOSE 8787
 
 # Run migrations then start the sync service
-CMD pnpm run db:migrate && pnpm run prod:sync
+CMD pnpm run db:migrate && pnpm run docker:sync
