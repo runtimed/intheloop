@@ -13,7 +13,6 @@ services:
     environment:
       ALLOW_LOCAL_AUTH: "true"
       VITE_API_TARGET: "http://sync:8787"
-      VITE_SERVER_ORIGIN: "http://localhost:5173"
       VITE_GIT_COMMIT_HASH: "docker-build"
     volumes: []
       # Mount .dev.vars if you have local development variables

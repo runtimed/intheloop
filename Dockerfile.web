@@ -35,7 +35,6 @@ COPY .dev.vars.example .dev.vars
 # Set git commit hash to avoid git commands in container
 ENV VITE_GIT_COMMIT_HASH=docker-build
 ENV VITE_API_TARGET=http://sync:8787
-ENV VITE_SERVER_ORIGIN=http://localhost:5173
 
 # Expose port
 EXPOSE 5173

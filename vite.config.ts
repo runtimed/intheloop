@@ -107,11 +107,6 @@ export default defineConfig(({ mode }) => {
         ? parseInt(env.ANODE_DEV_SERVER_PORT)
         : 5173,
       strictPort: true,
-      // Set origin to a valid URL for plugins that need it (e.g., LiveStore devtools)
-      // In Docker, use localhost since 0.0.0.0 is not a valid URL base
-      // origin:
-      //   env.VITE_SERVER_ORIGIN ||
-      //   `http://sync:${env.ANODE_DEV_SERVER_PORT ? parseInt(env.ANODE_DEV_SERVER_PORT) : 5173}`,
       proxy: {
         "/api": {
           target: env.VITE_API_TARGET || "http://localhost:8787",
