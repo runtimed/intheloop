@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  web:
+    image: intheloop-web:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "5173:5173"
+    environment:
+      ALLOW_LOCAL_AUTH: "true"
+    networks:
+      - intheloop-network
+
+  iframe-outputs:
+    image: intheloop-iframe-outputs:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.iframe-outputs
+    ports:
+      - "8000:8000"
+    networks:
+      - intheloop-network
+
+  sync:
+    image: intheloop-sync:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.sync
+    ports:
+      - "8787:8787"
+    networks:
+      - intheloop-network
+
+networks:
+  intheloop-network:

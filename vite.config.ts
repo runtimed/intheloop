@@ -106,17 +106,18 @@ export default defineConfig(({ mode }) => {
       sourcemap: true,
     },
     server: {
+      host: "0.0.0.0", // Allow external access (needed for Docker)
       port: env.ANODE_DEV_SERVER_PORT
         ? parseInt(env.ANODE_DEV_SERVER_PORT)
         : 5173,
       strictPort: true,
       proxy: {
         "/api": {
-          target: "http://localhost:8787",
+          target: env.VITE_API_TARGET || "http://localhost:8787",
           changeOrigin: true,
         },
         "/graphql": {
-          target: "http://localhost:8787",
+          target: env.VITE_API_TARGET || "http://localhost:8787",
           changeOrigin: true,
         },
       },

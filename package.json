@@ -16,6 +16,7 @@
     "dev:auth": "vite --mode auth",
     "predev:sync": "pnpm run db:migrate",
     "dev:sync": "wrangler dev",
+    "docker:sync": "wrangler dev --ip 0.0.0.0 --port 8787",
     "dev:runtime": "./scripts/dev-runtime.sh",
     "build:iframe": "cd iframe-outputs && vite build",
     "build": "vite build --mode development",
