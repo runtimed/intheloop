@@ -1,7 +1,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { execSync } from "child_process";
-import { copyFileSync, mkdirSync, existsSync } from "node:fs";
 
 import { livestoreDevtoolsPlugin } from "@livestore/devtools-vite";
 import react from "@vitejs/plugin-react";
@@ -69,12 +68,15 @@ export default defineConfig(({ mode }) => {
       },
     }),
     tailwindcss(),
-    env.ENABLE_LIVESTORE_DEVTOOLS === "true"
-      ? livestoreDevtoolsPlugin({
-          schemaPath: "./packages/schema/src/index.ts",
-        })
-      : null,
   ];
+
+  if (env.ENABLE_LIVESTORE_DEVTOOLS === "true") {
+    plugins.push(
+      livestoreDevtoolsPlugin({
+        schemaPath: "./packages/schema/src/index.ts",
+      })
+    );
+  }
 
   // Add bundle analyzer for bundle analysis
   if (process.env.ANALYZE_BUNDLE) {
