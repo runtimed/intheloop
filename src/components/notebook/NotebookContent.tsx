@@ -10,10 +10,25 @@ import { contextSelectionMode$ } from "./signals/ai-context.js";
 import { focusedCellSignal$, hasManuallyFocused$ } from "./signals/focus.js";
 import { GripVerticalIcon } from "lucide-react";
 import { useDragDropCellSort } from "@/hooks/useDragDropCellSort";
+import { useCellFilter } from "@/contexts/CellFilterContext.js";
 
 export const NotebookContent = () => {
   const { store } = useStore();
-  const cells = useQuery(queries.cells$);
+  const allCells = useQuery(queries.cells$);
+  const { filters } = useCellFilter();
+
+  // Filter cells based on context values
+  const cells = React.useMemo(() => {
+    return allCells.filter((cell) => {
+      // if (cell.cellType === "code" && !filters.showCodeCells) {
+      //   return false;
+      // }
+      if (cell.cellType === "ai" && !filters.showAiCells) {
+        return false;
+      }
+      return true;
+    });
+  }, [allCells, filters]);
 
   const focusedCellId = useQuery(focusedCellSignal$);
   const hasManuallyFocused = useQuery(hasManuallyFocused$);
