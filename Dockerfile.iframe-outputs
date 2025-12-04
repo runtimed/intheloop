@@ -33,6 +33,7 @@ FROM nginx:alpine
 COPY --from=builder /app/iframe-outputs/worker/dist /usr/share/nginx/html
 
 # Copy nginx configuration
+COPY iframe-outputs/nginx-main.conf /etc/nginx/nginx.conf
 COPY iframe-outputs/nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 8000
