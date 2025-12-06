@@ -2,7 +2,7 @@ name: Build and Push Docker Images
 
 on:
   push:
-    branches: [main]
+    branches: [main, "docker-build-push-ghcr"]
     tags:
       - "v*"
   workflow_dispatch:
