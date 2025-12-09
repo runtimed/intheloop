@@ -120,8 +120,8 @@
     "openid-client": "^6.6.2",
     "path-to-regexp": "^8.2.0",
     "psl": "^1.15.0",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
     "react-error-boundary": "^6.0.0",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.7.0",
@@ -186,8 +186,8 @@
   "pnpm": {
     "overrides": {
       "effect": "3.15.5",
-      "react": "19.0.0",
-      "react-dom": "19.0.0",
+      "react": "19.2.1",
+      "react-dom": "19.2.1",
       "@effect/platform": "0.82.4",
       "@effect/typeclass": "0.34.2",
       "@effect/cluster": "0.34.2",
