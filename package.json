@@ -46,7 +46,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check": "pnpm type-check && pnpm lint && pnpm format:check",
-    "start": "echo 'Use `pnpm dev` to run the integrated server (frontend + backend). Legacy `dev:sync` script removed - now using Cloudflare Vite plugin.'"
+    "start": "echo 'Use `pnpm dev` to run the integrated server (frontend + backend). Legacy `dev:sync` script removed - now using Cloudflare Vite plugin.'",
+    "post-product": "tsx scripts/post-product.ts"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.18.6",
@@ -137,6 +138,7 @@
     "strip-ansi": "^7.1.0",
     "tailwind-merge": "^3.3.1",
     "ts-extras": "^0.16.0",
+    "tsx": "^4.21.0",
     "tw-animate-css": "^1.3.4",
     "ulid": "^3.0.1",
     "uuid": "^11.1.0",
