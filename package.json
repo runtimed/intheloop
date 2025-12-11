@@ -197,7 +197,8 @@
       "@effect/cluster": "0.34.2",
       "@effect/experimental": "0.46.8",
       "@effect/sql": "0.35.8",
-      "@effect/rpc": "0.59.9"
+      "@effect/rpc": "0.59.9",
+      "@livestore/sync-cf": "link:../livestore/packages/@livestore/sync-cf"
     },
     "onlyBuiltDependencies": [
       "@parcel/watcher",
