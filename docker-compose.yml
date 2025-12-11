@@ -49,6 +49,13 @@ services:
       - listen_addresses=*
       - -c
       - wal_level=logical
+    networks:
+      - intheloop-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   intheloop-network:
