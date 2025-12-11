@@ -1,3 +1,4 @@
+import { Client } from "pg";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { WebSocketServer } from "./sync.ts";
@@ -120,6 +121,51 @@ export default {
   ): Promise<WorkerResponse> {
     const url = new URL(request.url);
     const pathname = url.pathname;
+
+    // Create a new Client instance using the connection string
+    // or explicit parameters as shown in the previous steps.
+    // Here, we are using the connection string method.
+    const sql = new Client({
+      connectionString: env.PG_CONNECTION_STRING,
+    });
+    // Connect to the PostgreSQL database
+    await sql.connect();
+
+    if (request.method === "POST" && url.pathname === "/products") {
+      console.log("request", request);
+
+      // Parse the request's JSON payload
+      const productData = (await request.json()) as {
+        name: string;
+        description: string;
+        price: number;
+      };
+
+      console.log("productData", productData);
+
+      const name = productData.name,
+        description = productData.description,
+        price = productData.price;
+
+      // Insert the new product into the products table
+      const insertResult = await sql.query(
+        `INSERT INTO products(name, description, price) VALUES($1, $2, $3)
+    RETURNING *`,
+        [name, description, price]
+      );
+
+      // Return the inserted row as JSON
+      return new workerGlobals.Response(JSON.stringify(insertResult.rows), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    if (request.method === "GET" && url.pathname === "/products") {
+      const products = await sql.query("SELECT * FROM products");
+      return new workerGlobals.Response(JSON.stringify(products.rows), {
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
     console.log("🔍 Selective router:", {
       method: request.method,
