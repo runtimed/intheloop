@@ -1,8 +1,13 @@
 import {
   makeDurableObject,
   handleWebSocket,
+  // foobar,
+  // bla,
 } from "@livestore/sync-cf/cf-worker";
 import { type Env, type ExecutionContext } from "./types";
+
+// console.log("🚨🚨🚨", bla);
+// console.log("🚨🚨🚨", foobar());
 
 import { getValidatedUser } from "./auth";
 import { Schema } from "@runtimed/schema";
