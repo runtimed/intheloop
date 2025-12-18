@@ -45,6 +45,6 @@ makeWorker({
   sync: {
     backend: makeCfSync({ url: getLiveStoreUrl() }),
     initialSyncOptions: { _tag: "Blocking", timeout: 5000 },
-    onSyncError: "ignore",
+    onSyncError: "shutdown",
   },
 });
