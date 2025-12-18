@@ -27,7 +27,7 @@
     {
       "name": "pg-temp",
       "script": "sh",
-      "args": "-c 'docker ps -a --filter name=intheloop-postgres --format \"{{.Names}}\" | grep -q intheloop-postgres && docker start -a intheloop-postgres || docker run --name intheloop-postgres -p 5432:5432 -e POSTGRES_DB=intheloop-dev -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password --tmpfs /var/lib/postgresql/data --tmpfs /tmp postgres:16-alpine -c listen_addresses=\"*\" -c wal_level=logical'",
+      "args": "-c 'docker compose up postgres pgbouncer'",
       "autorestart": false
     }
   ]
