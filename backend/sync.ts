@@ -1,18 +1,11 @@
-import {
-  makeDurableObject,
-  handleWebSocket,
-  // foobar,
-  // bla,
-} from "@livestore/sync-cf/cf-worker";
+import { handleWebSocket, makePostgres } from "@livestore/sync-cf/cf-worker";
 import { type Env, type ExecutionContext } from "./types";
-
-// console.log("🚨🚨🚨", bla);
-// console.log("🚨🚨🚨", foobar());
 
 import { getValidatedUser } from "./auth";
 import { Schema } from "@runtimed/schema";
 
-export class WebSocketServer extends makeDurableObject({
+export class WebSocketServer extends makePostgres({
+  // These are needed, even if they are empty
   onPush: async (message) => {
     console.log("onPush", message.batch);
   },
