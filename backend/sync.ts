@@ -1,4 +1,5 @@
-import { handleWebSocket, makePostgres } from "@livestore/sync-cf/cf-worker";
+import { handleWebSocket } from "@livestore/sync-cf/cf-worker";
+import { makePostgres } from "@runtimed/livestore-postgres/cf-worker";
 import { type Env, type ExecutionContext } from "./types";
 
 import { getValidatedUser } from "./auth";
