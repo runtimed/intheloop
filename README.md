@@ -149,11 +149,32 @@ Learn more about [what works today](./docs/what-works-today.md).
 
 You can help make it better by contributing. We welcome code contributions and ideas! See the documentation links below for more information.
 
+## Docker
+
+In the Loop can be run using Docker Compose for a complete production-like setup:
+
+```bash
+# Build all services
+docker compose build
+
+# Start all services
+docker compose up
+```
+
+This starts three services:
+
+- **Web** (http://localhost:5173) - Frontend application
+- **Sync** (http://localhost:8787) - Backend API and WebSocket sync
+- **Iframe Outputs** (http://localhost:8000) - Sandboxed output rendering
+
+See **[Docker Guide](./DOCKER.md)** for detailed instructions on building and running individual services.
+
 ## Documentation
 
 - **[Developing](./DEVELOPMENT.md)** - Developing in this repo
 - **[Contributing](./CONTRIBUTING.md)** - Contribute to this project
 - **[Deployment Guide](./DEPLOYMENT.md)** - Production deployment instructions
+- **[Docker Guide](./DOCKER.md)** - Docker build and run instructions
 - **[Roadmap](./ROADMAP.md)** - Development priorities and future plans
 
 - **[AI Development Context](./AGENTS.md)** - An AGENTS.md file for contributors and AI agents.
