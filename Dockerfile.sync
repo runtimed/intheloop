@@ -27,8 +27,12 @@ COPY . .
 COPY .env.example .env
 COPY .dev.vars.example .dev.vars
 
+# Copy entrypoint script
+COPY scripts/docker-sync-entrypoint.sh /usr/local/bin/docker-sync-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-sync-entrypoint.sh
+
 # Expose Wrangler's default port
 EXPOSE 8787
 
-# Run migrations then start the sync service
-CMD pnpm run db:migrate && pnpm run docker:sync
+# Use entrypoint script to generate .dev.vars from environment variables
+ENTRYPOINT ["/usr/local/bin/docker-sync-entrypoint.sh"]
