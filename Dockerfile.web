@@ -1,53 +1,52 @@
-# Single-stage Dockerfile for In the Loop
-# Copies source files and runs the dev server
-
-FROM node:23-alpine
+# syntax=docker/dockerfile:1.4
+# Build stage
+FROM node:23-alpine AS builder
 RUN apk add --no-cache bash git && corepack enable && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
-# ---
-# Install dependencies
-# ---
-
-# Copy package files first
+# Copy workspace files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Copy package.json files for all packages
 COPY packages/agent-core/package.json ./packages/agent-core/
 COPY packages/ai-core/package.json ./packages/ai-core/
 COPY packages/pyodide-runtime/package.json ./packages/pyodide-runtime/
 COPY packages/schema/package.json ./packages/schema/
 
-# Install dependencies
-RUN pnpm install --no-frozen-lockfile
+# Install dependencies with cache mount
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile
 
-# ---
-# Copy source files
-# ---
-
-# Copy everything else (filtered by .dockerignore)
-COPY . .
-
-# Override env files from examples
-COPY .env.example .env
-COPY .dev.vars.example .dev.vars
-
-# ---
-# Set environment variables
-# ---
+# Copy source files needed for build
+COPY packages ./packages
+COPY src ./src
+COPY public ./public
+COPY vite.config.ts tsconfig.json tsconfig.node.json ./
+COPY index.html ./
+COPY vite-plugins ./vite-plugins
 
 # Set git commit hash to avoid git commands in container
 ENV VITE_GIT_COMMIT_HASH=docker-build
 ENV VITE_API_TARGET=http://sync:8787
-ENV VITE_HOST=0.0.0.0
 
-# ---
-# Run server
-# ---
+# Build the web app
+RUN pnpm build
 
-# Expose port
+# Production stage
+FROM nginx:alpine
+
+# Copy built files from builder stage
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copy nginx configuration
+COPY nginx-main.conf /etc/nginx/nginx.conf
+# Copy as template - nginx:alpine automatically processes templates in /etc/nginx/templates/
+COPY nginx.conf /etc/nginx/templates/default.conf.template
+
+# Set default SYNC_HOST (can be overridden at runtime)
+ENV SYNC_HOST=sync
+
+# Expose port 5173
 EXPOSE 5173
 
-# Keep container running for debugging/SSH access
-# CMD ["tail", "-f", "/dev/null"]
-
-# Run dev server
-CMD ["pnpm", "run", "dev:web", "--port", "5173"]
+# nginx:alpine entrypoint automatically processes templates and starts nginx

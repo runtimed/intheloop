@@ -1,10 +1,14 @@
 # Docker Build and Run Guide
 
-This guide explains how to build and run the In the Loop frontend using Docker.
+This guide explains how to build and run In the Loop services using Docker.
 
 ## Overview
 
-The Docker image builds the production frontend and serves it using Vite's preview server.
+In the Loop consists of three Docker services:
+
+- **web**: Production frontend served via nginx
+- **sync**: Backend API and WebSocket sync service (Cloudflare Worker)
+- **iframe-outputs**: Sandboxed output rendering service
 
 ## Prerequisites
 
@@ -51,9 +55,7 @@ The services communicate via the `intheloop-network` Docker network:
 
 ## Testing Images Individually
 
-The main issue is the `web` Docker image needing access to `localhost:8787`. Docker won't be able to access ports on the host machine. If you want to run it, the easiest way is to also run the `sync` image in Docker.
-
-Otherwise, you can test these images individually to make sure they're working.
+You can build and run individual services for testing. The `web` service requires the `sync` service to be accessible.
 
 ### Building and Running Individual Images
 
@@ -65,13 +67,30 @@ Build the web image:
 docker build -f Dockerfile.web -t intheloop-web:latest .
 ```
 
-Run the web service:
+**Running with docker-compose (recommended):**
+
+The web service automatically connects to the `sync` service via Docker network DNS:
 
 ```shell
-docker run -p 5173:5173 intheloop-web:latest
+docker compose up web
 ```
 
-The web service will be available at `http://localhost:5173`. Note that it expects the sync service to be available at `http://sync:8787` (when running in docker-compose) or you'll need to configure the `VITE_API_TARGET` environment variable.
+**Running standalone:**
+
+When running standalone, you need to specify where the sync service is located using the `SYNC_HOST` environment variable:
+
+```shell
+# If sync is running on host machine (Mac/Windows)
+docker run -p 5173:5173 -e SYNC_HOST=host.docker.internal intheloop-web:latest
+
+# If sync is running on host machine (Linux)
+docker run -p 5173:5173 -e SYNC_HOST=172.17.0.1 intheloop-web:latest
+
+# If sync is running in another Docker container with a known IP
+docker run -p 5173:5173 -e SYNC_HOST=<container-ip> intheloop-web:latest
+```
+
+The web service will be available at `http://localhost:5173`. By default, `SYNC_HOST` is set to `sync` (for docker-compose usage).
 
 #### Iframe Outputs Service
 
@@ -104,3 +123,29 @@ docker run -p 8787:8787 intheloop-sync:latest
 ```
 
 The sync service will be available at `http://localhost:8787`.
+
+## Environment Variables
+
+### Web Service
+
+- `SYNC_HOST` (default: `sync`): Hostname or IP address of the sync service. Used by nginx to proxy API requests. Set to `sync` for docker-compose, or override for standalone runs.
+
+### Sync Service
+
+The sync service uses environment variables from `.dev.vars` file. See `.dev.vars.example` for configuration options.
+
+## Troubleshooting
+
+### "host not found in upstream 'sync'"
+
+This error occurs when running the web container standalone without setting `SYNC_HOST`. Either:
+
+1. Use docker-compose to run all services together, or
+2. Set `SYNC_HOST` environment variable when running the web container standalone
+
+### Web service can't connect to sync service
+
+- Verify the sync service is running and accessible
+- Check that `SYNC_HOST` is set correctly for your environment
+- On Linux, you may need to use the Docker bridge IP (`172.17.0.1`) instead of `host.docker.internal`
+- Ensure both containers are on the same Docker network if running separately
