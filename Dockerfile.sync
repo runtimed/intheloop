@@ -15,6 +15,7 @@ COPY packages/ai-core/package.json ./packages/ai-core/
 COPY packages/pyodide-runtime/package.json ./packages/pyodide-runtime/
 COPY packages/schema/package.json ./packages/schema/
 COPY packages/livestore-postgres/package.json ./packages/livestore-postgres/
+COPY packages/livestore-postgres ./packages/livestore-postgres/
 
 # Install dependencies
 RUN pnpm install
