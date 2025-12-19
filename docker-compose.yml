@@ -62,7 +62,7 @@ services:
     volumes:
       - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
       - ./userlist.txt:/etc/pgbouncer/userlist.txt:ro
-    command: ['/etc/pgbouncer/pgbouncer.ini']
+    command: ["/etc/pgbouncer/pgbouncer.ini"]
     ports:
       - ${PGBOUNCER_PORT:-6432}:6432
     depends_on:
