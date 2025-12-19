@@ -28,6 +28,7 @@ export type Env = {
 
   // Service provider configuration
   SERVICE_PROVIDER?: string; // "local" | "anaconda"
+  PERMISSIONS_PROVIDER?: string;
 
   // Bindings from the original sync worker configuration
   WEBSOCKET_SERVER: DurableObjectNamespace;
@@ -54,6 +55,12 @@ export type Env = {
 
   // Extension configuration for Anaconda provider
   EXTENSION_CONFIG?: string;
+
+  // Anaconda Projects Service configuration
+  ANACONDA_PROJECTS_URL: string;
+
+  // External OIDC provider for development
+  EXTERNAL_OIDC_URL?: string; // e.g., https://auth.stage.anaconda.com/api/auth
 
   DEBUG?: boolean;
 

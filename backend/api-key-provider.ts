@@ -9,6 +9,10 @@ export { RuntError, ErrorType, type Env } from "./types.ts";
 export enum Scope {
   RuntRead = "runt:read",
   RuntExecute = "runt:execute",
+
+  CloudRead = "cloud:read",
+  CloudWrite = "cloud:write",
+  RepoRead = "repo:read",
 }
 
 export type Resource = {

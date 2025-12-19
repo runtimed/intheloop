@@ -10,6 +10,7 @@ import type {
   ArtifactSubmissionResult,
   IArtifactClient,
 } from "./types.ts";
+import { uploadArtifactViaProjects } from "./projects-artifacts.ts";
 
 export function decodeImageData(base64String: string): Uint8Array<ArrayBuffer> {
   const binaryString = atob(base64String);
@@ -25,10 +26,15 @@ export function decodeImageData(base64String: string): Uint8Array<ArrayBuffer> {
  */
 export class ArtifactClient implements IArtifactClient {
   baseUrl: string;
+  private useProjectsArtifacts: boolean;
 
   // TODO: Make artifact service URL configuration more general for @runt/lib package
-  constructor(baseUrl: string = "https://app.runt.run") {
+  constructor(
+    baseUrl: string = "https://app.runt.run",
+    options?: { useProjectsArtifacts?: boolean }
+  ) {
     this.baseUrl = baseUrl;
+    this.useProjectsArtifacts = options?.useProjectsArtifacts ?? false;
   }
 
   /**
@@ -77,9 +83,9 @@ export class ArtifactClient implements IArtifactClient {
   }
 
   /**
-   * Submit arbitrary artifact data
+   * Legacy single-step artifact submission (R2-backed)
    */
-  async submitArtifact(
+  private async submitArtifactLegacy(
     data: Uint8Array,
     options: ArtifactSubmissionOptions
   ): Promise<ArtifactSubmissionResult> {
@@ -106,7 +112,9 @@ export class ArtifactClient implements IArtifactClient {
           error: "Unknown error",
         }));
         throw new Error(
-          `Artifact submission failed: ${error.error || response.statusText}`
+          `Artifact submission failed: ${
+            error.error || response.statusText
+          }`
         );
       }
 
@@ -117,6 +125,41 @@ export class ArtifactClient implements IArtifactClient {
         throw error;
       }
       throw new Error(`Failed to submit artifact: ${String(error)}`);
+    }
+  }
+
+  /**
+   * Projects-backed three-step artifact submission
+   */
+  private async submitArtifactViaProjects(
+    data: Uint8Array,
+    options: ArtifactSubmissionOptions
+  ): Promise<ArtifactSubmissionResult> {
+    const result = await uploadArtifactViaProjects({
+      baseUrl: this.baseUrl,
+      notebookId: options.notebookId,
+      authToken: options.authToken,
+      filename: options.filename || "artifact.bin",
+      mimeType: options.mimeType || "application/octet-stream",
+      body: new Uint8Array(data).buffer,
+    });
+
+    return {
+      artifactId: result.artifactId,
+    };
+  }
+
+  /**
+   * Submit arbitrary artifact data
+   */
+  async submitArtifact(
+    data: Uint8Array,
+    options: ArtifactSubmissionOptions
+  ): Promise<ArtifactSubmissionResult> {
+    if (this.useProjectsArtifacts) {
+      return await this.submitArtifactViaProjects(data, options);
+    } else {
+      return await this.submitArtifactLegacy(data, options);
     }
   }
 

@@ -15,7 +15,7 @@ import apiRoutes from "./routes.ts";
 import localOidcRoutes from "./local-oidc-routes.ts";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "./trpc/index.ts";
-import { extractAndValidateUser } from "./auth.ts";
+import { extractAuthToken, getValidatedUser } from "./auth.ts";
 import { createPermissionsProvider } from "./notebook-permissions/factory.ts";
 import { TrcpContext } from "./trpc/trpc.ts";
 
@@ -169,18 +169,20 @@ export default {
           req: request as unknown as Request,
           router: appRouter,
           createContext: async (): Promise<TrcpContext> => {
-            let auth = await extractAndValidateUser(
-              request as unknown as Request,
+            let authToken = extractAuthToken(request as unknown as Request);
+            let user = await getValidatedUser(
+              authToken,
               env
             );
 
             // Create permissions provider
-            const permissionsProvider = createPermissionsProvider(env);
+            const permissionsProvider = createPermissionsProvider(env, authToken ?? "");
 
             return {
               env,
-              user: auth,
+              user: user,
               permissionsProvider,
+              bearerToken: authToken,
             };
           },
         });

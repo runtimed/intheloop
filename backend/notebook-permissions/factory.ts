@@ -1,33 +1,34 @@
 import { LocalPermissionsProvider } from "./local-permissions.ts";
 import { NoPermissionsProvider } from "./no-permissions.ts";
-// import { AnacondaPermissionsProvider } from "./anaconda-permissions.ts"; // TODO: Implement
 import type { PermissionsProvider } from "./types.ts";
 import { RuntError, ErrorType, type Env } from "../types.ts";
+import { AnacondaPermissionsProvider } from "./anaconda-permissions.ts";
+import { ProjectsClient } from "backend/clients/projects-client.ts";
 
 // Re-export providers and types for convenience
 export { LocalPermissionsProvider } from "./local-permissions.ts";
 export { NoPermissionsProvider } from "./no-permissions.ts";
-// export { AnacondaPermissionsProvider } from "./anaconda-permissions.ts"; // TODO: Implement
 export type { PermissionsProvider } from "./types.ts";
 
 /**
  * Factory function to create the appropriate permissions provider based on environment
  */
-export function createPermissionsProvider(env: Env): PermissionsProvider {
-  const serviceProvider = env.SERVICE_PROVIDER?.toLowerCase();
+export function createPermissionsProvider(env: Env, bearerToken: string): PermissionsProvider {
+  const serviceProvider = env.PERMISSIONS_PROVIDER?.toLowerCase();
 
   switch (serviceProvider) {
     case "anaconda":
-      // TODO: Implement AnacondaPermissionsProvider
-      // For now, fall back to local permissions provider
-      console.warn(
-        "AnacondaPermissionsProvider not yet implemented, falling back to LocalPermissionsProvider"
-      );
       try {
-        return new LocalPermissionsProvider(env.DB);
+        let projectsConfig = {
+          baseUrl: env.ANACONDA_PROJECTS_URL,
+          bearerToken: bearerToken,
+        };
+
+        let projectsClient = new ProjectsClient(projectsConfig);
+        return new AnacondaPermissionsProvider(projectsClient, env.DB);
       } catch (error) {
         throw new RuntError(ErrorType.ServerMisconfigured, {
-          message: "Failed to initialize fallback local permissions provider",
+          message: "Failed to initialize anaconda permissions provider",
           cause: error as Error,
         });
       }

@@ -7,6 +7,7 @@ export type TrcpContext = {
   env: Env;
   user: ValidatedUser | null;
   permissionsProvider: PermissionsProvider;
+  bearerToken: string | null;
 };
 
 /**

@@ -11,26 +11,8 @@ import {
   getUsersByIds,
   toPublicFacingUser,
 } from "../users/utils.ts";
+import { NotebookRow } from "backend/trpc/types.ts";
 
-interface NotebookRow {
-  id: string;
-  owner_id: string;
-  title: string | null;
-  created_at: string;
-  updated_at: string;
-  collaborators?: Array<{
-    id: string;
-    givenName: string | null;
-    familyName: string | null;
-  }>;
-  tags?: Array<{
-    id: string;
-    name: string;
-    color: string;
-    created_at: string;
-    updated_at: string;
-  }>;
-}
 
 /**
  * Local permissions provider using D1 database

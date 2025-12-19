@@ -38,15 +38,19 @@ bucket_name = "anode-artifacts-dev"
 # Environment variables for local development (`wrangler dev`)
 # These are injected into the local worker process. The Vite dev server (`pnpm dev`)
 # will pick up variables from the `.env` file. Ensure they match.
-AUTH_ISSUER = "http://localhost:8787/local_oidc"
+AUTH_ISSUER = "https://auth.stage.anaconda.com/api/auth"
 DEPLOYMENT_ENV = "development"
 SERVICE_PROVIDER = "local"
+PERMISSIONS_PROVIDER = "anaconda"
 EXTENSION_CONFIG = "{}"
+ANACONDA_PROJECTS_URL = "https://stage.anaconda.com/api/projects"
+
+EXTERNAL_OIDC_URL = "https://auth.stage.anaconda.com/api/auth"
 
 VITE_LIVESTORE_SYNC_URL = "/livestore"
 VITE_RUNTIME_COMMAND = "pnpm run dev:runtime"
-VITE_AUTH_URI = "http://localhost:8787/local_oidc"
-VITE_AUTH_CLIENT_ID = "local-anode-client"
+VITE_AUTH_URI = "https://auth.stage.anaconda.com/api/auth"
+VITE_AUTH_CLIENT_ID = "b7296d39-c1eb-49f4-b9a1-f36e6d5b8b6d"
 VITE_AUTH_REDIRECT_URI = "http://localhost:5173/oidc"
 VITE_AI_PROVIDER = "anaconda"
 VITE_LS_DEV = "true"
@@ -104,9 +108,11 @@ bucket_name = "anode-artifacts-prod"
 # Worker runtime variables
 DEPLOYMENT_ENV = "production"
 SERVICE_PROVIDER = "anaconda"
+PERMISSIONS_PROVIDER = "anaconda"
 ARTIFACT_STORAGE = "r2"
 ARTIFACT_THRESHOLD = "16384"
 AUTH_ISSUER = "https://auth.anaconda.com/api/auth"
+ANACONDA_PROJECTS_URL = "https://anaconda.com/api/projects"
 EXTENSION_CONFIG = '{"apiKeyUrl": "https://anaconda.com/api/iam/api-keys", "userinfoUrl": "https://auth.anaconda.com/api/auth/sessions/whoami"}'
 # Vite build-time variables
 VITE_LIVESTORE_SYNC_URL = "/livestore"
@@ -150,6 +156,7 @@ preview_bucket_name = "anode-artifacts-preview"
 # Worker runtime variables
 DEPLOYMENT_ENV = "preview"
 SERVICE_PROVIDER = "anaconda"
+PERMISSIONS_PROVIDER = "anaconda"
 ARTIFACT_STORAGE = "r2"
 ARTIFACT_THRESHOLD = "16384"
 AUTH_ISSUER = "https://auth.anaconda.com/api/auth"

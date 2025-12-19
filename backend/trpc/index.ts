@@ -30,6 +30,7 @@ import {
 } from "./db.ts";
 import { authedProcedure, publicProcedure, router } from "./trpc";
 import { NotebookPermission, TagColor } from "./types.ts";
+import { createProjectIfNeeded } from "backend/utils/projects-utils.ts";
 
 // Create the tRPC router
 export const appRouter = router({
@@ -156,15 +157,21 @@ export const appRouter = router({
       const {
         user,
         env: { DB },
+        bearerToken,
       } = ctx;
 
       try {
         const nbId = createNotebookId();
+        let projectId: string | null = await createProjectIfNeeded(ctx.env, bearerToken || "");
+        if (projectId) {
+          console.log(`✅ Created project ${projectId} for notebook ${nbId}`);
+        }
 
         const success = await createNotebook(DB, {
           id: nbId,
           ownerId: user.id,
           title: input.title,
+          projectId: projectId,
         });
 
         if (!success) {
