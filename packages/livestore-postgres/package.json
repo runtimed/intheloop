@@ -4,14 +4,11 @@
   "license": "Apache-2.0",
   "sideEffects": false,
   "type": "module",
-  "exports": {
-    "./cf-worker": {
-      "types": "./dist/cf-worker/mod.d.ts",
-      "default": "./dist/cf-worker/mod.js"
-    }
-  },
+  "exports": "./index.ts",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "files": [
-    "postgres.ts",
+    "index.ts",
     "package.json"
   ],
   "scripts": {

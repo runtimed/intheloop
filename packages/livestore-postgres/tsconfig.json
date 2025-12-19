@@ -17,6 +17,6 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
   },
-  "include": ["cf-worker/**/*"],
+  "include": ["cf-worker/**/*", "index.ts"],
   "exclude": ["node_modules", "dist"]
 }
