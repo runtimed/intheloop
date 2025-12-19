@@ -14,7 +14,6 @@ overrides:
   '@effect/experimental': 0.46.8
   '@effect/sql': 0.35.8
   '@effect/rpc': 0.59.9
-  '@livestore/sync-cf': link:../livestore/packages/@livestore/sync-cf
 
 importers:
 
@@ -72,8 +71,8 @@ importers:
         specifier: ^0.3.1
         version: 0.3.1(e619d9a02e7331598c0487672266f18e)
       '@livestore/sync-cf':
-        specifier: link:../livestore/packages/@livestore/sync-cf
-        version: link:../livestore/packages/@livestore/sync-cf
+        specifier: ^0.3.1
+        version: 0.3.1(38eef8465614833bab78aa968987f446)
       '@livestore/wa-sqlite':
         specifier: 1.0.5-dev.2
         version: 1.0.5-dev.2
@@ -507,8 +506,8 @@ importers:
         specifier: ^0.3.1
         version: 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
       '@livestore/sync-cf':
-        specifier: link:../../../livestore/packages/@livestore/sync-cf
-        version: link:../../../livestore/packages/@livestore/sync-cf
+        specifier: ^0.3.1
+        version: 0.3.1(38eef8465614833bab78aa968987f446)
       '@livestore/utils':
         specifier: ^0.3.1
         version: 0.3.1(38eef8465614833bab78aa968987f446)
@@ -1724,6 +1723,9 @@ packages:
 
   '@livestore/sqlite-wasm@0.3.1':
     resolution: {integrity: sha512-+JLIwpd2N214LmwlUX6arYnJ5IhvSi4Fn3Jk6E6fNfuUU4tczcL1PtgfIX2IoiPhn9QDG0YJVdJBT6KYi1uMyg==}
+
+  '@livestore/sync-cf@0.3.1':
+    resolution: {integrity: sha512-Vopen/K5/MRr4va/3u19cGLFslJs/fqtr5C2MhEOy080uYcClEWUDxyHh/Oec9wx4ZsbC0WKfTiUVN48DjHo/A==}
 
   '@livestore/utils@0.3.1':
     resolution: {integrity: sha512-DFgrKpVIu/Nn9GE0QG2uitrFLF63aIiV5rencAk3kigNPzq4iBao05wvT/JVqgRxxiM7F1SuAZYogwM4QdpcDA==}
@@ -7100,6 +7102,28 @@ snapshots:
       '@livestore/common': 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
       '@livestore/utils': 0.3.1(38eef8465614833bab78aa968987f446)
       '@livestore/wa-sqlite': 1.0.5-dev.2
+    transitivePeerDependencies:
+      - '@effect/cli'
+      - '@effect/cluster'
+      - '@effect/experimental'
+      - '@effect/opentelemetry'
+      - '@effect/platform'
+      - '@effect/platform-browser'
+      - '@effect/platform-bun'
+      - '@effect/platform-node'
+      - '@effect/printer'
+      - '@effect/printer-ansi'
+      - '@effect/rpc'
+      - '@effect/sql'
+      - '@effect/typeclass'
+      - '@opentelemetry/api'
+      - '@opentelemetry/resources'
+      - effect
+
+  '@livestore/sync-cf@0.3.1(38eef8465614833bab78aa968987f446)':
+    dependencies:
+      '@livestore/common': 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
+      '@livestore/utils': 0.3.1(38eef8465614833bab78aa968987f446)
     transitivePeerDependencies:
       - '@effect/cli'
       - '@effect/cluster'
