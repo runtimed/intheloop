@@ -1,3 +1,5 @@
+/* eslint-disable no-redeclare */
+
 import { LiveStoreEvent } from "@livestore/common/schema";
 import { Schema } from "@livestore/utils/effect";
 
