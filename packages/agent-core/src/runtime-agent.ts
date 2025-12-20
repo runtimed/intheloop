@@ -919,7 +919,7 @@ export class RuntimeAgent {
     const shutdown = () => this.shutdown();
 
     // Set up global error handlers (platform-agnostic)
-    globalThis.addEventListener("unhandledrejection", (event) => {
+    globalThis.addEventListener("unhandledrejection", (event: PromiseRejectionEvent) => {
       logger.error(
         "Unhandled rejection",
         event.reason instanceof Error ? event.reason : undefined,

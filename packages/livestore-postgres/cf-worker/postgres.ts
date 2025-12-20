@@ -539,7 +539,7 @@ const createPostgresTable = async (
 
 const makeStorage = (
   ctx: DurableObjectState,
-  env: PostgresEnv,
+  _env: PostgresEnv,
   storeId: string,
   pgClient: Client
 ): SyncStorage => {

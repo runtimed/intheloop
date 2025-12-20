@@ -102,9 +102,9 @@ export class ArtifactClient implements IArtifactClient {
       });
 
       if (!response.ok) {
-        const error = await response.json().catch(() => ({
+        const error = (await response.json().catch(() => ({
           error: "Unknown error",
-        }));
+        }))) as { error?: string };
         throw new Error(
           `Artifact submission failed: ${error.error || response.statusText}`
         );

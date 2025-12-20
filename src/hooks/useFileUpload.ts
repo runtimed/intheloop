@@ -51,14 +51,16 @@ export const useFileUpload = ({
 
       if (!response.ok) {
         setIsUploading(false);
-        const error = await response
+        const error = (await response
           .json()
-          .catch(() => ({ error: "Upload failed" }));
+          .catch(() => ({ error: "Upload failed" }))) as {
+          error?: string;
+        };
         toast.error(error.error || response.statusText);
         throw new Error(error.error || response.statusText);
       }
 
-      const result = await response.json();
+      const result = (await response.json()) as { artifactId: string };
       console.log("result", result);
 
       store.commit(

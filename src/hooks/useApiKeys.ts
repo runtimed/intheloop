@@ -54,7 +54,9 @@ export function useApiKeys() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
+        const errorData = (await response.json().catch(() => ({}))) as {
+          message?: string;
+        };
         throw new Error(
           errorData.message || `HTTP ${response.status}: ${response.statusText}`
         );
@@ -75,10 +77,10 @@ export function useApiKeys() {
       setError(null);
 
       try {
-        const response = await makeAuthenticatedRequest(API_BASE, {
+        const response = (await makeAuthenticatedRequest(API_BASE, {
           method: "POST",
           body: JSON.stringify(request),
-        });
+        })) as { api_key: string };
 
         return response.api_key;
       } catch (err) {
@@ -104,7 +106,7 @@ export function useApiKeys() {
         if (request.offset) params.set("offset", request.offset.toString());
 
         const url = `${API_BASE}${params.toString() ? `?${params.toString()}` : ""}`;
-        const response = await makeAuthenticatedRequest(url);
+        const response = (await makeAuthenticatedRequest(url)) as ApiKey[];
 
         return response;
       } catch (err) {
@@ -125,7 +127,9 @@ export function useApiKeys() {
       setError(null);
 
       try {
-        const response = await makeAuthenticatedRequest(`${API_BASE}/${keyId}`);
+        const response = (await makeAuthenticatedRequest(
+          `${API_BASE}/${keyId}`
+        )) as ApiKey;
         return response;
       } catch (err) {
         const errorMessage =
@@ -166,13 +170,13 @@ export function useApiKeys() {
       setError(null);
 
       try {
-        const response = await makeAuthenticatedRequest(
+        const response = (await makeAuthenticatedRequest(
           `${API_BASE}/${keyId}`,
           {
             method: "PATCH",
             body: JSON.stringify({ revoked: true }),
           }
-        );
+        )) as ApiKey;
 
         return response;
       } catch (err) {
