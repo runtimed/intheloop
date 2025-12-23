@@ -3,6 +3,8 @@ import { useAuth, useAuthenticatedUser } from "@/auth";
 import { toast } from "sonner";
 import { useStore } from "@livestore/react";
 import { events } from "@runtimed/schema";
+import { MAX_FILE_UPLOAD_SIZE } from "../../shared/constants";
+import prettyBytes from "pretty-bytes";
 
 interface FileUploadOptions {
   notebookId: string;
@@ -36,6 +38,14 @@ export const useFileUpload = ({
         throw new Error(message);
       }
 
+      // Check file size before upload
+      if (file.size > MAX_FILE_UPLOAD_SIZE) {
+        const message = `File size (${prettyBytes(file.size)}) exceeds the maximum allowed size of ${prettyBytes(MAX_FILE_UPLOAD_SIZE)}`;
+        toast.error(message);
+        setIsUploading(false);
+        throw new Error(message);
+      }
+
       setIsUploading(true);
       await sleep(500);
 
@@ -53,9 +63,11 @@ export const useFileUpload = ({
         setIsUploading(false);
         const error = await response
           .json()
-          .catch(() => ({ error: "Upload failed" }));
-        toast.error(error.error || response.statusText);
-        throw new Error(error.error || response.statusText);
+          .catch(() => ({ error: "Upload failed", message: "Upload failed" }));
+        const errorMessage =
+          error.message || error.error || response.statusText;
+        toast.error(errorMessage);
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
