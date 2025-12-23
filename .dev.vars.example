@@ -19,3 +19,9 @@ ALLOW_LOCAL_AUTH="true"
 # - VITE_CLIENT_ID: Your OAuth client ID
 #
 # The backend expects RS256 JWT tokens from the OIDC provider.
+
+# Postgres
+# Direct PostgreSQL connection
+# PG_CONNECTION_STRING="postgresql://postgres:password@localhost:5432/intheloop-dev?sslmode=disable"
+# PgBouncer connection (recommended for production-like testing)
+PG_CONNECTION_STRING="postgresql://postgres:password@localhost:6432/intheloop-dev?sslmode=disable"

@@ -1,13 +1,12 @@
-import {
-  makeDurableObject,
-  handleWebSocket,
-} from "@livestore/sync-cf/cf-worker";
+import { handleWebSocket } from "@livestore/sync-cf/cf-worker";
+import { makePostgres } from "@runtimed/livestore-postgres";
 import { type Env, type ExecutionContext } from "./types";
 
 import { getValidatedUser } from "./auth";
 import { Schema } from "@runtimed/schema";
 
-export class WebSocketServer extends makeDurableObject({
+export class WebSocketServer extends makePostgres({
+  // These are needed, even if they are empty
   onPush: async (message) => {
     console.log("onPush", message.batch);
   },

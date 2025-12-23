@@ -360,6 +360,7 @@ export default [
       "scripts/**",
       "iframe-outputs/worker/dist/**",
       "iframe-outputs/worker/.wrangler/**",
+      "packages/livestore-postgres/dist/**",
     ],
   },
 ];

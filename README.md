@@ -70,6 +70,30 @@ The example files contain working defaults for local development:
 - `.env.example` → `.env` - Frontend environment variables (Vite)
 - `.dev.vars.example` → `.dev.vars` - Backend environment variables (Worker)
 
+## Docker Services
+
+The `docker-compose.yml` includes several services:
+
+1. **web** - The main web application (port 5173)
+2. **iframe-outputs** - Sandboxed output rendering server (port 8000)
+3. **sync** - Backend sync server (port 8787)
+4. **PostgreSQL** - The database server (port 5432 by default)
+5. **PgBouncer** - Connection pooler for PostgreSQL (port 6432 by default)
+
+### Using PgBouncer
+
+To connect through PgBouncer instead of directly to PostgreSQL, update your connection string in `.dev.vars`:
+
+```toml
+# Direct PostgreSQL connection
+PG_CONNECTION_STRING = "postgresql://postgres:password@localhost:5432/intheloop-dev?sslmode=disable"
+
+# PgBouncer connection (recommended for production-like testing)
+PG_CONNECTION_STRING = "postgresql://postgres:password@localhost:6432/intheloop-dev?sslmode=disable"
+```
+
+PgBouncer uses transaction-level pooling, which helps manage connection limits and improves performance under load.
+
 ### 2. Create Your First Notebook
 
 1. Open http://localhost:5173

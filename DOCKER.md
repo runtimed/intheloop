@@ -25,13 +25,13 @@ docker compose build
 To build without cache:
 
 ```shell
-docker-compose build --no-cache
+docker compose build --no-cache
 ```
 
 To build and start all services:
 
 ```shell
-docker-compose up --build
+docker compose up --build
 ```
 
 ## Running All Images
@@ -67,7 +67,7 @@ Build the web image:
 docker build -f Dockerfile.web -t intheloop-web:latest .
 ```
 
-**Running with docker-compose (recommended):**
+**Running with docker compose (recommended):**
 
 The web service automatically connects to the `sync` service via Docker network DNS:
 
@@ -90,7 +90,7 @@ docker run -p 5173:5173 -e SYNC_HOST=172.17.0.1 intheloop-web:latest
 docker run -p 5173:5173 -e SYNC_HOST=<container-ip> intheloop-web:latest
 ```
 
-The web service will be available at `http://localhost:5173`. By default, `SYNC_HOST` is set to `sync` (for docker-compose usage).
+The web service will be available at `http://localhost:5173`. By default, `SYNC_HOST` is set to `sync` (for docker compose usage).
 
 #### Iframe Outputs Service
 
@@ -128,7 +128,7 @@ The sync service will be available at `http://localhost:8787`.
 
 ### Web Service
 
-- `SYNC_HOST` (default: `sync`): Hostname or IP address of the sync service. Used by nginx to proxy API requests. Set to `sync` for docker-compose, or override for standalone runs.
+- `SYNC_HOST` (default: `sync`): Hostname or IP address of the sync service. Used by nginx to proxy API requests. Set to `sync` for docker compose, or override for standalone runs.
 
 ### Sync Service
 
@@ -140,7 +140,7 @@ The sync service uses environment variables from `.dev.vars` file. See `.dev.var
 
 This error occurs when running the web container standalone without setting `SYNC_HOST`. Either:
 
-1. Use docker-compose to run all services together, or
+1. Use docker compose to run all services together, or
 2. Set `SYNC_HOST` environment variable when running the web container standalone
 
 ### Web service can't connect to sync service

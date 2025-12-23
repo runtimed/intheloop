@@ -33,6 +33,8 @@ export type Env = {
   WEBSOCKET_SERVER: DurableObjectNamespace;
   DB: D1Database;
 
+  PG_CONNECTION_STRING: string;
+
   // Secrets
   AUTH_ISSUER: string;
 

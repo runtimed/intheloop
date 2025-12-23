@@ -1,0 +1,9 @@
+@runtimed/livestore-postgres
+Copyright 2025 Overengineering Studio
+
+This product includes software adapted from @livestore/sync-cf:
+https://github.com/livestorejs/livestore/tree/dev/packages/%40livestore/sync-cf
+
+The original work was modified to support PostgreSQL backend instead of Cloudflare Durable Objects.
+The main function `makeDurableObject` was renamed to `makePostgres` and heavily modified.
+

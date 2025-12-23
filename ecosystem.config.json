@@ -23,6 +23,12 @@
       "env": {
         "NODE_ENV": "development"
       }
+    },
+    {
+      "name": "pg-temp",
+      "script": "sh",
+      "args": "-c 'docker compose up postgres pgbouncer'",
+      "autorestart": false
     }
   ]
 }

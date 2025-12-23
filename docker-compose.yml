@@ -10,6 +10,9 @@ services:
       - "5173:5173"
     environment:
       ALLOW_LOCAL_AUTH: "true"
+    depends_on:
+      sync:
+        condition: service_started
     networks:
       - intheloop-network
 
@@ -30,6 +33,57 @@ services:
       dockerfile: Dockerfile.sync
     ports:
       - "8787:8787"
+    environment:
+      ALLOW_LOCAL_AUTH: "true"
+      PG_CONNECTION_STRING: "postgresql://postgres:password@postgres:5432/intheloop-dev?sslmode=disable"
+      AUTH_ISSUER: "http://localhost:8787/local_oidc"
+      DEPLOYMENT_ENV: "development"
+      SERVICE_PROVIDER: "local"
+      ADMIN_SECRET: "dev-admin-secret"
+      EXTENSION_CONFIG: "{}"
+      ARTIFACT_STORAGE: "local"
+      ARTIFACT_THRESHOLD: "16384"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - intheloop-network
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: intheloop-dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - 5432:5432
+    tmpfs:
+      - /var/lib/postgresql/data
+      - /tmp
+    command:
+      - -c
+      - listen_addresses=*
+      - -c
+      - wal_level=logical
+    networks:
+      - intheloop-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgbouncer:
+    image: cleanstart/pgbouncer:latest
+    volumes:
+      - ./pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+      - ./userlist.txt:/etc/pgbouncer/userlist.txt:ro
+    command: ["/etc/pgbouncer/pgbouncer.ini"]
+    ports:
+      - ${PGBOUNCER_PORT:-6432}:6432
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - intheloop-network
 
