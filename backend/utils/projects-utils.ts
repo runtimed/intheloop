@@ -6,18 +6,19 @@ import { D1Database } from "@cloudflare/workers-types";
 
 export async function createProjectIfNeeded(
   env: Env,
-  bearerToken: string
+  bearerToken: string,
+  projectsClient?: ProjectsClient
 ): Promise<string | null> {
   let projectId: string | null = null;
   let useProjectsService = env.PERMISSIONS_PROVIDER === "anaconda";
   if (useProjectsService) {
     try {
-      const projectsClient = new ProjectsClient({
+      const client = projectsClient || new ProjectsClient({
         baseUrl: env.ANACONDA_PROJECTS_URL,
         bearerToken: bearerToken,
       });
 
-      const project = await projectsClient.createProject({
+      const project = await client.createProject({
         name: "<random>",
       });
 

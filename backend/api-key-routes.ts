@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { type Env } from "./types.ts";
-import { authMiddleware, type AuthContext } from "./middleware.ts";
+import { authMiddleware, type RequestContext } from "./middleware.ts";
 import {
   createApiKeyProvider,
   isUsingLocalProvider,
@@ -18,7 +18,7 @@ import { D1Driver } from "@japikey/cloudflare";
 import { JSONWebKeySet } from "jose";
 import { getBearerToken } from "./utils/request-utils.ts";
 
-const apiKeyRoutes = new Hono<{ Bindings: Env; Variables: AuthContext }>();
+const apiKeyRoutes = new Hono<{ Bindings: Env; Variables: RequestContext }>();
 
 /**
  * Middleware to ensure OAuth authentication (not API key) for sensitive operations

@@ -9,7 +9,7 @@ import {
   type WorkerResponse,
   type ExecutionContext,
 } from "./types.ts";
-import { type AuthContext } from "./middleware.ts";
+import { type RequestContext } from "./middleware.ts";
 import { RuntError, ErrorType } from "./types.ts";
 import apiRoutes from "./routes.ts";
 import localOidcRoutes from "./local-oidc-routes.ts";
@@ -18,12 +18,13 @@ import { appRouter } from "./trpc/index.ts";
 import { extractAuthToken, getValidatedUser } from "./auth.ts";
 import { createPermissionsProvider } from "./notebook-permissions/factory.ts";
 import { TrcpContext } from "./trpc/trpc.ts";
+import { ProjectsClient } from "./clients/projects-client.ts";
 
 // NOTE: This export is necessary at the root entry point for the Workers
 // runtime for Durable Object usage
 export { WebSocketServer };
 
-const honoApp = new Hono<{ Bindings: Env; Variables: AuthContext }>();
+const honoApp = new Hono<{ Bindings: Env; Variables: RequestContext }>();
 
 honoApp.onError(async (error, c) => {
   let runtError: RuntError;
@@ -175,14 +176,24 @@ export default {
               env
             );
 
+            // Initialize ProjectsClient per request (separate from auth)
+            let projectsClient: ProjectsClient | undefined;
+            if (env.PERMISSIONS_PROVIDER === "anaconda" && authToken) {
+              projectsClient = new ProjectsClient({
+                baseUrl: env.ANACONDA_PROJECTS_URL,
+                bearerToken: authToken,
+              });
+            }
+
             // Create permissions provider
-            const permissionsProvider = createPermissionsProvider(env, authToken ?? "");
+            const permissionsProvider = createPermissionsProvider(env, authToken ?? "", projectsClient);
 
             return {
               env,
               user: user,
               permissionsProvider,
               bearerToken: authToken,
+              projectsClient,
             };
           },
         });

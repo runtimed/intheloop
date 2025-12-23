@@ -12,20 +12,23 @@ export type { PermissionsProvider } from "./types.ts";
 
 /**
  * Factory function to create the appropriate permissions provider based on environment
+ * @param projectsClient Optional ProjectsClient to reuse (for request-scoped clients)
  */
-export function createPermissionsProvider(env: Env, bearerToken: string): PermissionsProvider {
+export function createPermissionsProvider(
+  env: Env,
+  bearerToken: string,
+  projectsClient?: ProjectsClient
+): PermissionsProvider {
   const serviceProvider = env.PERMISSIONS_PROVIDER?.toLowerCase();
 
   switch (serviceProvider) {
     case "anaconda":
       try {
-        let projectsConfig = {
+        const client = projectsClient || new ProjectsClient({
           baseUrl: env.ANACONDA_PROJECTS_URL,
           bearerToken: bearerToken,
-        };
-
-        let projectsClient = new ProjectsClient(projectsConfig);
-        return new AnacondaPermissionsProvider(projectsClient, env.DB);
+        });
+        return new AnacondaPermissionsProvider(client, env.DB);
       } catch (error) {
         throw new RuntError(ErrorType.ServerMisconfigured, {
           message: "Failed to initialize anaconda permissions provider",

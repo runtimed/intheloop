@@ -6,17 +6,20 @@ import {
   getValidatedUser,
 } from "./auth.ts";
 import { type Env } from "./types.ts";
+import { ProjectsClient } from "./clients/projects-client.ts";
+import { getBearerToken } from "./utils/request-utils.ts";
 
-export interface AuthContext {
+export interface RequestContext {
   passport?: Passport;
   userId?: string;
   isRuntime?: boolean;
+  projectsClient?: ProjectsClient;
 }
 
 // Auth middleware for standard API routes
 export const authMiddleware = createMiddleware<{
   Bindings: Env;
-  Variables: AuthContext;
+  Variables: RequestContext;
 }>(async (c, next) => {
   try {
     const authToken = extractAuthToken(c.req.raw);
@@ -57,7 +60,7 @@ export const authMiddleware = createMiddleware<{
 // Optional auth middleware - continues even if auth fails
 export const optionalAuthMiddleware = createMiddleware<{
   Bindings: Env;
-  Variables: AuthContext;
+  Variables: RequestContext;
 }>(async (c, next) => {
   try {
     const authToken = extractAuthToken(c.req.raw);
@@ -85,7 +88,7 @@ export const optionalAuthMiddleware = createMiddleware<{
 // WebSocket auth middleware using query payload
 export const payloadAuthMiddleware = createMiddleware<{
   Bindings: Env;
-  Variables: AuthContext;
+  Variables: RequestContext;
 }>(async (c, next) => {
   try {
     const payloadParam = c.req.query("payload");
@@ -111,4 +114,23 @@ export const payloadAuthMiddleware = createMiddleware<{
       401
     );
   }
+});
+
+// Middleware to initialize ProjectsClient per request
+export const projectsClientMiddleware = createMiddleware<{
+  Bindings: Env;
+  Variables: RequestContext;
+}>(async (c, next) => {
+  if (c.env.PERMISSIONS_PROVIDER === "anaconda") {
+    const bearerToken = getBearerToken(c.req);
+    if (bearerToken) {
+      const projectsClient = new ProjectsClient({
+        baseUrl: c.env.ANACONDA_PROJECTS_URL,
+        bearerToken,
+      });
+      c.set("projectsClient", projectsClient);
+    }
+  }
+  
+  await next();
 });

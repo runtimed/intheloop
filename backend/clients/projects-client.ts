@@ -271,6 +271,24 @@ export class ProjectsClient {
     return this.request<ProjectSchema>("GET", `/${projectId}`);
   }
 
+  /**
+   * Delete a project
+   *
+   * Swagger path: /{project_id} (DELETE)
+   * Returns 204 on success (no content)
+   *
+   * @param projectId - The project ID to delete
+   * @returns Promise that resolves when deletion is complete
+   */
+  async deleteProject(projectId: string): Promise<void> {
+    await this.request<void>(
+      "DELETE",
+      `/${projectId}`,
+      undefined,
+      { expectEmpty: true }
+    );
+  }
+
   async listProjects(options?: {
     owner?: string; // "me", UUID, or null for all
   }): Promise<ProjectSchema[]> {

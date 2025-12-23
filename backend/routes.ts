@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
-import { authMiddleware, type AuthContext } from "./middleware.ts";
+import { authMiddleware, type RequestContext } from "./middleware.ts";
 import { type Env } from "./types.ts";
 
 // Import unified API key routes
@@ -26,9 +26,9 @@ import { createPermissionsProvider } from "./notebook-permissions/factory.ts";
 import type { TagColor } from "./trpc/types.ts";
 import { getBearerToken } from "./utils/request-utils.ts";
 import { createProjectIfNeeded, getProjectIdForNotebook } from "./utils/projects-utils.ts";
-import { ProjectsClient } from "./clients/projects-client.ts";
+import { projectsClientMiddleware } from "./middleware.ts";
 
-const api = new Hono<{ Bindings: Env; Variables: AuthContext }>();
+const api = new Hono<{ Bindings: Env; Variables: RequestContext }>();
 
 // Health endpoint - no auth required
 api.get("/health", (c) => {
@@ -86,7 +86,7 @@ const createNotebookSchema = z.object({
  * @param tags - Optional array of tag names to assign to notebook
  * @returns Created notebook with ID, title, owner, and timestamps
  */
-api.post("/notebooks", authMiddleware, async (c) => {
+api.post("/notebooks", authMiddleware, projectsClientMiddleware, async (c) => {
   const passport = c.get("passport");
   if (!passport) {
     return c.json({ error: "Authentication failed" }, 401);
@@ -112,7 +112,12 @@ api.post("/notebooks", authMiddleware, async (c) => {
 
     // Generate notebook ID
     const notebookId = createNotebookId();
-    let projectId: string | null = await createProjectIfNeeded(c.env, getBearerToken(c.req));
+    const projectsClient = c.get("projectsClient");
+    let projectId: string | null = await createProjectIfNeeded(
+      c.env,
+      getBearerToken(c.req),
+      projectsClient
+    );
     if (projectId) {
       console.log(`✅ Created project ${projectId} for notebook ${notebookId}`);
     }
@@ -235,8 +240,13 @@ api.get("/notebooks/:id", authMiddleware, async (c) => {
   }
 
   try {
-    // Create permissions provider
-    const permissionsProvider = createPermissionsProvider(c.env, getBearerToken(c.req));
+    // Create permissions provider (reuse scoped client if available)
+    const projectsClient = c.get("projectsClient");
+    const permissionsProvider = createPermissionsProvider(
+      c.env,
+      getBearerToken(c.req),
+      projectsClient
+    );
 
     // Check if user has access to this notebook
     const permissionResult = await permissionsProvider.checkPermission(
@@ -315,7 +325,7 @@ api.route("/api-keys", apiKeyRoutes);
 // These routes are only active when PERMISSIONS_PROVIDER is "anaconda";
 // existing R2-based /artifacts routes are kept for backward compatibility.
 
-api.post("/artifacts/:file_name/init", authMiddleware, async (c) => {
+api.post("/artifacts/:file_name/init", authMiddleware, projectsClientMiddleware, async (c) => {
   const passport = c.get("passport");
   if (!passport) {
     return c.json({ error: "Authentication failed" }, 401);
@@ -350,10 +360,12 @@ api.post("/artifacts/:file_name/init", authMiddleware, async (c) => {
   try {
     const bearerToken = getBearerToken(c.req);
 
-    // Ensure the user has access to this notebook
+    // Ensure the user has access to this notebook (reuse scoped client if available)
+    const projectsClient = c.get("projectsClient");
     const permissionsProvider = createPermissionsProvider(
       c.env,
-      bearerToken
+      bearerToken,
+      projectsClient
     );
     const permissionResult = await permissionsProvider.checkPermission(
       passport.user.id,
@@ -383,10 +395,15 @@ api.post("/artifacts/:file_name/init", authMiddleware, async (c) => {
       );
     }
     
-    const projectsClient = new ProjectsClient({
-      baseUrl: c.env.ANACONDA_PROJECTS_URL,
-      bearerToken,
-    });
+    if (!projectsClient) {
+      return c.json(
+        {
+          error: "Internal Server Error",
+          message: "Projects client not available",
+        },
+        500
+      );
+    }
 
     // Make the project public
     // Done here because setting this during project creation sometimes returns 403
@@ -415,7 +432,7 @@ api.post("/artifacts/:file_name/init", authMiddleware, async (c) => {
   }
 });
 
-api.post("/artifacts/:file_name/commit", authMiddleware, async (c) => {
+api.post("/artifacts/:file_name/commit", authMiddleware, projectsClientMiddleware, async (c) => {
   const passport = c.get("passport");
   if (!passport) {
     return c.json({ error: "Authentication failed" }, 401);
@@ -450,10 +467,12 @@ api.post("/artifacts/:file_name/commit", authMiddleware, async (c) => {
   try {
     const bearerToken = getBearerToken(c.req);
 
-    // Ensure the user has access to this notebook
+    // Ensure the user has access to this notebook (reuse scoped client if available)
+    const projectsClient = c.get("projectsClient");
     const permissionsProvider = createPermissionsProvider(
       c.env,
-      bearerToken
+      bearerToken,
+      projectsClient
     );
     const permissionResult = await permissionsProvider.checkPermission(
       passport.user.id,
@@ -483,10 +502,15 @@ api.post("/artifacts/:file_name/commit", authMiddleware, async (c) => {
       );
     }
 
-    const projectsClient = new ProjectsClient({
-      baseUrl: c.env.ANACONDA_PROJECTS_URL,
-      bearerToken,
-    });
+    if (!projectsClient) {
+      return c.json(
+        {
+          error: "Internal Server Error",
+          message: "Projects client not available",
+        },
+        500
+      );
+    }
 
     await projectsClient.commitFileVersion(projectId, fileVersionId);
 

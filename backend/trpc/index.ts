@@ -30,7 +30,7 @@ import {
 } from "./db.ts";
 import { authedProcedure, publicProcedure, router } from "./trpc";
 import { NotebookPermission, TagColor } from "./types.ts";
-import { createProjectIfNeeded } from "backend/utils/projects-utils.ts";
+import { createProjectIfNeeded, getProjectIdForNotebook } from "backend/utils/projects-utils.ts";
 
 // Create the tRPC router
 export const appRouter = router({
@@ -160,12 +160,16 @@ export const appRouter = router({
         bearerToken,
       } = ctx;
 
-      try {
-        const nbId = createNotebookId();
-        let projectId: string | null = await createProjectIfNeeded(ctx.env, bearerToken || "");
-        if (projectId) {
-          console.log(`✅ Created project ${projectId} for notebook ${nbId}`);
-        }
+        try {
+          const nbId = createNotebookId();
+          let projectId: string | null = await createProjectIfNeeded(
+            ctx.env,
+            bearerToken || "",
+            ctx.projectsClient
+          );
+          if (projectId) {
+            console.log(`✅ Created project ${projectId} for notebook ${nbId}`);
+          }
 
         const success = await createNotebook(DB, {
           id: nbId,
@@ -272,6 +276,11 @@ export const appRouter = router({
             code: "FORBIDDEN",
             message: "Only the owner can delete a notebook",
           });
+        }
+
+        const projectId = await getProjectIdForNotebook(DB, nbId);
+        if (projectId) {
+          await ctx.projectsClient?.deleteProject(projectId);
         }
 
         // Delete notebook (CASCADE will handle permissions)
