@@ -46,8 +46,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check": "pnpm type-check && pnpm lint && pnpm format:check",
-    "start": "echo 'Use `pnpm dev` to run the integrated server (frontend + backend). Legacy `dev:sync` script removed - now using Cloudflare Vite plugin.'",
-    "post-product": "tsx scripts/post-product.ts"
+    "start": "echo 'Use `pnpm dev` to run the integrated server (frontend + backend). Legacy `dev:sync` script removed - now using Cloudflare Vite plugin.'"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.18.6",
