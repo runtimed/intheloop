@@ -189,7 +189,9 @@ export class ProjectsClient {
     let responseVal: T | null = null;
 
     for (let attempt = 0; attempt < maxRetries; attempt++) {
-      console.log(`ProjectsClient request attempt ${attempt + 1} for ${method} ${this.config.baseUrl}${path}`);
+      console.log(
+        `ProjectsClient request attempt ${attempt + 1} for ${method} ${this.config.baseUrl}${path}`
+      );
       try {
         const url = `${this.config.baseUrl}${path}`;
 
@@ -202,7 +204,9 @@ export class ProjectsClient {
           body: body ? JSON.stringify(body) : undefined,
         });
 
-        console.log(`ProjectsClient response status: ${response.status} for ${method} ${this.config.baseUrl}${path}`);
+        console.log(
+          `ProjectsClient response status: ${response.status} for ${method} ${this.config.baseUrl}${path}`
+        );
 
         if (!response.ok) {
           const error = await response.text();
@@ -216,13 +220,17 @@ export class ProjectsClient {
           return undefined as T;
         }
 
-        responseVal = await response.json() as T;
+        responseVal = (await response.json()) as T;
         break; // Success, exit the retry loop
       } catch (error) {
         // If it's the last attempt or not a 5xx error, throw
         if (
           attempt === maxRetries - 1 ||
-          !(error instanceof ProjectsError && error.statusCode && error.statusCode >= 500)
+          !(
+            error instanceof ProjectsError &&
+            error.statusCode &&
+            error.statusCode >= 500
+          )
         ) {
           throw error;
         }
@@ -281,12 +289,9 @@ export class ProjectsClient {
    * @returns Promise that resolves when deletion is complete
    */
   async deleteProject(projectId: string): Promise<void> {
-    await this.request<void>(
-      "DELETE",
-      `/${projectId}`,
-      undefined,
-      { expectEmpty: true }
-    );
+    await this.request<void>("DELETE", `/${projectId}`, undefined, {
+      expectEmpty: true,
+    });
   }
 
   async listProjects(options?: {
@@ -296,23 +301,21 @@ export class ProjectsClient {
     let nextPageUrl: string | undefined = undefined;
 
     while (true) {
-      let url = '/';
-      
+      let url = "/";
+
       // Build query parameters for the first request
       if (!nextPageUrl) {
         const params = new URLSearchParams();
-        if (options?.owner) params.append('owner', options.owner);
-        
+        if (options?.owner) params.append("owner", options.owner);
+
         const queryString = params.toString();
         if (queryString) url += `?${queryString}`;
       } else {
-        url = nextPageUrl.replace(this.config.baseUrl, '');
+        url = nextPageUrl.replace(this.config.baseUrl, "");
       }
 
-      let listResponse: ProjectListResponse = await this.request<ProjectListResponse>(
-        "GET",
-        url
-      );
+      let listResponse: ProjectListResponse =
+        await this.request<ProjectListResponse>("GET", url);
       projects = projects.concat(listResponse.items);
       nextPageUrl = listResponse.next_page_url;
       if (!nextPageUrl) break;
@@ -324,7 +327,7 @@ export class ProjectsClient {
   // Permissions Management (via SpiceDB)
   // ============================================================
 
-  /** 
+  /**
    * Get project permissions
    *
    * @param projectId - The project ID

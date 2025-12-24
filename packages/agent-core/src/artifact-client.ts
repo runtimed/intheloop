@@ -112,9 +112,7 @@ export class ArtifactClient implements IArtifactClient {
           error: "Unknown error",
         }));
         throw new Error(
-          `Artifact submission failed: ${
-            error.error || response.statusText
-          }`
+          `Artifact submission failed: ${error.error || response.statusText}`
         );
       }
 

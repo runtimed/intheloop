@@ -30,7 +30,10 @@ import {
 } from "./db.ts";
 import { authedProcedure, publicProcedure, router } from "./trpc";
 import { NotebookPermission, TagColor } from "./types.ts";
-import { createProjectIfNeeded, getProjectIdForNotebook } from "backend/utils/projects-utils.ts";
+import {
+  createProjectIfNeeded,
+  getProjectIdForNotebook,
+} from "backend/utils/projects-utils.ts";
 
 // Create the tRPC router
 export const appRouter = router({
@@ -125,7 +128,9 @@ export const appRouter = router({
 
         const notebook = await getNotebookById(DB, nbId);
 
-        const collaborators = (await permissionsProvider.listPermissions(nbId)).filter((u) => u.level === "writer");
+        const collaborators = (
+          await permissionsProvider.listPermissions(nbId)
+        ).filter((u) => u.level === "writer");
         const tags = await getNotebookTags(DB, nbId, user.id);
 
         if (!notebook) {
@@ -135,7 +140,11 @@ export const appRouter = router({
           });
         }
 
-        return { ...notebook, collaborators: collaborators.map((c) => c.userId), tags };
+        return {
+          ...notebook,
+          collaborators: collaborators.map((c) => c.userId),
+          tags,
+        };
       } catch (error) {
         if (error instanceof TRPCError) throw error;
         throw new TRPCError({
@@ -160,16 +169,16 @@ export const appRouter = router({
         bearerToken,
       } = ctx;
 
-        try {
-          const nbId = createNotebookId();
-          let projectId: string | null = await createProjectIfNeeded(
-            ctx.env,
-            bearerToken || "",
-            ctx.projectsClient
-          );
-          if (projectId) {
-            console.log(`✅ Created project ${projectId} for notebook ${nbId}`);
-          }
+      try {
+        const nbId = createNotebookId();
+        let projectId: string | null = await createProjectIfNeeded(
+          ctx.env,
+          bearerToken || "",
+          ctx.projectsClient
+        );
+        if (projectId) {
+          console.log(`✅ Created project ${projectId} for notebook ${nbId}`);
+        }
 
         const success = await createNotebook(DB, {
           id: nbId,

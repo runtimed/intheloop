@@ -67,7 +67,7 @@ export async function uploadArtifactViaProjects(
     // and adding Content-Type can break the signature if it wasn't part of the signed request
     body,
   } = params;
-  
+
   // Suppress unused parameter warning - mimeType is part of the interface contract
   // but we can't use it in the upload step without potentially breaking the signature
   void params.mimeType;
@@ -108,7 +108,7 @@ export async function uploadArtifactViaProjects(
   // IMPORTANT: Pre-signed URLs are sensitive to headers. The signature was generated
   // with specific headers (or no headers). We must not add headers that weren't
   // part of the signature, or the signature validation will fail.
-  // 
+  //
   // For S3/R2 pre-signed URLs, if Content-Type was included in the signature,
   // it must match exactly. If it wasn't included, adding it will break the signature.
   // The Projects service should generate the URL with the correct headers already
@@ -137,9 +137,7 @@ export async function uploadArtifactViaProjects(
   if (!uploadResponse.ok) {
     const errorText = await uploadResponse.text().catch(() => "Unknown error");
     throw new Error(
-      `Artifact binary upload failed: ${
-        errorText || uploadResponse.statusText
-      }`
+      `Artifact binary upload failed: ${errorText || uploadResponse.statusText}`
     );
   }
 
@@ -182,5 +180,3 @@ export async function uploadArtifactViaProjects(
     fileUrl: initResult.fileUrl,
   };
 }
-
-

@@ -171,10 +171,7 @@ export default {
           router: appRouter,
           createContext: async (): Promise<TrcpContext> => {
             let authToken = extractAuthToken(request as unknown as Request);
-            let user = await getValidatedUser(
-              authToken,
-              env
-            );
+            let user = await getValidatedUser(authToken, env);
 
             // Initialize ProjectsClient per request (separate from auth)
             let projectsClient: ProjectsClient | undefined;
@@ -186,7 +183,11 @@ export default {
             }
 
             // Create permissions provider
-            const permissionsProvider = createPermissionsProvider(env, authToken ?? "", projectsClient);
+            const permissionsProvider = createPermissionsProvider(
+              env,
+              authToken ?? "",
+              projectsClient
+            );
 
             return {
               env,

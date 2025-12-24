@@ -24,10 +24,12 @@ export function createPermissionsProvider(
   switch (serviceProvider) {
     case "anaconda":
       try {
-        const client = projectsClient || new ProjectsClient({
-          baseUrl: env.ANACONDA_PROJECTS_URL,
-          bearerToken: bearerToken,
-        });
+        const client =
+          projectsClient ||
+          new ProjectsClient({
+            baseUrl: env.ANACONDA_PROJECTS_URL,
+            bearerToken: bearerToken,
+          });
         return new AnacondaPermissionsProvider(client, env.DB);
       } catch (error) {
         throw new RuntError(ErrorType.ServerMisconfigured, {

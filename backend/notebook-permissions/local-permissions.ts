@@ -13,7 +13,6 @@ import {
 } from "../users/utils.ts";
 import { NotebookRow } from "backend/trpc/types.ts";
 
-
 /**
  * Local permissions provider using D1 database
  */

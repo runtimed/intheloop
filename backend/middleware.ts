@@ -131,6 +131,6 @@ export const projectsClientMiddleware = createMiddleware<{
       c.set("projectsClient", projectsClient);
     }
   }
-  
+
   await next();
 });

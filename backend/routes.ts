@@ -25,7 +25,10 @@ import {
 import { createPermissionsProvider } from "./notebook-permissions/factory.ts";
 import type { TagColor } from "./trpc/types.ts";
 import { getBearerToken } from "./utils/request-utils.ts";
-import { createProjectIfNeeded, getProjectIdForNotebook } from "./utils/projects-utils.ts";
+import {
+  createProjectIfNeeded,
+  getProjectIdForNotebook,
+} from "./utils/projects-utils.ts";
 import { projectsClientMiddleware } from "./middleware.ts";
 
 const api = new Hono<{ Bindings: Env; Variables: RequestContext }>();
@@ -325,212 +328,220 @@ api.route("/api-keys", apiKeyRoutes);
 // These routes are only active when PERMISSIONS_PROVIDER is "anaconda";
 // existing R2-based /artifacts routes are kept for backward compatibility.
 
-api.post("/artifacts/:file_name/init", authMiddleware, projectsClientMiddleware, async (c) => {
-  const passport = c.get("passport");
-  if (!passport) {
-    return c.json({ error: "Authentication failed" }, 401);
-  }
-
-  if (c.env.PERMISSIONS_PROVIDER !== "anaconda") {
-    return c.redirect("/artifacts", 307);
-  }
-
-  const notebookId = c.req.header("x-notebook-id");
-  if (!notebookId) {
-    return c.json(
-      {
-        error: "Bad Request",
-        message: "x-notebook-id header is required",
-      },
-      400
-    );
-  }
-
-  const fileName = c.req.param("file_name");
-  if (!fileName) {
-    return c.json(
-      {
-        error: "Bad Request",
-        message: "file_name path parameter is required",
-      },
-      400
-    );
-  }
-
-  try {
-    const bearerToken = getBearerToken(c.req);
-
-    // Ensure the user has access to this notebook (reuse scoped client if available)
-    const projectsClient = c.get("projectsClient");
-    const permissionsProvider = createPermissionsProvider(
-      c.env,
-      bearerToken,
-      projectsClient
-    );
-    const permissionResult = await permissionsProvider.checkPermission(
-      passport.user.id,
-      notebookId
-    );
-
-    if (!permissionResult.hasAccess) {
-      return c.json(
-        {
-          error: "Not Found",
-          message: "Notebook not found or access denied",
-        },
-        404
-      );
+api.post(
+  "/artifacts/:file_name/init",
+  authMiddleware,
+  projectsClientMiddleware,
+  async (c) => {
+    const passport = c.get("passport");
+    if (!passport) {
+      return c.json({ error: "Authentication failed" }, 401);
     }
 
-    // Look up project_id for this notebook
-    const projectId = await getProjectIdForNotebook(c.env.DB, notebookId);
-    if (!projectId) {
+    if (c.env.PERMISSIONS_PROVIDER !== "anaconda") {
+      return c.redirect("/artifacts", 307);
+    }
+
+    const notebookId = c.req.header("x-notebook-id");
+    if (!notebookId) {
       return c.json(
         {
           error: "Bad Request",
-          message:
-            "Notebook is not associated with a project",
+          message: "x-notebook-id header is required",
         },
-        404
+        400
       );
     }
-    
-    if (!projectsClient) {
+
+    const fileName = c.req.param("file_name");
+    if (!fileName) {
+      return c.json(
+        {
+          error: "Bad Request",
+          message: "file_name path parameter is required",
+        },
+        400
+      );
+    }
+
+    try {
+      const bearerToken = getBearerToken(c.req);
+
+      // Ensure the user has access to this notebook (reuse scoped client if available)
+      const projectsClient = c.get("projectsClient");
+      const permissionsProvider = createPermissionsProvider(
+        c.env,
+        bearerToken,
+        projectsClient
+      );
+      const permissionResult = await permissionsProvider.checkPermission(
+        passport.user.id,
+        notebookId
+      );
+
+      if (!permissionResult.hasAccess) {
+        return c.json(
+          {
+            error: "Not Found",
+            message: "Notebook not found or access denied",
+          },
+          404
+        );
+      }
+
+      // Look up project_id for this notebook
+      const projectId = await getProjectIdForNotebook(c.env.DB, notebookId);
+      if (!projectId) {
+        return c.json(
+          {
+            error: "Bad Request",
+            message: "Notebook is not associated with a project",
+          },
+          404
+        );
+      }
+
+      if (!projectsClient) {
+        return c.json(
+          {
+            error: "Internal Server Error",
+            message: "Projects client not available",
+          },
+          500
+        );
+      }
+
+      // Make the project public
+      // Done here because setting this during project creation sometimes returns 403
+      // Workaround until we can authenticate artifact reads
+      await projectsClient.setPermissions(projectId, {
+        is_public: true,
+      });
+
+      const preload = await projectsClient.preloadFile(projectId, fileName);
+
+      // Normalize keys for the client.
+      return c.json({
+        uploadUrl: preload.signed_url,
+        fileUrl: preload.url,
+        fileVersionId: preload.file_version_id,
+      });
+    } catch (error) {
+      console.error("❌ Artifact init via Projects service failed:", error);
       return c.json(
         {
           error: "Internal Server Error",
-          message: "Projects client not available",
+          message: "Failed to initialize artifact upload",
         },
         500
       );
     }
-
-    // Make the project public
-    // Done here because setting this during project creation sometimes returns 403
-    // Workaround until we can authenticate artifact reads
-    await projectsClient.setPermissions(projectId, {
-      is_public: true,
-    }); 
-
-    const preload = await projectsClient.preloadFile(projectId, fileName);
-
-    // Normalize keys for the client.
-    return c.json({
-      uploadUrl: preload.signed_url,
-      fileUrl: preload.url,
-      fileVersionId: preload.file_version_id,
-    });
-  } catch (error) {
-    console.error("❌ Artifact init via Projects service failed:", error);
-    return c.json(
-      {
-        error: "Internal Server Error",
-        message: "Failed to initialize artifact upload",
-      },
-      500
-    );
   }
-});
+);
 
-api.post("/artifacts/:file_name/commit", authMiddleware, projectsClientMiddleware, async (c) => {
-  const passport = c.get("passport");
-  if (!passport) {
-    return c.json({ error: "Authentication failed" }, 401);
-  }
+api.post(
+  "/artifacts/:file_name/commit",
+  authMiddleware,
+  projectsClientMiddleware,
+  async (c) => {
+    const passport = c.get("passport");
+    if (!passport) {
+      return c.json({ error: "Authentication failed" }, 401);
+    }
 
-  if (c.env.PERMISSIONS_PROVIDER !== "anaconda") {
-    return c.json(
-      {
-        error: "Not Implemented",
-        message:
-          "Multi-step artifact uploads are not supported for this provider",
-      },
-      400
-    );
-  }
-
-  const notebookId = c.req.header("x-notebook-id");
-  if (!notebookId) {
-    return c.json(
-      {
-        error: "Bad Request",
-        message: "x-notebook-id header is required",
-      },
-      400
-    );
-  }
-
-  const body = await c.req.json();
-
-  const { fileVersionId } = body;
-
-  try {
-    const bearerToken = getBearerToken(c.req);
-
-    // Ensure the user has access to this notebook (reuse scoped client if available)
-    const projectsClient = c.get("projectsClient");
-    const permissionsProvider = createPermissionsProvider(
-      c.env,
-      bearerToken,
-      projectsClient
-    );
-    const permissionResult = await permissionsProvider.checkPermission(
-      passport.user.id,
-      notebookId
-    );
-
-    if (!permissionResult.hasAccess) {
+    if (c.env.PERMISSIONS_PROVIDER !== "anaconda") {
       return c.json(
         {
-          error: "Not Found",
-          message: "Notebook not found or access denied",
+          error: "Not Implemented",
+          message:
+            "Multi-step artifact uploads are not supported for this provider",
         },
-        404
+        400
       );
     }
 
-    const projectId = await getProjectIdForNotebook(c.env.DB, notebookId);
-
-    if (!projectId) {
+    const notebookId = c.req.header("x-notebook-id");
+    if (!notebookId) {
       return c.json(
         {
           error: "Bad Request",
-          message:
-            "Notebook is not associated with a project",
+          message: "x-notebook-id header is required",
         },
-        404
+        400
       );
     }
 
-    if (!projectsClient) {
+    const body = await c.req.json();
+
+    const { fileVersionId } = body;
+
+    try {
+      const bearerToken = getBearerToken(c.req);
+
+      // Ensure the user has access to this notebook (reuse scoped client if available)
+      const projectsClient = c.get("projectsClient");
+      const permissionsProvider = createPermissionsProvider(
+        c.env,
+        bearerToken,
+        projectsClient
+      );
+      const permissionResult = await permissionsProvider.checkPermission(
+        passport.user.id,
+        notebookId
+      );
+
+      if (!permissionResult.hasAccess) {
+        return c.json(
+          {
+            error: "Not Found",
+            message: "Notebook not found or access denied",
+          },
+          404
+        );
+      }
+
+      const projectId = await getProjectIdForNotebook(c.env.DB, notebookId);
+
+      if (!projectId) {
+        return c.json(
+          {
+            error: "Bad Request",
+            message: "Notebook is not associated with a project",
+          },
+          404
+        );
+      }
+
+      if (!projectsClient) {
+        return c.json(
+          {
+            error: "Internal Server Error",
+            message: "Projects client not available",
+          },
+          500
+        );
+      }
+
+      await projectsClient.commitFileVersion(projectId, fileVersionId);
+
+      return c.json({
+        status: "ok",
+        notebookId,
+        fileName: c.req.param("file_name"),
+        fileVersionId,
+      });
+    } catch (error) {
+      console.error("❌ Artifact commit via Projects service failed:", error);
       return c.json(
         {
           error: "Internal Server Error",
-          message: "Projects client not available",
+          message: "Failed to finalize artifact upload",
         },
         500
       );
     }
-
-    await projectsClient.commitFileVersion(projectId, fileVersionId);
-
-    return c.json({
-      status: "ok",
-      notebookId,
-      fileName: c.req.param("file_name"),
-      fileVersionId,
-    });
-  } catch (error) {
-    console.error("❌ Artifact commit via Projects service failed:", error);
-    return c.json(
-      {
-        error: "Internal Server Error",
-        message: "Failed to finalize artifact upload",
-      },
-      500
-    );
   }
-});
+);
 
 // Legacy R2-based artifact upload (kept for backward compatibility)
 // POST /artifacts - Upload artifact (requires auth)
