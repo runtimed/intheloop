@@ -5,14 +5,15 @@ interface EnvConfig {
 }
 
 const DEVELOPMENT_DEFAULTS: EnvConfig = {
-  VITE_AUTH_URI: "http://localhost:8787/local_oidc",
-  VITE_AUTH_CLIENT_ID: "local-anode-client",
+  VITE_AUTH_URI: "https://auth.stage.anaconda.com/api/auth",
+  VITE_AUTH_CLIENT_ID: "b7296d39-c1eb-49f4-b9a1-f36e6d5b8b6d",
   VITE_AUTH_REDIRECT_URI: "http://localhost:5173/oidc",
   VITE_LIVESTORE_SYNC_URL: "ws://localhost:8787/livestore",
   VITE_IFRAME_OUTPUT_URI: "http://localhost:8000",
   VITE_AI_PROVIDER: "anaconda",
   VITE_LS_DEV: "true",
   ENABLE_LIVESTORE_DEVTOOLS: "false",
+  VITE_USE_PROJECTS_ARTIFACTS: "true",
 };
 
 const REQUIRED_ENV_VARS = Object.keys(DEVELOPMENT_DEFAULTS);

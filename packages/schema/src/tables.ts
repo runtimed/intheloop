@@ -29,6 +29,7 @@ export const tables = {
       fileName: State.SQLite.text({ primaryKey: true }),
       mimeType: State.SQLite.text(),
       artifactId: State.SQLite.text(),
+      fileUrl: State.SQLite.text({ nullable: true }), // Direct URL for Projects-backed artifacts
       createdAt: State.SQLite.datetime({ nullable: true }),
       createdBy: State.SQLite.text(),
       deletedAt: State.SQLite.datetime({ nullable: true }),

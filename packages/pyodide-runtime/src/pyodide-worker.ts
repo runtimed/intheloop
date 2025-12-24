@@ -153,7 +153,18 @@ await run_registered_tool("${data.toolName}", kwargs_string)
                 });
               }
             } else {
-              const response = await fetch(`/api/artifacts/${file.artifactId}`);
+              // For Projects-backed artifacts, use fileUrl if available (direct access)
+              // Otherwise fall back to the GET endpoint (works for both R2 and Projects)
+              const artifactUrl =
+                file.fileUrl || `/api/artifacts/${file.artifactId}`;
+
+              const response = await fetch(artifactUrl);
+
+              if (!response.ok) {
+                throw new Error(
+                  `Failed to fetch artifact ${file.artifactId}: ${response.status} ${response.statusText}`
+                );
+              }
 
               // Handle different file types based on mimeType
               if (file.mimeType && file.mimeType.startsWith("text/")) {

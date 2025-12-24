@@ -1,7 +1,7 @@
 # This is an example file for local Worker development.
 # Copy this file to .dev.vars and fill in the values.
 # This file SHOULD NOT contain real production secrets.
-AUTH_ISSUER="http://localhost:8787/local_oidc"
+AUTH_ISSUER="https://auth.stage.anaconda.com/api/auth"
 
 # Local authentication control
 # Set to "true" to enable local OIDC endpoints for development

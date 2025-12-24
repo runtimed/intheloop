@@ -32,12 +32,8 @@ const getBaseIssuer = (context: ProviderContext): URL => {
   const issuer = context.env.AUTH_ISSUER;
   const match = issuer.match(/^http:\/\/localhost:(\d+)\/local_oidc$/);
   if (!match) {
-    throw new RuntError(ErrorType.ServerMisconfigured, {
-      message: "Cannot determine the api key issuer from the AUTH_ISSUER",
-      debugPayload: {
-        issuer,
-      },
-    });
+    // default for local development
+    return new URL(`http://localhost:8787/api/api-keys`);
   }
   return new URL(`http://localhost:${match[1]}/api/api-keys`);
 };
