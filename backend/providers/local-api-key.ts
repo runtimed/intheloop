@@ -29,8 +29,13 @@ import { RuntError, ErrorType, type Env } from "../types.ts";
 import { type Passport, type ValidatedUser } from "../auth.ts";
 
 const getBaseIssuer = (context: ProviderContext): URL => {
-  // TODO
-  return new URL(`http://localhost:8787/api/api-keys`);
+  const issuer = context.env.AUTH_ISSUER;
+  const match = issuer.match(/^http:\/\/localhost:(\d+)\/local_oidc$/);
+  if (!match) {
+    // default for local development
+    return new URL(`http://localhost:8787/api/api-keys`);
+  }
+  return new URL(`http://localhost:${match[1]}/api/api-keys`);
 };
 
 const claimToMaybeString = (item: unknown): string | undefined => {
