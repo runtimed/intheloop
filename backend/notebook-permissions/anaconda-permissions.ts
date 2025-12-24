@@ -71,7 +71,7 @@ export class AnacondaPermissionsProvider implements PermissionsProvider {
         
     }
     async grantPermission(input: GrantPermissionInput): Promise<void> {
-        if (!await this.isOwner(input.userId, input.notebookId)) {
+        if (!await this.isOwner(input.grantedBy, input.notebookId)) {
             throw new Error("Only owners can grant permissions");
         }
 
@@ -123,12 +123,13 @@ export class AnacondaPermissionsProvider implements PermissionsProvider {
             permissionsResponse = await this.client.getPermissions(projectId);
         }
         catch {
+            console.error("Failed to get permissions", projectId);
             return permissions;
         }
 
         for (const item of permissionsResponse.items) {
             if (item.type === "user_id" && item.id !== "*") {
-                if (item.relation in ["owner", "writer"]) {
+                if (["owner", "writer"].includes(item.relation)) {
                     permissions.push({
                         userId: item.id,
                         level: item.relation === "owner" ? "owner" : "writer",
@@ -162,29 +163,4 @@ export class AnacondaPermissionsProvider implements PermissionsProvider {
         // Method not used for now. Not implemented yet.
         throw new Error("Method not implemented.");
     }
-    /*
-    async fetchAccessibleResourcesWithData?(userId: string, resourceType: "notebook", options: { owned?: boolean; shared?: boolean; limit?: number; offset?: number; }): Promise<any[] | null> {
-        if (resourceType !== "notebook") {
-            throw new Error(`Unsupported resource type ${resourceType}`);
-        }
-
-        let fetchOwned = options.owned ?? true;
-        let fetchShared = options.shared ?? true;
-
-        let projectOptions: any = {};
-        if (fetchOwned && !fetchShared) {
-            projectOptions.owner = "me";
-        }
-
-        let projects = await this.client.listProjects(projectOptions);
-        if (fetchShared && !fetchOwned) {
-            // Filter out owned projects
-            projects = projects.filter(proj =>
-                proj.owner?.type !== "user" || proj.owner?.id !== userId);
-        }
-        let projectIds = projects.map(proj => proj.id);
-        let notebookIds = await this.getNotebookIdsByProjectIds(projectIds);
-        return notebookIds;
-    }
-    */
 }

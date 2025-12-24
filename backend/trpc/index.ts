@@ -125,7 +125,7 @@ export const appRouter = router({
 
         const notebook = await getNotebookById(DB, nbId);
 
-        const collaborators = await getNotebookCollaborators(DB, nbId);
+        const collaborators = (await permissionsProvider.listPermissions(nbId)).filter((u) => u.level === "writer");
         const tags = await getNotebookTags(DB, nbId, user.id);
 
         if (!notebook) {
@@ -135,7 +135,7 @@ export const appRouter = router({
           });
         }
 
-        return { ...notebook, collaborators, tags };
+        return { ...notebook, collaborators: collaborators.map((c) => c.userId), tags };
       } catch (error) {
         if (error instanceof TRPCError) throw error;
         throw new TRPCError({
@@ -403,7 +403,6 @@ export const appRouter = router({
         const writers = (
           await permissionsProvider.listPermissions(nbId)
         ).filter((u) => u.level === "writer");
-
         if (writers.length === 0) {
           return [];
         }
