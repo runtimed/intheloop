@@ -330,6 +330,63 @@ function HealthPageInner() {
     }
   };
 
+  // Group health checks by section
+  const apiStackChecks = healthStatuses.filter(
+    (health) =>
+      health.name.includes("Cloudflare") ||
+      health.name.includes("Hono") ||
+      health.name.includes("Sync") ||
+      health.name.includes("tRPC")
+  );
+
+  const liveStoreChecks = healthStatuses.filter((health) =>
+    health.name.includes("LiveStore")
+  );
+
+  const iframeChecks = healthStatuses.filter((health) =>
+    health.name.includes("Iframe")
+  );
+
+  const renderHealthCard = (health: HealthStatus, index: number) => (
+    <div
+      key={index}
+      className={`rounded-lg border p-4 ${getStatusColor(health.status)}`}
+    >
+      <div className="mb-2 flex items-center justify-between">
+        <h3 className="text-lg font-semibold">{health.name}</h3>
+        <span className="text-2xl">{getStatusIcon(health.status)}</span>
+      </div>
+
+      {health.status === "loading" && <p className="text-sm">Checking...</p>}
+
+      {health.error && (
+        <div className="mt-2">
+          <p className="text-sm font-medium">Error:</p>
+          <p className="text-sm">{health.error}</p>
+        </div>
+      )}
+
+      {health.data && (
+        <div className="mt-2">
+          <details className="text-sm">
+            <summary className="cursor-pointer font-medium">
+              View Details
+            </summary>
+            <pre className="mt-2 overflow-auto rounded bg-white/50 p-2 text-xs">
+              {JSON.stringify(health.data, null, 2)}
+            </pre>
+          </details>
+        </div>
+      )}
+
+      {health.timestamp && (
+        <p className="mt-2 text-xs opacity-70">
+          Checked: {new Date(health.timestamp).toLocaleString()}
+        </p>
+      )}
+    </div>
+  );
+
   return (
     <div className="container mx-auto max-w-6xl p-6">
       <div className="mb-8">
@@ -344,90 +401,92 @@ function HealthPageInner() {
         <LiveStoreHealthChecker onStatusChange={setLiveStoreStatus} />
       </CustomLiveStoreProvider>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        {healthStatuses.map((health, index) => (
-          <div
-            key={index}
-            className={`rounded-lg border p-4 ${getStatusColor(health.status)}`}
-          >
-            <div className="mb-2 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">{health.name}</h3>
-              <span className="text-2xl">{getStatusIcon(health.status)}</span>
-            </div>
+      {/* API Stack Section */}
+      <div className="mb-8">
+        <h2 className="mb-4 text-2xl font-semibold">1. API Stack</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          {apiStackChecks.map((health, index) =>
+            renderHealthCard(health, index)
+          )}
+        </div>
+      </div>
 
-            {health.status === "loading" && (
-              <p className="text-sm">Checking...</p>
-            )}
+      {/* LiveStore Section */}
+      <div className="mb-8">
+        <h2 className="mb-4 text-2xl font-semibold">2. LiveStore</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          {liveStoreChecks.map((health, index) =>
+            renderHealthCard(health, index)
+          )}
+        </div>
+      </div>
 
-            {health.error && (
-              <div className="mt-2">
-                <p className="text-sm font-medium">Error:</p>
-                <p className="text-sm">{health.error}</p>
-              </div>
-            )}
-
-            {health.data && (
-              <div className="mt-2">
-                <details className="text-sm">
-                  <summary className="cursor-pointer font-medium">
-                    View Details
-                  </summary>
-                  <pre className="mt-2 overflow-auto rounded bg-white/50 p-2 text-xs">
-                    {JSON.stringify(health.data, null, 2)}
-                  </pre>
-                </details>
-              </div>
-            )}
-
-            {health.timestamp && (
-              <p className="mt-2 text-xs opacity-70">
-                Checked: {new Date(health.timestamp).toLocaleString()}
-              </p>
-            )}
-          </div>
-        ))}
+      {/* Iframe Section */}
+      <div className="mb-8">
+        <h2 className="mb-4 text-2xl font-semibold">3. Iframe</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          {iframeChecks.map((health, index) => renderHealthCard(health, index))}
+        </div>
       </div>
 
       <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-4">
-        <h2 className="mb-2 text-xl font-semibold">Endpoints</h2>
-        <ul className="list-inside list-disc space-y-1 text-sm">
-          <li>
-            <code className="rounded bg-white px-1">
-              GET /cloudflare-health
-            </code>{" "}
-            - Basic Cloudflare health check
-          </li>
-          <li>
-            <code className="rounded bg-white px-1">GET /api/health</code> -
-            Hono framework health check
-          </li>
-          <li>
-            <code className="rounded bg-white px-1">
-              GET /api/health/authed
-            </code>{" "}
-            - Authenticated Hono health check
-          </li>
-          <li>
-            <code className="rounded bg-white px-1">GET /api/health/sync</code>{" "}
-            - Sync service health check
-          </li>
-          <li>
-            <code className="rounded bg-white px-1">tRPC health</code> - tRPC
-            public health query
-          </li>
-          <li>
-            <code className="rounded bg-white px-1">tRPC healthAuthed</code> -
-            tRPC authenticated health query
-          </li>
-          <li>
-            <code className="rounded bg-white px-1">Iframe Outputs</code> -
-            Iframe outputs service health check
-          </li>
-          <li>
-            <code className="rounded bg-white px-1">LiveStore</code> - LiveStore
-            configuration and connectivity check
-          </li>
-        </ul>
+        <h2 className="mb-4 text-xl font-semibold">Endpoints</h2>
+
+        <div className="mb-4">
+          <h3 className="mb-2 font-semibold">1. API Stack</h3>
+          <ul className="list-inside list-disc space-y-1 text-sm">
+            <li>
+              <code className="rounded bg-white px-1">
+                GET /cloudflare-health
+              </code>{" "}
+              - Basic Cloudflare health check
+            </li>
+            <li>
+              <code className="rounded bg-white px-1">GET /api/health</code> -
+              Hono framework health check
+            </li>
+            <li>
+              <code className="rounded bg-white px-1">
+                GET /api/health/authed
+              </code>{" "}
+              - Authenticated Hono health check
+            </li>
+            <li>
+              <code className="rounded bg-white px-1">
+                GET /api/health/sync
+              </code>{" "}
+              - Sync service health check
+            </li>
+            <li>
+              <code className="rounded bg-white px-1">tRPC health</code> - tRPC
+              public health query
+            </li>
+            <li>
+              <code className="rounded bg-white px-1">tRPC healthAuthed</code> -
+              tRPC authenticated health query
+            </li>
+          </ul>
+        </div>
+
+        <div className="mb-4">
+          <h3 className="mb-2 font-semibold">2. LiveStore</h3>
+          <ul className="list-inside list-disc space-y-1 text-sm">
+            <li>
+              <code className="rounded bg-white px-1">LiveStore</code> -
+              LiveStore configuration and connectivity check
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="mb-2 font-semibold">3. Iframe</h3>
+          <ul className="list-inside list-disc space-y-1 text-sm">
+            <li>
+              <code className="rounded bg-white px-1">Iframe Outputs</code> -
+              Iframe outputs service health check
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );
