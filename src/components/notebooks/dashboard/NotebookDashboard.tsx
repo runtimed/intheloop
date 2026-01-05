@@ -24,6 +24,7 @@ import {
 } from "./helpers";
 import { NoResults, Results } from "./Results";
 import { useTitle } from "react-use";
+import { Link } from "react-router-dom";
 
 const DebugNotebooks = React.lazy(() =>
   import("./DebugNotebooks").then((mod) => ({ default: mod.DebugNotebooks }))
@@ -138,6 +139,12 @@ function Filters({ allNotebooks }: { allNotebooks: NotebookProcessed[] }) {
     <div className="space-y-6 p-4">
       {/* Navigation */}
       <nav className="space-y-1">
+        <Link
+          to="/health"
+          className="text-sm text-gray-500 hover:text-gray-700"
+        >
+          Health
+        </Link>
         <button
           onClick={() => setActiveFilter("named")}
           className={`group flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${

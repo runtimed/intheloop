@@ -55,6 +55,11 @@ const FeatureFlagsPage = React.lazy(() =>
     default: mod.FeatureFlagsPage,
   }))
 );
+const HealthPage = React.lazy(() =>
+  import("./pages/HealthPage").then((mod) => ({
+    default: mod.HealthPage,
+  }))
+);
 
 import { ErrorBoundary } from "react-error-boundary";
 import { Confirmer, ConfirmProvider } from "./components/ui/confirm";
@@ -150,6 +155,14 @@ export const App: React.FC = () => {
                 }
               />
               <Route path="/feature-flags" element={<FeatureFlagsPage />} />
+              <Route
+                path="/health"
+                element={
+                  <AuthGuard>
+                    <HealthPage />
+                  </AuthGuard>
+                }
+              />
             </Routes>
             <FPSMeter />
             <Toaster />

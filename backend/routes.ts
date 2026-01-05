@@ -51,6 +51,28 @@ api.get("/health", (c) => {
   });
 });
 
+// Authed health endpoint - requires authentication
+api.get("/health/authed", authMiddleware, (c) => {
+  const passport = c.get("passport");
+  if (!passport) {
+    return c.json({ error: "Authentication failed" }, 401);
+  }
+
+  return c.json({
+    status: "healthy",
+    authenticated: true,
+    deployment_env: c.env.DEPLOYMENT_ENV,
+    timestamp: new Date().toISOString(),
+    framework: "hono",
+    user: {
+      id: passport.user.id,
+      email: passport.user.email,
+      name: passport.user.name,
+      isAnonymous: passport.user.isAnonymous,
+    },
+  });
+});
+
 // Me endpoint - returns authenticated user info
 api.get("/me", authMiddleware, (c) => {
   const passport = c.get("passport");
@@ -276,6 +298,32 @@ api.get("/notebooks/:id", authMiddleware, async (c) => {
       {
         error: "Internal Server Error",
         message: "Failed to retrieve notebook",
+      },
+      500
+    );
+  }
+});
+
+// Sync health endpoint - checks if sync service is available
+api.get("/health/sync", async (c) => {
+  try {
+    // Check if WebSocket server binding exists
+    const hasWebSocketServer = Boolean(c.env.WEBSOCKET_SERVER);
+
+    return c.json({
+      status: "healthy",
+      service: "sync",
+      timestamp: new Date().toISOString(),
+      websocket_server_available: hasWebSocketServer,
+      deployment_env: c.env.DEPLOYMENT_ENV,
+    });
+  } catch (error) {
+    return c.json(
+      {
+        status: "unhealthy",
+        service: "sync",
+        timestamp: new Date().toISOString(),
+        error: error instanceof Error ? error.message : "Unknown error",
       },
       500
     );
