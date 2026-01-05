@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { TrpcProvider, useTrpc } from "@/components/TrpcProvider";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/auth";
+import { CustomLiveStoreProvider } from "@/livestore/CustomLiveStoreProvider";
+import { useQuery as useLiveStoreQuery, useStore } from "@livestore/react";
+import { queryDb, tables, events } from "@runtimed/schema";
 
 interface HealthStatus {
   name: string;
@@ -11,10 +14,74 @@ interface HealthStatus {
   timestamp?: string;
 }
 
+// Component to check LiveStore health
+function LiveStoreHealthChecker({
+  onStatusChange,
+}: {
+  onStatusChange: (status: HealthStatus) => void;
+}) {
+  const { store } = useStore();
+
+  // Try to query a simple table to verify LiveStore is working
+  const debugRecords = useLiveStoreQuery(
+    queryDb(tables.debug.select("id").limit(1))
+  );
+
+  useEffect(() => {
+    // Initial loading state
+    if (!store) {
+      onStatusChange({
+        name: "LiveStore",
+        status: "loading",
+      });
+      return;
+    }
+
+    try {
+      // Try to commit a test event to verify write capability
+      const testId = `health-check-${Date.now()}`;
+      store.commit(
+        events.debug1({
+          id: testId,
+        })
+      );
+
+      // Query should work without errors
+      const queryResult = debugRecords;
+
+      // If we get here, LiveStore is working
+      onStatusChange({
+        name: "LiveStore",
+        status: "healthy",
+        data: {
+          storeId: store.storeId,
+          queryWorking: true,
+          writeWorking: true,
+          debugRecordsCount: queryResult.length,
+        },
+        timestamp: new Date().toISOString(),
+      });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
+      onStatusChange({
+        name: "LiveStore",
+        status: "error",
+        error: errorMessage,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }, [store, debugRecords, onStatusChange]);
+
+  return null;
+}
+
 function HealthPageInner() {
   const { accessToken } = useAuth();
   const trpc = useTrpc();
   const [healthStatuses, setHealthStatuses] = useState<HealthStatus[]>([]);
+  const [liveStoreStatus, setLiveStoreStatus] = useState<HealthStatus | null>(
+    null
+  );
 
   // tRPC health queries
   const trpcHealth = useQuery(trpc.health.queryOptions());
@@ -146,6 +213,7 @@ function HealthPageInner() {
         { name: "Iframe Outputs", status: "loading" },
         { name: "tRPC health", status: "loading" },
         { name: "tRPC healthAuthed", status: "loading" },
+        { name: "LiveStore", status: "loading" },
       ]);
 
       const [cloudflare, hono, authedHono, sync, iframe] = await Promise.all([
@@ -213,6 +281,16 @@ function HealthPageInner() {
         });
       }
 
+      // Add LiveStore status if available
+      if (liveStoreStatus) {
+        results.push(liveStoreStatus);
+      } else {
+        results.push({
+          name: "LiveStore",
+          status: "loading",
+        });
+      }
+
       setHealthStatuses(results);
     };
 
@@ -223,6 +301,7 @@ function HealthPageInner() {
     trpcHealthAuthed.data,
     trpcHealthAuthed.error,
     accessToken,
+    liveStoreStatus,
   ]);
 
   const getStatusColor = (status: HealthStatus["status"]) => {
@@ -259,6 +338,11 @@ function HealthPageInner() {
           Real-time health checks for all API endpoints and services.
         </p>
       </div>
+
+      {/* LiveStore Health Check */}
+      <CustomLiveStoreProvider storeId="health-check-test">
+        <LiveStoreHealthChecker onStatusChange={setLiveStoreStatus} />
+      </CustomLiveStoreProvider>
 
       <div className="grid gap-4 md:grid-cols-2">
         {healthStatuses.map((health, index) => (
@@ -338,6 +422,10 @@ function HealthPageInner() {
           <li>
             <code className="rounded bg-white px-1">Iframe Outputs</code> -
             Iframe outputs service health check
+          </li>
+          <li>
+            <code className="rounded bg-white px-1">LiveStore</code> - LiveStore
+            configuration and connectivity check
           </li>
         </ul>
       </div>
