@@ -155,27 +155,6 @@ function HealthPageInner() {
       }
     };
 
-    // Fetch sync health
-    const fetchSyncHealth = async (): Promise<HealthStatus> => {
-      try {
-        const response = await fetch("/api/health/sync");
-        const data = await response.json();
-        return {
-          name: "Sync GET /api/health/sync",
-          status: response.ok ? ("healthy" as const) : ("unhealthy" as const),
-          data,
-          timestamp: new Date().toISOString(),
-        };
-      } catch (error) {
-        return {
-          name: "Sync GET /api/health/sync",
-          status: "error" as const,
-          error: error instanceof Error ? error.message : "Unknown error",
-          timestamp: new Date().toISOString(),
-        };
-      }
-    };
-
     // Fetch iframe outputs health
     const fetchIframeHealth = async (): Promise<HealthStatus> => {
       try {
@@ -209,28 +188,20 @@ function HealthPageInner() {
         { name: "Cloudflare GET /health", status: "loading" },
         { name: "Hono GET /api/health", status: "loading" },
         { name: "Hono GET /api/health/authed", status: "loading" },
-        { name: "Sync GET /api/health/sync", status: "loading" },
         { name: "Iframe Outputs", status: "loading" },
         { name: "tRPC health", status: "loading" },
         { name: "tRPC healthAuthed", status: "loading" },
         { name: "LiveStore", status: "loading" },
       ]);
 
-      const [cloudflare, hono, authedHono, sync, iframe] = await Promise.all([
+      const [cloudflare, hono, authedHono, iframe] = await Promise.all([
         fetchCloudflareHealth(),
         fetchHonoHealth(),
         fetchAuthedHonoHealth(),
-        fetchSyncHealth(),
         fetchIframeHealth(),
       ]);
 
-      const results: HealthStatus[] = [
-        cloudflare,
-        hono,
-        authedHono,
-        sync,
-        iframe,
-      ];
+      const results: HealthStatus[] = [cloudflare, hono, authedHono, iframe];
 
       // Add tRPC results
       if (trpcHealth.data) {
@@ -335,7 +306,6 @@ function HealthPageInner() {
     (health) =>
       health.name.includes("Cloudflare") ||
       health.name.includes("Hono") ||
-      health.name.includes("Sync") ||
       health.name.includes("tRPC")
   );
 
@@ -450,12 +420,6 @@ function HealthPageInner() {
                 GET /api/health/authed
               </code>{" "}
               - Authenticated Hono health check
-            </li>
-            <li>
-              <code className="rounded bg-white px-1">
-                GET /api/health/sync
-              </code>{" "}
-              - Sync service health check
             </li>
             <li>
               <code className="rounded bg-white px-1">tRPC health</code> - tRPC

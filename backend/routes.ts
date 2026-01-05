@@ -304,32 +304,6 @@ api.get("/notebooks/:id", authMiddleware, async (c) => {
   }
 });
 
-// Sync health endpoint - checks if sync service is available
-api.get("/health/sync", async (c) => {
-  try {
-    // Check if WebSocket server binding exists
-    const hasWebSocketServer = Boolean(c.env.WEBSOCKET_SERVER);
-
-    return c.json({
-      status: "healthy",
-      service: "sync",
-      timestamp: new Date().toISOString(),
-      websocket_server_available: hasWebSocketServer,
-      deployment_env: c.env.DEPLOYMENT_ENV,
-    });
-  } catch (error) {
-    return c.json(
-      {
-        status: "unhealthy",
-        service: "sync",
-        timestamp: new Date().toISOString(),
-        error: error instanceof Error ? error.message : "Unknown error",
-      },
-      500
-    );
-  }
-});
-
 // Mount unified API key routes
 api.route("/api-keys", apiKeyRoutes);
 
