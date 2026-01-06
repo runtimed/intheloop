@@ -1,91 +1,13 @@
 import { useEffect, useState } from "react";
-import { TrpcProvider, useTrpc } from "@/components/TrpcProvider";
-import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@/auth";
-import { CustomLiveStoreProvider } from "@/livestore/CustomLiveStoreProvider";
-import { useQuery as useLiveStoreQuery, useStore } from "@livestore/react";
-import { queryDb, tables, events } from "@runtimed/schema";
-
-interface HealthStatus {
-  name: string;
-  status: "loading" | "healthy" | "unhealthy" | "error";
-  data?: any;
-  error?: string;
-  timestamp?: string;
-}
-
-// Component to check LiveStore health
-function LiveStoreHealthChecker({
-  onStatusChange,
-}: {
-  onStatusChange: (status: HealthStatus) => void;
-}) {
-  const { store } = useStore();
-
-  // Try to query a simple table to verify LiveStore is working
-  const debugRecords = useLiveStoreQuery(
-    queryDb(tables.debug.select("id").limit(1))
-  );
-
-  useEffect(() => {
-    // Initial loading state
-    if (!store) {
-      onStatusChange({
-        name: "LiveStore",
-        status: "loading",
-      });
-      return;
-    }
-
-    try {
-      // Try to commit a test event to verify write capability
-      const testId = `health-check-${Date.now()}`;
-      store.commit(
-        events.debug1({
-          id: testId,
-        })
-      );
-
-      // Query should work without errors
-      const queryResult = debugRecords;
-
-      // If we get here, LiveStore is working
-      onStatusChange({
-        name: "LiveStore",
-        status: "healthy",
-        data: {
-          storeId: store.storeId,
-          queryWorking: true,
-          writeWorking: true,
-          debugRecordsCount: queryResult.length,
-        },
-        timestamp: new Date().toISOString(),
-      });
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Unknown error";
-      onStatusChange({
-        name: "LiveStore",
-        status: "error",
-        error: errorMessage,
-        timestamp: new Date().toISOString(),
-      });
-    }
-  }, [store, debugRecords, onStatusChange]);
-
-  return null;
-}
+import { HealthCard, type HealthStatus } from "@/components/HealthCard";
 
 function HealthPageInner() {
-  const { accessToken } = useAuth();
-  const trpc = useTrpc();
   const [healthStatuses, setHealthStatuses] = useState<HealthStatus[]>([]);
   const [liveStoreStatus, setLiveStoreStatus] = useState<HealthStatus | null>(
     null
   );
 
-  // tRPC health queries
-  const trpcHealth = useQuery(trpc.health.queryOptions());
-  const trpcHealthAuthed = useQuery(trpc.healthAuthed.queryOptions());
+  // tRPC health query (public)
 
   useEffect(() => {
     // Fetch basic Cloudflare health
@@ -130,31 +52,6 @@ function HealthPageInner() {
       }
     };
 
-    // Fetch authed Hono health
-    const fetchAuthedHonoHealth = async (): Promise<HealthStatus> => {
-      try {
-        const headers: HeadersInit = {};
-        if (accessToken) {
-          headers.Authorization = `Bearer ${accessToken}`;
-        }
-        const response = await fetch("/api/health/authed", { headers });
-        const data = await response.json();
-        return {
-          name: "Hono GET /api/health/authed",
-          status: response.ok ? ("healthy" as const) : ("unhealthy" as const),
-          data,
-          timestamp: new Date().toISOString(),
-        };
-      } catch (error) {
-        return {
-          name: "Hono GET /api/health/authed",
-          status: "error" as const,
-          error: error instanceof Error ? error.message : "Unknown error",
-          timestamp: new Date().toISOString(),
-        };
-      }
-    };
-
     // Fetch iframe outputs health
     const fetchIframeHealth = async (): Promise<HealthStatus> => {
       try {
@@ -187,70 +84,17 @@ function HealthPageInner() {
       setHealthStatuses([
         { name: "Cloudflare GET /health", status: "loading" },
         { name: "Hono GET /api/health", status: "loading" },
-        { name: "Hono GET /api/health/authed", status: "loading" },
         { name: "Iframe Outputs", status: "loading" },
-        { name: "tRPC health", status: "loading" },
-        { name: "tRPC healthAuthed", status: "loading" },
         { name: "LiveStore", status: "loading" },
       ]);
 
-      const [cloudflare, hono, authedHono, iframe] = await Promise.all([
+      const [cloudflare, hono, iframe] = await Promise.all([
         fetchCloudflareHealth(),
         fetchHonoHealth(),
-        fetchAuthedHonoHealth(),
         fetchIframeHealth(),
       ]);
 
-      const results: HealthStatus[] = [cloudflare, hono, authedHono, iframe];
-
-      // Add tRPC results
-      if (trpcHealth.data) {
-        results.push({
-          name: "tRPC health",
-          status: "healthy",
-          data: trpcHealth.data,
-          timestamp: new Date().toISOString(),
-        });
-      } else if (trpcHealth.error) {
-        results.push({
-          name: "tRPC health",
-          status: "error",
-          error:
-            trpcHealth.error instanceof Error
-              ? trpcHealth.error.message
-              : "Unknown error",
-          timestamp: new Date().toISOString(),
-        });
-      } else {
-        results.push({
-          name: "tRPC health",
-          status: "loading",
-        });
-      }
-
-      if (trpcHealthAuthed.data) {
-        results.push({
-          name: "tRPC healthAuthed",
-          status: "healthy",
-          data: trpcHealthAuthed.data,
-          timestamp: new Date().toISOString(),
-        });
-      } else if (trpcHealthAuthed.error) {
-        results.push({
-          name: "tRPC healthAuthed",
-          status: "error",
-          error:
-            trpcHealthAuthed.error instanceof Error
-              ? trpcHealthAuthed.error.message
-              : "Unknown error",
-          timestamp: new Date().toISOString(),
-        });
-      } else {
-        results.push({
-          name: "tRPC healthAuthed",
-          status: "loading",
-        });
-      }
+      const results: HealthStatus[] = [cloudflare, hono, iframe];
 
       // Add LiveStore status if available
       if (liveStoreStatus) {
@@ -266,40 +110,7 @@ function HealthPageInner() {
     };
 
     fetchAllHealth();
-  }, [
-    trpcHealth.data,
-    trpcHealth.error,
-    trpcHealthAuthed.data,
-    trpcHealthAuthed.error,
-    accessToken,
-    liveStoreStatus,
-  ]);
-
-  const getStatusColor = (status: HealthStatus["status"]) => {
-    switch (status) {
-      case "healthy":
-        return "text-green-600 bg-green-50 border-green-200";
-      case "unhealthy":
-        return "text-yellow-600 bg-yellow-50 border-yellow-200";
-      case "error":
-        return "text-red-600 bg-red-50 border-red-200";
-      case "loading":
-        return "text-gray-600 bg-gray-50 border-gray-200";
-    }
-  };
-
-  const getStatusIcon = (status: HealthStatus["status"]) => {
-    switch (status) {
-      case "healthy":
-        return "✅";
-      case "unhealthy":
-        return "⚠️";
-      case "error":
-        return "❌";
-      case "loading":
-        return "⏳";
-    }
-  };
+  }, [liveStoreStatus]);
 
   // Group health checks by section
   const apiStackChecks = healthStatuses.filter(
@@ -309,52 +120,8 @@ function HealthPageInner() {
       health.name.includes("tRPC")
   );
 
-  const liveStoreChecks = healthStatuses.filter((health) =>
-    health.name.includes("LiveStore")
-  );
-
   const iframeChecks = healthStatuses.filter((health) =>
     health.name.includes("Iframe")
-  );
-
-  const renderHealthCard = (health: HealthStatus, index: number) => (
-    <div
-      key={index}
-      className={`rounded-lg border p-4 ${getStatusColor(health.status)}`}
-    >
-      <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-lg font-semibold">{health.name}</h3>
-        <span className="text-2xl">{getStatusIcon(health.status)}</span>
-      </div>
-
-      {health.status === "loading" && <p className="text-sm">Checking...</p>}
-
-      {health.error && (
-        <div className="mt-2">
-          <p className="text-sm font-medium">Error:</p>
-          <p className="text-sm">{health.error}</p>
-        </div>
-      )}
-
-      {health.data && (
-        <div className="mt-2">
-          <details className="text-sm">
-            <summary className="cursor-pointer font-medium">
-              View Details
-            </summary>
-            <pre className="mt-2 overflow-auto rounded bg-white/50 p-2 text-xs">
-              {JSON.stringify(health.data, null, 2)}
-            </pre>
-          </details>
-        </div>
-      )}
-
-      {health.timestamp && (
-        <p className="mt-2 text-xs opacity-70">
-          Checked: {new Date(health.timestamp).toLocaleString()}
-        </p>
-      )}
-    </div>
   );
 
   return (
@@ -366,28 +133,13 @@ function HealthPageInner() {
         </p>
       </div>
 
-      {/* LiveStore Health Check */}
-      <CustomLiveStoreProvider storeId="health-check-test">
-        <LiveStoreHealthChecker onStatusChange={setLiveStoreStatus} />
-      </CustomLiveStoreProvider>
-
       {/* API Stack Section */}
       <div className="mb-8">
         <h2 className="mb-4 text-2xl font-semibold">1. API Stack</h2>
         <div className="grid gap-4 md:grid-cols-2">
-          {apiStackChecks.map((health, index) =>
-            renderHealthCard(health, index)
-          )}
-        </div>
-      </div>
-
-      {/* LiveStore Section */}
-      <div className="mb-8">
-        <h2 className="mb-4 text-2xl font-semibold">2. LiveStore</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {liveStoreChecks.map((health, index) =>
-            renderHealthCard(health, index)
-          )}
+          {apiStackChecks.map((health, index) => (
+            <HealthCard key={index} health={health} />
+          ))}
         </div>
       </div>
 
@@ -395,7 +147,9 @@ function HealthPageInner() {
       <div className="mb-8">
         <h2 className="mb-4 text-2xl font-semibold">3. Iframe</h2>
         <div className="grid gap-4 md:grid-cols-2">
-          {iframeChecks.map((health, index) => renderHealthCard(health, index))}
+          {iframeChecks.map((health, index) => (
+            <HealthCard key={index} health={health} />
+          ))}
         </div>
       </div>
 
@@ -416,18 +170,8 @@ function HealthPageInner() {
               Hono framework health check
             </li>
             <li>
-              <code className="rounded bg-white px-1">
-                GET /api/health/authed
-              </code>{" "}
-              - Authenticated Hono health check
-            </li>
-            <li>
               <code className="rounded bg-white px-1">tRPC health</code> - tRPC
               public health query
-            </li>
-            <li>
-              <code className="rounded bg-white px-1">tRPC healthAuthed</code> -
-              tRPC authenticated health query
             </li>
           </ul>
         </div>
@@ -457,9 +201,5 @@ function HealthPageInner() {
 }
 
 export function HealthPage() {
-  return (
-    <TrpcProvider>
-      <HealthPageInner />
-    </TrpcProvider>
-  );
+  return <HealthPageInner />;
 }

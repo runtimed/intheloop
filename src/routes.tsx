@@ -55,9 +55,9 @@ const FeatureFlagsPage = React.lazy(() =>
     default: mod.FeatureFlagsPage,
   }))
 );
-const HealthPage = React.lazy(() =>
-  import("./pages/HealthPage").then((mod) => ({
-    default: mod.HealthPage,
+const HealthAuthedPage = React.lazy(() =>
+  import("./pages/HealthAuthedPage").then((mod) => ({
+    default: mod.HealthAuthedPage,
   }))
 );
 
@@ -156,10 +156,19 @@ export const App: React.FC = () => {
               />
               <Route path="/feature-flags" element={<FeatureFlagsPage />} />
               <Route
-                path="/health"
+                path="/health/authed"
                 element={
                   <AuthGuard>
-                    <HealthPage />
+                    <Suspense
+                      fallback={
+                        <LoadingState
+                          variant="fullscreen"
+                          message="Loading authenticated health checks..."
+                        />
+                      }
+                    >
+                      <HealthAuthedPage />
+                    </Suspense>
                   </AuthGuard>
                 }
               />

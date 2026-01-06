@@ -2,7 +2,7 @@ import "./index.css";
 
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DebugProvider } from "@/components/debug/debug-mode.js";
 
 const App = React.lazy(() =>
@@ -16,6 +16,7 @@ import "./runtime/console-launcher.js";
 import "./runtime/ai-provider.js";
 import { LoadingState } from "./components/loading/LoadingState.js";
 import { FeatureFlagProvider } from "./contexts/FeatureFlagContext.js";
+import { HealthPage } from "./pages/HealthPage.js";
 
 // Verify launcher is available
 if (typeof window !== "undefined" && window.__RUNT_LAUNCHER__) {
@@ -40,6 +41,9 @@ ReactDOM.createRoot(document.getElementById("react-app")!).render(
             }
           >
             <App />
+            <Routes>
+              <Route path="/health" element={<HealthPage />} />
+            </Routes>
           </Suspense>
         </BrowserRouter>
       </FeatureFlagProvider>
