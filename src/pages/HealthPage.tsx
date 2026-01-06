@@ -7,9 +7,28 @@ function HealthPageInner() {
     null
   );
 
-  // tRPC health query (public)
-
   useEffect(() => {
+    // Fetch tRPC health
+    const fetchTrpcHealth = async (): Promise<HealthStatus> => {
+      try {
+        const response = await fetch("/api/trpc/health");
+        const data = await response.json();
+        return {
+          name: "tRPC health",
+          status: response.ok ? ("healthy" as const) : ("unhealthy" as const),
+          data,
+          timestamp: new Date().toISOString(),
+        };
+      } catch (error) {
+        return {
+          name: "tRPC health",
+          status: "error" as const,
+          error: error instanceof Error ? error.message : "Unknown error",
+          timestamp: new Date().toISOString(),
+        };
+      }
+    };
+
     // Fetch basic Cloudflare health
     const fetchCloudflareHealth = async (): Promise<HealthStatus> => {
       try {
@@ -84,17 +103,19 @@ function HealthPageInner() {
       setHealthStatuses([
         { name: "Cloudflare GET /health", status: "loading" },
         { name: "Hono GET /api/health", status: "loading" },
+        { name: "tRPC health", status: "loading" },
         { name: "Iframe Outputs", status: "loading" },
         { name: "LiveStore", status: "loading" },
       ]);
 
-      const [cloudflare, hono, iframe] = await Promise.all([
+      const [cloudflare, hono, trpc, iframe] = await Promise.all([
         fetchCloudflareHealth(),
         fetchHonoHealth(),
+        fetchTrpcHealth(),
         fetchIframeHealth(),
       ]);
 
-      const results: HealthStatus[] = [cloudflare, hono, iframe];
+      const results: HealthStatus[] = [cloudflare, hono, trpc, iframe];
 
       // Add LiveStore status if available
       if (liveStoreStatus) {
