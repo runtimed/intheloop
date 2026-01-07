@@ -3,9 +3,6 @@ import { HealthCard, type HealthStatus } from "@/components/HealthCard";
 
 function HealthPageInner() {
   const [healthStatuses, setHealthStatuses] = useState<HealthStatus[]>([]);
-  const [liveStoreStatus, setLiveStoreStatus] = useState<HealthStatus | null>(
-    null
-  );
 
   useEffect(() => {
     // Fetch tRPC health
@@ -99,13 +96,14 @@ function HealthPageInner() {
       }
     };
 
+    // TODO: Implement LiveStore WebSocket health check
+
     const fetchAllHealth = async () => {
       setHealthStatuses([
         { name: "Cloudflare GET /health", status: "loading" },
         { name: "Hono GET /api/health", status: "loading" },
         { name: "tRPC health", status: "loading" },
         { name: "Iframe Outputs", status: "loading" },
-        { name: "LiveStore", status: "loading" },
       ]);
 
       const [cloudflare, hono, trpc, iframe] = await Promise.all([
@@ -117,21 +115,11 @@ function HealthPageInner() {
 
       const results: HealthStatus[] = [cloudflare, hono, trpc, iframe];
 
-      // Add LiveStore status if available
-      if (liveStoreStatus) {
-        results.push(liveStoreStatus);
-      } else {
-        results.push({
-          name: "LiveStore",
-          status: "loading",
-        });
-      }
-
       setHealthStatuses(results);
     };
 
     fetchAllHealth();
-  }, [liveStoreStatus]);
+  }, []);
 
   // Group health checks by section
   const apiStackChecks = healthStatuses.filter(
@@ -161,6 +149,17 @@ function HealthPageInner() {
           {apiStackChecks.map((health, index) => (
             <HealthCard key={index} health={health} />
           ))}
+        </div>
+      </div>
+
+      {/* LiveStore Section */}
+      {/* TODO: Implement LiveStore WebSocket health check */}
+      <div className="mb-8">
+        <h2 className="mb-4 text-2xl font-semibold">2. LiveStore</h2>
+        <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+          <p className="text-muted-foreground">
+            TODO: LiveStore WebSocket health check not yet implemented
+          </p>
         </div>
       </div>
 
@@ -201,8 +200,9 @@ function HealthPageInner() {
           <h3 className="mb-2 font-semibold">2. LiveStore</h3>
           <ul className="list-inside list-disc space-y-1 text-sm">
             <li>
-              <code className="rounded bg-white px-1">LiveStore</code> -
-              LiveStore configuration and connectivity check
+              <code className="rounded bg-white px-1">WS /livestore</code> -
+              TODO: LiveStore WebSocket endpoint connectivity check (not yet
+              implemented)
             </li>
           </ul>
         </div>
