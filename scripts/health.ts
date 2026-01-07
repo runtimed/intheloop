@@ -5,6 +5,10 @@
  * Usage:
  *   pnpm health                    # Check all services
  *   pnpm health livestore         # Check only LiveStore endpoint
+ *   pnpm health trpc              # Check only tRPC health
+ *   pnpm health cloudflare       # Check only Cloudflare health
+ *   pnpm health hono             # Check only Hono health
+ *   pnpm health iframe            # Check only iframe outputs
  *   pnpm health anaconda          # Check only Anaconda API
  */
 
@@ -49,6 +53,18 @@ function loadEnv(): Record<string, string> {
     console.warn("Warning: Could not load .env file:", error);
     return {};
   }
+}
+
+/**
+ * Get base API URL for backend health checks
+ */
+function getApiBaseUrl(): string {
+  const env = loadEnv();
+  return (
+    env.VITE_API_TARGET ||
+    process.env.VITE_API_TARGET ||
+    "http://localhost:8787"
+  );
 }
 
 /**
@@ -238,6 +254,226 @@ async function checkLiveStore(): Promise<HealthCheckResult> {
 }
 
 /**
+ * Check tRPC health endpoint
+ */
+async function checkTrpcHealth(): Promise<HealthCheckResult> {
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}/api/trpc/health`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      signal: AbortSignal.timeout(5000),
+    });
+
+    const status = response.status;
+    let data: unknown = null;
+    try {
+      data = await response.json();
+    } catch {
+      // Ignore JSON parse errors
+    }
+
+    if (response.ok) {
+      return {
+        name: "tRPC health",
+        status: "ok",
+        message: `Endpoint reachable (status ${status})`,
+        details: {
+          status,
+          data,
+        },
+      };
+    }
+
+    return {
+      name: "tRPC health",
+      status: "error",
+      message: `Endpoint returned error (status ${status})`,
+      details: {
+        status,
+        data,
+      },
+    };
+  } catch (error) {
+    return {
+      name: "tRPC health",
+      status: "error",
+      message: error instanceof Error ? error.message : String(error),
+      details: {
+        url,
+        error,
+      },
+    };
+  }
+}
+
+/**
+ * Check Cloudflare health endpoint
+ */
+async function checkCloudflareHealth(): Promise<HealthCheckResult> {
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}/api/cloudflare-health`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      signal: AbortSignal.timeout(5000),
+    });
+
+    const status = response.status;
+    let data: unknown = null;
+    try {
+      data = await response.json();
+    } catch {
+      // Ignore JSON parse errors
+    }
+
+    if (response.ok) {
+      return {
+        name: "Cloudflare GET /cloudflare-health",
+        status: "ok",
+        message: `Endpoint reachable (status ${status})`,
+        details: {
+          status,
+          data,
+        },
+      };
+    }
+
+    return {
+      name: "Cloudflare GET /cloudflare-health",
+      status: "error",
+      message: `Endpoint returned error (status ${status})`,
+      details: {
+        status,
+        data,
+      },
+    };
+  } catch (error) {
+    return {
+      name: "Cloudflare GET /cloudflare-health",
+      status: "error",
+      message: error instanceof Error ? error.message : String(error),
+      details: {
+        url,
+        error,
+      },
+    };
+  }
+}
+
+/**
+ * Check Hono health endpoint
+ */
+async function checkHonoHealth(): Promise<HealthCheckResult> {
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}/api/health`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      signal: AbortSignal.timeout(5000),
+    });
+
+    const status = response.status;
+    let data: unknown = null;
+    try {
+      data = await response.json();
+    } catch {
+      // Ignore JSON parse errors
+    }
+
+    if (response.ok) {
+      return {
+        name: "Hono GET /api/health",
+        status: "ok",
+        message: `Endpoint reachable (status ${status})`,
+        details: {
+          status,
+          data,
+        },
+      };
+    }
+
+    return {
+      name: "Hono GET /api/health",
+      status: "error",
+      message: `Endpoint returned error (status ${status})`,
+      details: {
+        status,
+        data,
+      },
+    };
+  } catch (error) {
+    return {
+      name: "Hono GET /api/health",
+      status: "error",
+      message: error instanceof Error ? error.message : String(error),
+      details: {
+        url,
+        error,
+      },
+    };
+  }
+}
+
+/**
+ * Check iframe outputs health
+ */
+async function checkIframeHealth(): Promise<HealthCheckResult> {
+  const env = loadEnv();
+  const iframeUrl =
+    env.VITE_IFRAME_OUTPUT_URI ||
+    process.env.VITE_IFRAME_OUTPUT_URI ||
+    "http://localhost:8000";
+
+  try {
+    const url = `${iframeUrl}/index.html`;
+    const response = await fetch(url, {
+      method: "HEAD",
+      signal: AbortSignal.timeout(5000),
+    });
+
+    const status = response.status;
+
+    if (response.ok) {
+      return {
+        name: "Iframe Outputs",
+        status: "ok",
+        message: `Endpoint reachable (status ${status})`,
+        details: {
+          url: iframeUrl,
+          status,
+          statusText: response.statusText,
+        },
+      };
+    }
+
+    return {
+      name: "Iframe Outputs",
+      status: "error",
+      message: `Endpoint returned error (status ${status})`,
+      details: {
+        url: iframeUrl,
+        status,
+        statusText: response.statusText,
+      },
+    };
+  } catch (error) {
+    return {
+      name: "Iframe Outputs",
+      status: "error",
+      message: error instanceof Error ? error.message : String(error),
+      details: {
+        url: iframeUrl,
+        error,
+      },
+    };
+  }
+}
+
+/**
  * Check Anaconda API endpoint health
  */
 async function checkAnacondaAPI(): Promise<HealthCheckResult> {
@@ -318,7 +554,11 @@ async function checkAnacondaAPI(): Promise<HealthCheckResult> {
  */
 async function runHealthChecks(checks: string[] = []): Promise<void> {
   const checkMap: Record<string, () => Promise<HealthCheckResult>> = {
+    cloudflare: checkCloudflareHealth,
+    hono: checkHonoHealth,
+    trpc: checkTrpcHealth,
     livestore: checkLiveStore,
+    iframe: checkIframeHealth,
     anaconda: checkAnacondaAPI,
   };
 
@@ -390,10 +630,18 @@ Health check script for In the Loop services
 Usage:
   pnpm health                    # Check all services
   pnpm health livestore         # Check only LiveStore endpoint
+  pnpm health trpc              # Check only tRPC health
+  pnpm health cloudflare       # Check only Cloudflare health
+  pnpm health hono             # Check only Hono health
+  pnpm health iframe            # Check only iframe outputs
   pnpm health anaconda          # Check only Anaconda API
 
 Available checks:
   livestore   Check LiveStore sync endpoint health
+  trpc        Check tRPC health endpoint
+  cloudflare  Check Cloudflare health endpoint
+  hono        Check Hono health endpoint
+  iframe      Check iframe outputs service health
   anaconda    Check Anaconda API endpoint health
 `);
   process.exit(0);
