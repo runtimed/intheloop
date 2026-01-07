@@ -62,23 +62,23 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       '@livestore/adapter-web':
-        specifier: ^0.3.1
-        version: 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
+        specifier: ^0.4.0-dev.22
+        version: 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
       '@livestore/livestore':
-        specifier: ^0.3.1
-        version: 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
+        specifier: ^0.4.0-dev.22
+        version: 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
       '@livestore/react':
-        specifier: ^0.3.1
-        version: 0.3.1(e619d9a02e7331598c0487672266f18e)
+        specifier: ^0.4.0-dev.22
+        version: 0.4.0-dev.22(e2fa3e649a3073b3ecbf27b22f58c622)
       '@livestore/sync-cf':
-        specifier: ^0.3.1
-        version: 0.3.1(38eef8465614833bab78aa968987f446)
+        specifier: ^0.4.0-dev.22
+        version: 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
       '@livestore/wa-sqlite':
         specifier: 1.0.5-dev.2
         version: 1.0.5-dev.2
       '@livestore/webmesh':
-        specifier: ^0.3.1
-        version: 0.3.1(38eef8465614833bab78aa968987f446)
+        specifier: ^0.4.0-dev.22
+        version: 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
       '@microlink/react-json-view':
         specifier: ^1.26.2
         version: 1.26.2(@types/react@19.1.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -306,11 +306,11 @@ importers:
         specifier: ^9.30.1
         version: 9.31.0
       '@livestore/adapter-node':
-        specifier: ^0.3.1
-        version: 0.3.1(9e08093124f6b4bd8ce511313ddc6850)
+        specifier: ^0.4.0-dev.22
+        version: 0.4.0-dev.22(b13dc9731b633c487916d732f43c266d)
       '@livestore/devtools-vite':
-        specifier: ^0.3.1
-        version: 0.3.1(29e08c45f86af1aa0ee363af32cb9c18)
+        specifier: ^0.4.0-dev.22
+        version: 0.4.0-dev.22(37f54459f5513ce719b4b549bd0e5ba8)
       '@tailwindcss/cli':
         specifier: ^4.1.10
         version: 4.1.11
@@ -776,6 +776,9 @@ packages:
   '@cloudflare/workers-types@4.20250813.0':
     resolution: {integrity: sha512-RFFjomDndGR+p7ug1HWDlW21qOJyRZbmI99dUtuR9tmwJbSZhUUnSFmzok9lBYVfkMMrO1O5vmB+IlgiecgLEA==}
 
+  '@cloudflare/workers-types@4.20251118.0':
+    resolution: {integrity: sha512-O1BlPjaQlM5rsxf8rc8NwNrXduzXMCWZDsSelI1SEyt0zYuBYMzn0kNrrD2bXAtXeYCk6LrX98037AlVdGXBUw==}
+
   '@codemirror/autocomplete@6.18.6':
     resolution: {integrity: sha512-PHHBXFomUs5DF+9tCOM/UoW6XQ4R44lLNNhRaW9PKPTU0D7lIjRg3ElxaJnTwsl/oHiR93WSXDBrekhoUGCPtg==}
 
@@ -824,6 +827,14 @@ packages:
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
+
+  '@effect/ai@0.29.1':
+    resolution: {integrity: sha512-uSeAPYha2yJVyEl1xdcbwrXF7GpQlt5225HMP2HXH92OIYNQO9jOel/bCiqV7Q2QWk3I0NP/2zfIM+nThAGoVg==}
+    peerDependencies:
+      '@effect/experimental': 0.46.8
+      '@effect/platform': 0.82.4
+      '@effect/rpc': 0.59.9
+      effect: 3.15.5
 
   '@effect/cli@0.61.8':
     resolution: {integrity: sha512-CRdzBUW3SkjsL1Og5bnh7nt1VN0JwNLyfnjlzTWwtIm07WFFdcZXUXquFJfmU++eTP5Kfp8JbZYvsHwmzg/q1w==}
@@ -1662,36 +1673,45 @@ packages:
   '@lezer/python@1.1.18':
     resolution: {integrity: sha512-31FiUrU7z9+d/ElGQLJFXl+dKOdx0jALlP3KEOsGTex8mvj+SoE1FgItcHWK/axkxCHGUSpqIHt6JAWfWu9Rhg==}
 
-  '@livestore/adapter-node@0.3.1':
-    resolution: {integrity: sha512-qP6nGY8du3r+4aS4yJ2YgaDVp/KzE/qBzOzleFTBR9DEM0faeLI9EXzwVq9A/k8pbxm5heF78l0ConExxxl42Q==}
+  '@livestore/adapter-node@0.4.0-dev.22':
+    resolution: {integrity: sha512-++EwvHnvOpJOzqxKfLdom111uCK9fHcS4dGutm/qnCyKOL0nXFFH9yuHUrLAlprJ+soyZ/N1NVajEJdmL2culA==}
 
-  '@livestore/adapter-web@0.3.1':
-    resolution: {integrity: sha512-0ZKTam+C3KeG5qiiTLFOgoMhdUBCENmuaMwxoj7WOtA2c4eKyqIy+P/1zga+az0XqaMJoG5FVszWhWMUMzNjtQ==}
+  '@livestore/adapter-web@0.4.0-dev.22':
+    resolution: {integrity: sha512-TXr+LCQYiijr3H5aDzmHjCH0OFBC2l4jnuSZm47Gjk7nFW7oba+kRNuLRjy5/T84H64+WBEvUemuiKBcQQkwOg==}
+
+  '@livestore/common-cf@0.4.0-dev.22':
+    resolution: {integrity: sha512-eWHeOpQ4Lwa39WpgHGPZvDCTo5Muf6qHO0SKklOibUDGxhb7yCX3qcV/cOH7cwiFU6FTZI6cZr7PMUYlSwr5UQ==}
 
   '@livestore/common@0.3.1':
     resolution: {integrity: sha512-D44ia+zVH8EF0TWGUp0GQnCVvCsGKgKD/ryFl+kx607/l7GDUSagNnWkRmMwhhshJSJblQwouhA9fwjDNTBB2g==}
 
-  '@livestore/devtools-vite@0.3.1':
-    resolution: {integrity: sha512-7d4dxI1jkNtMRNxfnj7WVFIg+z5+M1FxTCUw4XrtHYeJGd7qy3GOJ/75D0lU12OQ7EbY/qSVnoU7++SkSEjMFA==}
-    peerDependencies:
-      vite: ~6.3.4
+  '@livestore/common@0.4.0-dev.22':
+    resolution: {integrity: sha512-ybtwS2eTZ/RaO0Jdtuu2tcRxr36Vz9lsOoHtFLagflaiB5+emC9W4d73++ideOBP6BM+gfi9PpiKTNeFZ1lLtg==}
 
-  '@livestore/devtools-web-common@0.3.1':
-    resolution: {integrity: sha512-jU7IvebelTtvSTQ2zKNzSm5qZodwUiPsNsDURsY5Yw0DXpafcfpRobs/WYd+Wd4Q1E4oFaK05hPfWZGbVFdw7Q==}
+  '@livestore/devtools-vite@0.4.0-dev.22':
+    resolution: {integrity: sha512-J+hKbCPmdXGNW5Y6JK3ia0bHXzEi0zIRXP6xJATm77arCCmIYU2SrQanK4s/9oAGfx3VARONupYCtC+a+JNbsQ==}
+    peerDependencies:
+      vite: ^7.2.4
+
+  '@livestore/devtools-web-common@0.4.0-dev.22':
+    resolution: {integrity: sha512-EXlFKrrsmjlrcRrowheGsXk7uoF+ab4LeMaGYp2Uoo62nLVH0D8Q8zMbbzojnYhZHs6SHDaqAmQE430G+HUfgA==}
 
   '@livestore/livestore@0.3.1':
     resolution: {integrity: sha512-imw1JK5i82yTmSC4PRoZ1gUiG39jasR49c5TPQI/MCIFSbgqcKS0x1IPoB8js6tlPoVm+iH7p4JTAQKYC2q3Pg==}
 
-  '@livestore/react@0.3.1':
-    resolution: {integrity: sha512-9/6XzrzSjchgmZevQV0EkD08RXaFRMpU4EQp7dSEjihIv9+gvOwnLyYDTd7MvjaMIKTw7tnmKAmjdoqM5d0ijg==}
+  '@livestore/livestore@0.4.0-dev.22':
+    resolution: {integrity: sha512-k0/GigrjjsT50aYmE1gdVHufyJrPR2w1xVGAOO/MV6tTO3xGUo6qgX4duM6tksn87wPThGA2yNHRfNprO1iMrA==}
+
+  '@livestore/react@0.4.0-dev.22':
+    resolution: {integrity: sha512-SFeZPvnS8bVICYai+eeLEtGMKU/RkzA5J+TS+oh638F602PWSBVurPuLQA6o0Ryj6UeO8/jeAUjxr44UO5f2aw==}
     peerDependencies:
       react: 19.2.1
 
-  '@livestore/sqlite-wasm@0.3.1':
-    resolution: {integrity: sha512-+JLIwpd2N214LmwlUX6arYnJ5IhvSi4Fn3Jk6E6fNfuUU4tczcL1PtgfIX2IoiPhn9QDG0YJVdJBT6KYi1uMyg==}
+  '@livestore/sqlite-wasm@0.4.0-dev.22':
+    resolution: {integrity: sha512-ZdhwguqJbEjPqem2rYfI6mdrnMLFmbLtgWAwLNFQRmiSiY4F20i7y/c3tFbHTJUDYoQwWmvunLRL8GYDHtCXzA==}
 
-  '@livestore/sync-cf@0.3.1':
-    resolution: {integrity: sha512-Vopen/K5/MRr4va/3u19cGLFslJs/fqtr5C2MhEOy080uYcClEWUDxyHh/Oec9wx4ZsbC0WKfTiUVN48DjHo/A==}
+  '@livestore/sync-cf@0.4.0-dev.22':
+    resolution: {integrity: sha512-RJlNTwpzxuJ5PCHcUalvRwlwRDIYXbyri5aima8J6w4CbIZusZ1wTZDUN5xw8bM1Ck6nN9lKRyAv8uG7e15rew==}
 
   '@livestore/utils@0.3.1':
     resolution: {integrity: sha512-DFgrKpVIu/Nn9GE0QG2uitrFLF63aIiV5rencAk3kigNPzq4iBao05wvT/JVqgRxxiM7F1SuAZYogwM4QdpcDA==}
@@ -1713,11 +1733,38 @@ packages:
       '@opentelemetry/resources': ~2.0.0
       effect: 3.15.5
 
+  '@livestore/utils@0.4.0-dev.22':
+    resolution: {integrity: sha512-5eDFievmIQA9A/KpqNYbfm5hyLahHHyzl4dlkeEe26EefF2cxF5/7EH2Bt5fMzsDgIyAc4WNgxSXtZRp74TftQ==}
+    peerDependencies:
+      '@effect/ai': ^0.29.0
+      '@effect/cli': ^0.71.0
+      '@effect/cluster': 0.34.2
+      '@effect/experimental': 0.46.8
+      '@effect/opentelemetry': ^0.58.0
+      '@effect/platform': 0.82.4
+      '@effect/platform-browser': ^0.72.0
+      '@effect/platform-bun': ^0.81.1
+      '@effect/platform-node': ^0.98.4
+      '@effect/printer': ^0.46.0
+      '@effect/printer-ansi': ^0.46.0
+      '@effect/rpc': 0.59.9
+      '@effect/sql': 0.35.8
+      '@effect/typeclass': 0.34.2
+      '@opentelemetry/api': ^1.9.0
+      '@opentelemetry/resources': ^2.0.1
+      effect: 3.15.5
+
+  '@livestore/wa-sqlite@0.4.0-dev.22':
+    resolution: {integrity: sha512-+Q4JP2SiXRI+CUYQa33KeyWdeUtRJbrSXbJ0acIRNJmnXSdHWA9N1XHZOCtkoR2BY7XCA29/uh3coNklsQOYtA==}
+
   '@livestore/wa-sqlite@1.0.5-dev.2':
     resolution: {integrity: sha512-i7tKFEp0m3+4tGLV9Z5eAr/3RZPuNOyuf4NaQ/ygF2KwzlHc3TnqouPuE2sMH06r3soXIilWYND/x0eT8x6D6Q==}
 
   '@livestore/webmesh@0.3.1':
     resolution: {integrity: sha512-JLYFgiOf1r7xqN7SkwdHNZdZ+geQlEdC9rg81DeC839vqqshA5TEhh045dhEkeyVJZqeg44vX5adUX6FOkhTfg==}
+
+  '@livestore/webmesh@0.4.0-dev.22':
+    resolution: {integrity: sha512-HlLKupNlq7MNTFmIYBXPX/n+jOpI5cyx5Sbpsj/acCVaqSaeq1tOdIpn6LNBzTR1uv4bkbEb2XUYIxxsvY4e9g==}
 
   '@mapbox/geojson-rewind@0.5.2':
     resolution: {integrity: sha512-tJaT+RbYGJYStt7wI3cq4Nl4SXxG8W7JDG5DMJu97V25RnbNg3QtQtf+KD+VLjNpWKYsRvXDNmNrBgEETr1ifA==}
@@ -3722,6 +3769,15 @@ packages:
       picomatch:
         optional: true
 
+  fdir@6.5.0:
+    resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      picomatch: ^3 || ^4
+    peerDependenciesMeta:
+      picomatch:
+        optional: true
+
   fflate@0.8.2:
     resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
 
@@ -4715,6 +4771,10 @@ packages:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
     engines: {node: '>=12'}
 
+  picomatch@4.0.3:
+    resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
+    engines: {node: '>=12'}
+
   pidusage@2.0.21:
     resolution: {integrity: sha512-cv3xAQos+pugVX+BfXpHsbyz/dLzX+lr44zNMsYiGxUw+kV5sgQCIcLd1z+0vq+KyC7dJ+/ts2PsfgWfSC3WXA==}
     engines: {node: '>=8'}
@@ -4841,6 +4901,10 @@ packages:
     resolution: {integrity: sha512-mQUvGU6aUFQ+rNvTIAcZuWGRT9a6f6Yrg9bHs4ImKF+HZCEK+plBvnAZYSIQztknZF2qnzNtr6F8s0+IuptdlQ==}
     engines: {node: ^14.13.1 || >=16.0.0}
 
+  pretty-bytes@7.0.1:
+    resolution: {integrity: sha512-285/jRCYIbMGDciDdrw0KPNC4LKEEwz/bwErcYNxSJOi4CpGUuLpb9gQpg3XJP0XYj9ldSRluXxih4lX2YN8Xw==}
+    engines: {node: '>=20'}
+
   pretty-format@27.5.1:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -4888,6 +4952,9 @@ packages:
   pyodide@0.27.7:
     resolution: {integrity: sha512-RUSVJlhQdfWfgO9hVHCiXoG+nVZQRS5D9FzgpLJ/VcgGBLSAKoPL8kTiOikxbHQm1kRISeWUBdulEgO26qpSRA==}
     engines: {node: '>=18.0.0'}
+
+  qrcode-generator@2.0.4:
+    resolution: {integrity: sha512-mZSiP6RnbHl4xL2Ap5HfkjLnmxfKcPWpWe/c+5XxCuetEenqmNFf1FH/ftXPCtFG5/TDobjsjz6sSNL0Sr8Z9g==}
 
   qs@6.14.0:
     resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
@@ -5366,6 +5433,10 @@ packages:
     resolution: {integrity: sha512-tX5e7OM1HnYr2+a2C/4V0htOcSQcoSTH9KgJnVvNm5zm/cyEWKJ7j7YutsH9CxMdtOkkLFy2AHrMci9IM8IPZQ==}
     engines: {node: '>=12.0.0'}
 
+  tinyglobby@0.2.15:
+    resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
+    engines: {node: '>=12.0.0'}
+
   tinypool@1.1.1:
     resolution: {integrity: sha512-Zba82s87IFq9A9XmjiX5uZA/ARWDrB03OHlq+Vw1fSdt0I+4/Kutwy8BP4Y/y/aORMo61FQ0vIb5j44vSo5Pkg==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -5588,8 +5659,8 @@ packages:
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
 
-  vite@6.3.4:
-    resolution: {integrity: sha512-BiReIiMS2fyFqbqNT/Qqt4CVITDU9M9vE+DKcVAsB+ZV0wvTKd+3hMbkpxz1b+NmEDMegpVbisKiAZOnvO92Sw==}
+  vite@6.3.5:
+    resolution: {integrity: sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
     peerDependencies:
@@ -5628,19 +5699,19 @@ packages:
       yaml:
         optional: true
 
-  vite@6.3.5:
-    resolution: {integrity: sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==}
-    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
+  vite@7.2.4:
+    resolution: {integrity: sha512-NL8jTlbo0Tn4dUEXEsUg8KeyG/Lkmc4Fnzb8JXN/Ykm9G4HNImjtABMJgkQoVjOBN/j2WAwDTRytdqJbZsah7w==}
+    engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
-      '@types/node': ^18.0.0 || ^20.0.0 || >=22.0.0
+      '@types/node': ^20.19.0 || >=22.12.0
       jiti: '>=1.21.0'
-      less: '*'
+      less: ^4.0.0
       lightningcss: ^1.21.0
-      sass: '*'
-      sass-embedded: '*'
-      stylus: '*'
-      sugarss: '*'
+      sass: ^1.70.0
+      sass-embedded: ^1.70.0
+      stylus: '>=0.54.8'
+      sugarss: ^5.0.0
       terser: ^5.16.0
       tsx: ^4.8.1
       yaml: ^2.4.2
@@ -6098,6 +6169,8 @@ snapshots:
 
   '@cloudflare/workers-types@4.20250813.0': {}
 
+  '@cloudflare/workers-types@4.20251118.0': {}
+
   '@codemirror/autocomplete@6.18.6':
     dependencies:
       '@codemirror/language': 6.11.2
@@ -6218,6 +6291,14 @@ snapshots:
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
+
+  '@effect/ai@0.29.1(@effect/experimental@0.46.8(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/platform@0.82.4(effect@3.15.5))(@effect/rpc@0.59.9(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(effect@3.15.5)':
+    dependencies:
+      '@effect/experimental': 0.46.8(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5)
+      '@effect/platform': 0.82.4(effect@3.15.5)
+      '@effect/rpc': 0.59.9(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5)
+      effect: 3.15.5
+      find-my-way-ts: 0.1.6
 
   '@effect/cli@0.61.8(@effect/platform@0.82.4(effect@3.15.5))(@effect/printer-ansi@0.43.5(@effect/typeclass@0.34.2(effect@3.15.5))(effect@3.15.5))(@effect/printer@0.43.5(@effect/typeclass@0.34.2(effect@3.15.5))(effect@3.15.5))(effect@3.15.5)':
     dependencies:
@@ -6804,16 +6885,17 @@ snapshots:
       '@lezer/highlight': 1.2.1
       '@lezer/lr': 1.4.2
 
-  '@livestore/adapter-node@0.3.1(9e08093124f6b4bd8ce511313ddc6850)':
+  '@livestore/adapter-node@0.4.0-dev.22(b13dc9731b633c487916d732f43c266d)':
     dependencies:
-      '@livestore/common': 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
-      '@livestore/devtools-vite': 0.3.1(c59ede95208b310cf42a97088f561888)
-      '@livestore/sqlite-wasm': 0.3.1(38eef8465614833bab78aa968987f446)
-      '@livestore/utils': 0.3.1(38eef8465614833bab78aa968987f446)
-      '@livestore/webmesh': 0.3.1(38eef8465614833bab78aa968987f446)
+      '@livestore/common': 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
+      '@livestore/devtools-vite': 0.4.0-dev.22(e6b3ed140f343de605d092e14d9b84cc)
+      '@livestore/sqlite-wasm': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@livestore/webmesh': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
       '@opentelemetry/api': 1.9.0
-      vite: 6.3.4(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.21.0)(yaml@2.8.1)
+      vite: 7.2.4(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.21.0)(yaml@2.8.1)
     transitivePeerDependencies:
+      - '@effect/ai'
       - '@effect/cli'
       - '@effect/cluster'
       - '@effect/experimental'
@@ -6841,15 +6923,16 @@ snapshots:
       - tsx
       - yaml
 
-  '@livestore/adapter-web@0.3.1(f9c23af240f2640c0a9abef8711d3cc6)':
+  '@livestore/adapter-web@0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)':
     dependencies:
-      '@livestore/common': 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
-      '@livestore/devtools-web-common': 0.3.1(38eef8465614833bab78aa968987f446)
-      '@livestore/sqlite-wasm': 0.3.1(38eef8465614833bab78aa968987f446)
-      '@livestore/utils': 0.3.1(38eef8465614833bab78aa968987f446)
-      '@livestore/webmesh': 0.3.1(38eef8465614833bab78aa968987f446)
+      '@livestore/common': 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
+      '@livestore/devtools-web-common': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@livestore/sqlite-wasm': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@livestore/webmesh': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
       '@opentelemetry/api': 1.9.0
     transitivePeerDependencies:
+      - '@effect/ai'
       - '@effect/cli'
       - '@effect/cluster'
       - '@effect/experimental'
@@ -6863,6 +6946,30 @@ snapshots:
       - '@effect/rpc'
       - '@effect/sql'
       - '@effect/typeclass'
+      - '@opentelemetry/resources'
+      - effect
+
+  '@livestore/common-cf@0.4.0-dev.22(007908adef956769b32467e09d1ab764)':
+    dependencies:
+      '@cloudflare/workers-types': 4.20251118.0
+      '@livestore/common': 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+    transitivePeerDependencies:
+      - '@effect/ai'
+      - '@effect/cli'
+      - '@effect/cluster'
+      - '@effect/experimental'
+      - '@effect/opentelemetry'
+      - '@effect/platform'
+      - '@effect/platform-browser'
+      - '@effect/platform-bun'
+      - '@effect/platform-node'
+      - '@effect/printer'
+      - '@effect/printer-ansi'
+      - '@effect/rpc'
+      - '@effect/sql'
+      - '@effect/typeclass'
+      - '@opentelemetry/api'
       - '@opentelemetry/resources'
       - effect
 
@@ -6891,12 +6998,36 @@ snapshots:
       - '@opentelemetry/resources'
       - effect
 
-  '@livestore/devtools-vite@0.3.1(29e08c45f86af1aa0ee363af32cb9c18)':
+  '@livestore/common@0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)':
     dependencies:
-      '@livestore/adapter-web': 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
-      '@livestore/utils': 0.3.1(38eef8465614833bab78aa968987f446)
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@livestore/webmesh': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@opentelemetry/api': 1.9.0
+    transitivePeerDependencies:
+      - '@effect/ai'
+      - '@effect/cli'
+      - '@effect/cluster'
+      - '@effect/experimental'
+      - '@effect/opentelemetry'
+      - '@effect/platform'
+      - '@effect/platform-browser'
+      - '@effect/platform-bun'
+      - '@effect/platform-node'
+      - '@effect/printer'
+      - '@effect/printer-ansi'
+      - '@effect/rpc'
+      - '@effect/sql'
+      - '@effect/typeclass'
+      - '@opentelemetry/resources'
+      - effect
+
+  '@livestore/devtools-vite@0.4.0-dev.22(37f54459f5513ce719b4b549bd0e5ba8)':
+    dependencies:
+      '@livestore/adapter-web': 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
       vite: 6.3.5(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.21.0)(yaml@2.8.1)
     transitivePeerDependencies:
+      - '@effect/ai'
       - '@effect/cli'
       - '@effect/cluster'
       - '@effect/experimental'
@@ -6914,12 +7045,13 @@ snapshots:
       - '@opentelemetry/resources'
       - effect
 
-  '@livestore/devtools-vite@0.3.1(c59ede95208b310cf42a97088f561888)':
+  '@livestore/devtools-vite@0.4.0-dev.22(e6b3ed140f343de605d092e14d9b84cc)':
     dependencies:
-      '@livestore/adapter-web': 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
-      '@livestore/utils': 0.3.1(38eef8465614833bab78aa968987f446)
-      vite: 6.3.4(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.21.0)(yaml@2.8.1)
+      '@livestore/adapter-web': 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      vite: 7.2.4(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.21.0)(yaml@2.8.1)
     transitivePeerDependencies:
+      - '@effect/ai'
       - '@effect/cli'
       - '@effect/cluster'
       - '@effect/experimental'
@@ -6937,12 +7069,13 @@ snapshots:
       - '@opentelemetry/resources'
       - effect
 
-  '@livestore/devtools-web-common@0.3.1(38eef8465614833bab78aa968987f446)':
+  '@livestore/devtools-web-common@0.4.0-dev.22(007908adef956769b32467e09d1ab764)':
     dependencies:
-      '@livestore/common': 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
-      '@livestore/utils': 0.3.1(38eef8465614833bab78aa968987f446)
-      '@livestore/webmesh': 0.3.1(38eef8465614833bab78aa968987f446)
+      '@livestore/common': 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@livestore/webmesh': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
     transitivePeerDependencies:
+      - '@effect/ai'
       - '@effect/cli'
       - '@effect/cluster'
       - '@effect/experimental'
@@ -6982,14 +7115,13 @@ snapshots:
       - '@opentelemetry/resources'
       - effect
 
-  '@livestore/react@0.3.1(e619d9a02e7331598c0487672266f18e)':
+  '@livestore/livestore@0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)':
     dependencies:
-      '@livestore/common': 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
-      '@livestore/livestore': 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
-      '@livestore/utils': 0.3.1(38eef8465614833bab78aa968987f446)
+      '@livestore/common': 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
       '@opentelemetry/api': 1.9.0
-      react: 19.2.1
     transitivePeerDependencies:
+      - '@effect/ai'
       - '@effect/cli'
       - '@effect/cluster'
       - '@effect/experimental'
@@ -7006,12 +7138,40 @@ snapshots:
       - '@opentelemetry/resources'
       - effect
 
-  '@livestore/sqlite-wasm@0.3.1(38eef8465614833bab78aa968987f446)':
+  '@livestore/react@0.4.0-dev.22(e2fa3e649a3073b3ecbf27b22f58c622)':
     dependencies:
-      '@livestore/common': 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
-      '@livestore/utils': 0.3.1(38eef8465614833bab78aa968987f446)
-      '@livestore/wa-sqlite': 1.0.5-dev.2
+      '@livestore/common': 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
+      '@livestore/livestore': 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@opentelemetry/api': 1.9.0
+      react: 19.2.1
     transitivePeerDependencies:
+      - '@effect/ai'
+      - '@effect/cli'
+      - '@effect/cluster'
+      - '@effect/experimental'
+      - '@effect/opentelemetry'
+      - '@effect/platform'
+      - '@effect/platform-browser'
+      - '@effect/platform-bun'
+      - '@effect/platform-node'
+      - '@effect/printer'
+      - '@effect/printer-ansi'
+      - '@effect/rpc'
+      - '@effect/sql'
+      - '@effect/typeclass'
+      - '@opentelemetry/resources'
+      - effect
+
+  '@livestore/sqlite-wasm@0.4.0-dev.22(007908adef956769b32467e09d1ab764)':
+    dependencies:
+      '@cloudflare/workers-types': 4.20251118.0
+      '@livestore/common': 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
+      '@livestore/common-cf': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@livestore/wa-sqlite': 0.4.0-dev.22
+    transitivePeerDependencies:
+      - '@effect/ai'
       - '@effect/cli'
       - '@effect/cluster'
       - '@effect/experimental'
@@ -7029,11 +7189,14 @@ snapshots:
       - '@opentelemetry/resources'
       - effect
 
-  '@livestore/sync-cf@0.3.1(38eef8465614833bab78aa968987f446)':
+  '@livestore/sync-cf@0.4.0-dev.22(007908adef956769b32467e09d1ab764)':
     dependencies:
-      '@livestore/common': 0.3.1(f9c23af240f2640c0a9abef8711d3cc6)
-      '@livestore/utils': 0.3.1(38eef8465614833bab78aa968987f446)
+      '@cloudflare/workers-types': 4.20251118.0
+      '@livestore/common': 0.4.0-dev.22(9b5a0ddad8b7b9494fb32c90061ba2c1)
+      '@livestore/common-cf': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
     transitivePeerDependencies:
+      - '@effect/ai'
       - '@effect/cli'
       - '@effect/cluster'
       - '@effect/experimental'
@@ -7074,12 +7237,60 @@ snapshots:
       nanoid: 5.1.3
       pretty-bytes: 6.1.1
 
+  '@livestore/utils@0.4.0-dev.22(007908adef956769b32467e09d1ab764)':
+    dependencies:
+      '@effect/ai': 0.29.1(@effect/experimental@0.46.8(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/platform@0.82.4(effect@3.15.5))(@effect/rpc@0.59.9(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(effect@3.15.5)
+      '@effect/cli': 0.61.8(@effect/platform@0.82.4(effect@3.15.5))(@effect/printer-ansi@0.43.5(@effect/typeclass@0.34.2(effect@3.15.5))(effect@3.15.5))(@effect/printer@0.43.5(@effect/typeclass@0.34.2(effect@3.15.5))(effect@3.15.5))(effect@3.15.5)
+      '@effect/cluster': 0.34.2(@effect/platform@0.82.4(effect@3.15.5))(@effect/rpc@0.59.9(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/sql@0.35.8(@effect/experimental@0.46.8(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(effect@3.15.5)
+      '@effect/experimental': 0.46.8(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5)
+      '@effect/opentelemetry': 0.48.8(@effect/platform@0.82.4(effect@3.15.5))(@opentelemetry/api@1.9.0)(@opentelemetry/resources@2.0.1(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.36.0)(effect@3.15.5)
+      '@effect/platform': 0.82.4(effect@3.15.5)
+      '@effect/platform-browser': 0.62.8(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5)
+      '@effect/platform-bun': 0.65.5(@effect/cluster@0.34.2(@effect/platform@0.82.4(effect@3.15.5))(@effect/rpc@0.59.9(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/sql@0.35.8(@effect/experimental@0.46.8(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(effect@3.15.5))(@effect/platform@0.82.4(effect@3.15.5))(@effect/rpc@0.59.9(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/sql@0.35.8(@effect/experimental@0.46.8(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(effect@3.15.5)
+      '@effect/platform-node': 0.81.5(@effect/cluster@0.34.2(@effect/platform@0.82.4(effect@3.15.5))(@effect/rpc@0.59.9(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/sql@0.35.8(@effect/experimental@0.46.8(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(effect@3.15.5))(@effect/platform@0.82.4(effect@3.15.5))(@effect/rpc@0.59.9(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/sql@0.35.8(@effect/experimental@0.46.8(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(effect@3.15.5)
+      '@effect/printer': 0.43.5(@effect/typeclass@0.34.2(effect@3.15.5))(effect@3.15.5)
+      '@effect/printer-ansi': 0.43.5(@effect/typeclass@0.34.2(effect@3.15.5))(effect@3.15.5)
+      '@effect/rpc': 0.59.9(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5)
+      '@effect/sql': 0.35.8(@effect/experimental@0.46.8(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5))(@effect/platform@0.82.4(effect@3.15.5))(effect@3.15.5)
+      '@effect/typeclass': 0.34.2(effect@3.15.5)
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/resources': 2.0.1(@opentelemetry/api@1.9.0)
+      '@standard-schema/spec': 1.0.0
+      effect: 3.15.5
+      nanoid: 5.1.5
+      pretty-bytes: 7.0.1
+      qrcode-generator: 2.0.4
+
+  '@livestore/wa-sqlite@0.4.0-dev.22': {}
+
   '@livestore/wa-sqlite@1.0.5-dev.2': {}
 
   '@livestore/webmesh@0.3.1(38eef8465614833bab78aa968987f446)':
     dependencies:
       '@livestore/utils': 0.3.1(38eef8465614833bab78aa968987f446)
     transitivePeerDependencies:
+      - '@effect/cli'
+      - '@effect/cluster'
+      - '@effect/experimental'
+      - '@effect/opentelemetry'
+      - '@effect/platform'
+      - '@effect/platform-browser'
+      - '@effect/platform-bun'
+      - '@effect/platform-node'
+      - '@effect/printer'
+      - '@effect/printer-ansi'
+      - '@effect/rpc'
+      - '@effect/sql'
+      - '@effect/typeclass'
+      - '@opentelemetry/api'
+      - '@opentelemetry/resources'
+      - effect
+
+  '@livestore/webmesh@0.4.0-dev.22(007908adef956769b32467e09d1ab764)':
+    dependencies:
+      '@livestore/utils': 0.4.0-dev.22(007908adef956769b32467e09d1ab764)
+    transitivePeerDependencies:
+      - '@effect/ai'
       - '@effect/cli'
       - '@effect/cluster'
       - '@effect/experimental'
@@ -9242,6 +9453,10 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.2
 
+  fdir@6.5.0(picomatch@4.0.3):
+    optionalDependencies:
+      picomatch: 4.0.3
+
   fflate@0.8.2: {}
 
   file-entry-cache@8.0.0:
@@ -10491,6 +10706,8 @@ snapshots:
 
   picomatch@4.0.2: {}
 
+  picomatch@4.0.3: {}
+
   pidusage@2.0.21:
     dependencies:
       safe-buffer: 5.2.1
@@ -10607,6 +10824,8 @@ snapshots:
 
   pretty-bytes@6.1.1: {}
 
+  pretty-bytes@7.0.1: {}
+
   pretty-format@27.5.1:
     dependencies:
       ansi-regex: 5.0.1
@@ -10660,6 +10879,8 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
+
+  qrcode-generator@2.0.4: {}
 
   qs@6.14.0:
     dependencies:
@@ -11218,6 +11439,11 @@ snapshots:
       fdir: 6.4.6(picomatch@4.0.2)
       picomatch: 4.0.2
 
+  tinyglobby@0.2.15:
+    dependencies:
+      fdir: 6.5.0(picomatch@4.0.3)
+      picomatch: 4.0.3
+
   tinypool@1.1.1: {}
 
   tinyqueue@2.0.3: {}
@@ -11445,7 +11671,7 @@ snapshots:
       - tsx
       - yaml
 
-  vite@6.3.4(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.21.0)(yaml@2.8.1):
+  vite@6.3.5(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.21.0)(yaml@2.8.1):
     dependencies:
       esbuild: 0.25.6
       fdir: 6.4.6(picomatch@4.0.2)
@@ -11461,14 +11687,14 @@ snapshots:
       tsx: 4.21.0
       yaml: 2.8.1
 
-  vite@6.3.5(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.21.0)(yaml@2.8.1):
+  vite@7.2.4(@types/node@24.0.13)(jiti@2.4.2)(lightningcss@1.30.1)(tsx@4.21.0)(yaml@2.8.1):
     dependencies:
       esbuild: 0.25.6
-      fdir: 6.4.6(picomatch@4.0.2)
-      picomatch: 4.0.2
+      fdir: 6.5.0(picomatch@4.0.3)
+      picomatch: 4.0.3
       postcss: 8.5.6
       rollup: 4.45.0
-      tinyglobby: 0.2.14
+      tinyglobby: 0.2.15
     optionalDependencies:
       '@types/node': 24.0.13
       fsevents: 2.3.3
