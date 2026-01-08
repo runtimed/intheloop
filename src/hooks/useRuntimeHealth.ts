@@ -113,9 +113,9 @@ export const useRuntimeHealth = (): RuntimeHealthState => {
 
   const hasActiveRuntime = Boolean(
     activeRuntime &&
-    ["healthy", "warning", "connecting"].includes(
-      getRuntimeHealth(activeRuntime)
-    )
+      ["healthy", "warning", "connecting"].includes(
+        getRuntimeHealth(activeRuntime)
+      )
   );
 
   const runtimeHealth = activeRuntime
