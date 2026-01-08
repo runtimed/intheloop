@@ -192,12 +192,15 @@ class ConsoleLauncher {
       }
 
       // Create HTML agent with new dedicated class
+      const envValue = String(import.meta.env.VITE_USE_PROJECTS_ARTIFACTS || "");
+      const useProjectsArtifacts = envValue === "true";
       const htmlConfig: LocalRuntimeConfig = {
         store,
         authToken,
         notebookId,
         userId,
         syncUrl: "ws://localhost:8787",
+        useProjectsArtifacts,
       };
 
       this.currentHtmlAgent = new HtmlRuntimeAgent(htmlConfig);
@@ -276,6 +279,8 @@ class ConsoleLauncher {
       const enableConsoleLogging = logLevel <= LogLevel.INFO;
 
       // Create Pyodide agent with new dedicated class
+      const envValue = String(import.meta.env.VITE_USE_PROJECTS_ARTIFACTS || "");
+      const useProjectsArtifacts = envValue === "true";
       const pyodideConfig: LocalRuntimeConfig = {
         store,
         authToken,
@@ -286,6 +291,7 @@ class ConsoleLauncher {
           level: logLevel,
           console: enableConsoleLogging,
         },
+        useProjectsArtifacts,
       };
 
       this.currentPyodideAgent = new PyodideRuntimeAgent(pyodideConfig);

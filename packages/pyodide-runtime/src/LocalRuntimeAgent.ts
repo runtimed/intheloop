@@ -70,6 +70,9 @@ export abstract class LocalRuntimeAgent {
       throw new Error(`${this.getRuntimeType()} agent is already running`);
     }
 
+    const useProjectsArtifacts: boolean = this.config.useProjectsArtifacts ??
+      (String(import.meta.env.VITE_USE_PROJECTS_ARTIFACTS || "") === "true");
+
     const runtimeConfig = new RuntimeConfig({
       runtimeId: this.config.runtimeId || this.generateRuntimeId(),
       runtimeType: this.getRuntimeType(),
@@ -79,6 +82,7 @@ export abstract class LocalRuntimeAgent {
       notebookId: this.config.notebookId,
       store: this.config.store,
       userId: this.config.userId,
+      useProjectsArtifacts: useProjectsArtifacts,
     });
 
     this.agent = new RuntimeAgent(runtimeConfig, this.getCapabilities());

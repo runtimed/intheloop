@@ -48,8 +48,17 @@ const processMultimediaData = (data: Record<string, MediaContainer>) => {
         if (isInlineContainer(container)) {
           outputData[mimeType] = container.data;
         } else if (isArtifactContainer(container)) {
-          // Generate proper artifact URL for loading
-          outputData[mimeType] = `/api/artifacts/${container.artifactId}`;
+          // For artifact containers, we need to determine the URL
+          // Since we don't have access to ArtifactClient here, we check metadata for fileUrl
+          // If Projects artifacts are enabled (fileUrl present), use it; otherwise use legacy endpoint
+          const metadataFileUrl =
+            typeof container.metadata?.fileUrl === "string"
+              ? container.metadata.fileUrl
+              : undefined;
+          const fileUrl =
+            metadataFileUrl || `/api/artifacts/${container.artifactId}`;
+          
+          outputData[mimeType] = fileUrl;
         }
       }
       return outputData;

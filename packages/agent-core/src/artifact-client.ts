@@ -144,6 +144,7 @@ export class ArtifactClient implements IArtifactClient {
 
     return {
       artifactId: result.artifactId,
+      fileUrl: result.fileUrl,
     };
   }
 
@@ -189,9 +190,25 @@ export class ArtifactClient implements IArtifactClient {
 
   /**
    * Get the public URL for an artifact (for direct access)
+   * If useProjectsArtifacts is enabled and fileUrl is in container metadata, use it.
+   * Otherwise, fall back to the legacy API endpoint.
    */
-  getArtifactUrl(artifactId: string): string {
-    return `${this.baseUrl}/api/artifacts/${artifactId}`;
+  getArtifactUrl(container: {
+    artifactId: string;
+    metadata?: Record<string, unknown>;
+  }): string {
+    // If Projects artifacts are enabled, check for fileUrl in metadata
+    if (this.useProjectsArtifacts) {
+      const fileUrl =
+        typeof container.metadata?.fileUrl === "string"
+          ? container.metadata.fileUrl
+          : undefined;
+      if (fileUrl) {
+        return fileUrl;
+      }
+    }
+    // Otherwise, use the legacy API endpoint
+    return `${this.baseUrl}/api/artifacts/${container.artifactId}`;
   }
 
   /**

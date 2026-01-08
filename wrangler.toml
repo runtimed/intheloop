@@ -54,6 +54,7 @@ VITE_AUTH_CLIENT_ID = "b7296d39-c1eb-49f4-b9a1-f36e6d5b8b6d"
 VITE_AUTH_REDIRECT_URI = "http://localhost:5173/oidc"
 VITE_AI_PROVIDER = "anaconda"
 VITE_LS_DEV = "true"
+VITE_USE_PROJECTS_ARTIFACTS = "true"
 
 # ---
 # Deployed Environments
