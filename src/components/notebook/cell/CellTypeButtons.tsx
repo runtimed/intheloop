@@ -13,8 +13,10 @@ export const cellTypeStyles = {
   ai: "border-purple-300 focus-visible:border-purple-500 text-purple-600 hover:bg-purple-50 hover:text-purple-600 focus:bg-purple-50 focus-visible:ring-purple-100",
 };
 
-interface CellTypeButtonProps
-  extends Omit<ComponentProps<typeof Button>, "children"> {
+interface CellTypeButtonProps extends Omit<
+  ComponentProps<typeof Button>,
+  "children"
+> {
   cellType: CellTypeNoRaw;
   showIcon?: boolean;
   showPlus?: boolean;

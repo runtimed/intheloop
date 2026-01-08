@@ -57,7 +57,7 @@ const processMultimediaData = (data: Record<string, MediaContainer>) => {
               : undefined;
           const fileUrl =
             metadataFileUrl || `/api/artifacts/${container.artifactId}`;
-          
+
           outputData[mimeType] = fileUrl;
         }
       }

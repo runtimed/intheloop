@@ -75,11 +75,11 @@ export function prefetchOutputChunks(): void {
 
     // These imports will trigger chunk loading but won't execute the modules
     // until they're actually needed via React.lazy()
-    import(
-      "../components/outputs/shared-with-iframe/MarkdownRenderer.js"
-    ).catch(() => {
-      // Silently ignore prefetch failures
-    });
+    import("../components/outputs/shared-with-iframe/MarkdownRenderer.js").catch(
+      () => {
+        // Silently ignore prefetch failures
+      }
+    );
     import("../components/outputs/shared-with-iframe/JsonOutput.js").catch(
       () => {}
     );
@@ -95,12 +95,12 @@ export function prefetchOutputChunks(): void {
     import("../components/outputs/shared-with-iframe/SvgOutput.js").catch(
       () => {}
     );
-    import(
-      "../components/outputs/shared-with-iframe/AiToolCallOutput.js"
-    ).catch(() => {});
-    import(
-      "../components/outputs/shared-with-iframe/AiToolResultOutput.js"
-    ).catch(() => {});
+    import("../components/outputs/shared-with-iframe/AiToolCallOutput.js").catch(
+      () => {}
+    );
+    import("../components/outputs/shared-with-iframe/AiToolResultOutput.js").catch(
+      () => {}
+    );
   });
 }
 
@@ -137,12 +137,12 @@ export function prefetchOutputsConservative(): void {
   prefetchWhenIdle(
     () => {
       // Only prefetch the most commonly used components
-      import(
-        "../components/outputs/shared-with-iframe/PlainTextOutput.js"
-      ).catch(() => {});
-      import(
-        "../components/outputs/shared-with-iframe/MarkdownRenderer.js"
-      ).catch(() => {});
+      import("../components/outputs/shared-with-iframe/PlainTextOutput.js").catch(
+        () => {}
+      );
+      import("../components/outputs/shared-with-iframe/MarkdownRenderer.js").catch(
+        () => {}
+      );
       // Preload react-spring as it's used in the loading screen
       import("@react-spring/web").catch(() => {});
     },

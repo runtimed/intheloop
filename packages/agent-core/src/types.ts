@@ -30,7 +30,10 @@ export interface IArtifactClient {
   ): Promise<ArtifactSubmissionResult>;
 
   /** Get artifact URL from container, using fileUrl if available (Projects) or falling back to legacy endpoint */
-  getArtifactUrl(container: { artifactId: string; metadata?: Record<string, unknown> }): string;
+  getArtifactUrl(container: {
+    artifactId: string;
+    metadata?: Record<string, unknown>;
+  }): string;
 }
 
 /** Artifact submission options */

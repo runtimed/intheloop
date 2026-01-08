@@ -73,8 +73,9 @@ export abstract class LocalRuntimeAgent {
       throw new Error(`${this.getRuntimeType()} agent is already running`);
     }
 
-    const useProjectsArtifacts: boolean = this.config.useProjectsArtifacts ??
-      (String(import.meta.env.VITE_USE_PROJECTS_ARTIFACTS || "") === "true");
+    const useProjectsArtifacts: boolean =
+      this.config.useProjectsArtifacts ??
+      String(import.meta.env.VITE_USE_PROJECTS_ARTIFACTS || "") === "true";
 
     const runtimeConfig = new RuntimeConfig({
       runtimeId: this.config.runtimeId || this.generateRuntimeId(),

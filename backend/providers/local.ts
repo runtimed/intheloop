@@ -21,12 +21,12 @@ export class LocalApiKeyProvider implements ApiKeyProvider {
       // japikey tokens have specific structure - check for key ID in subject and audience
       return Boolean(
         unverified.sub &&
-          unverified.iss &&
-          unverified.aud === "api-keys" &&
-          typeof unverified.sub === "string" &&
-          unverified.sub.match(
-            /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-          ) // UUID format
+        unverified.iss &&
+        unverified.aud === "api-keys" &&
+        typeof unverified.sub === "string" &&
+        unverified.sub.match(
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+        ) // UUID format
       );
     } catch {
       return false;

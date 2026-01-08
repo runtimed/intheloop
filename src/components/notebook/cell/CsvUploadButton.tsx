@@ -9,8 +9,10 @@ import { useAddCell } from "@/hooks/useAddCell";
 import { events } from "@runtimed/schema";
 import { toast } from "sonner";
 
-interface CsvUploadButtonProps
-  extends Omit<ComponentProps<typeof Button>, "children"> {
+interface CsvUploadButtonProps extends Omit<
+  ComponentProps<typeof Button>,
+  "children"
+> {
   showPlus?: boolean;
   label?: string;
   position?: "before" | "after";

@@ -46,11 +46,11 @@ const PlainTextOutput = React.lazy(() =>
   )
 );
 const GeoJsonMapOutput = React.lazy(() =>
-  import(
-    "@/components/outputs/shared-with-iframe/geojson/GeoJsonMapOutput"
-  ).then((m) => ({
-    default: m.GeoJsonMapOutput,
-  }))
+  import("@/components/outputs/shared-with-iframe/geojson/GeoJsonMapOutput").then(
+    (m) => ({
+      default: m.GeoJsonMapOutput,
+    })
+  )
 );
 
 // Dynamic imports for AI outputs
