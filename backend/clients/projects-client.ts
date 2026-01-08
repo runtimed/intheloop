@@ -269,6 +269,12 @@ export class ProjectsClient {
     return this.request<ProjectSchema>("POST", "/", request);
   }
 
+  async createRandomlyNamedProject(): Promise<ProjectSchema> {
+    return this.createProject({
+      name: "<random>",
+    });
+  }
+
   /**
    * Get project details
    *

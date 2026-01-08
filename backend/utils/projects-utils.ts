@@ -18,10 +18,7 @@ export async function createProjectIfNeeded(
           bearerToken: bearerToken,
         });
 
-      const project = await client.createProject({
-        name: "<random>",
-      });
-
+      const project = await client.createRandomlyNamedProject();
       projectId = project.id;
     } catch (error) {
       console.error("Error creating project:", error);

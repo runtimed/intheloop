@@ -151,7 +151,7 @@ export class AnacondaPermissionsProvider implements PermissionsProvider {
   }
 
   async listAccessibleResources(
-    userId: string,
+    _userId: string,
     resourceType: "notebook",
     permissions?: PermissionLevel[]
   ): Promise<string[]> {
@@ -169,8 +169,8 @@ export class AnacondaPermissionsProvider implements PermissionsProvider {
     return notebookIds;
   }
   async filterAccessibleResources(
-    userId: string,
-    resourceIds: string[]
+    _userId: string,
+    _resourceIds: string[]
   ): Promise<string[]> {
     // Method not used for now. Not implemented yet.
     throw new Error("Method not implemented.");

@@ -23,7 +23,6 @@ import {
   removeTagFromNotebook,
   updateNotebook,
   updateTag,
-  getNotebookCollaborators,
   upsertSavedPrompt,
   getSavedPrompt,
   deleteSavedPrompt,
