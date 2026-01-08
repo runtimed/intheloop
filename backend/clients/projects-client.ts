@@ -122,6 +122,18 @@ export interface ListPermissionsResponse {
 }
 
 /**
+ * My permissions response - permissions for the current user
+ */
+export interface MyPermissionResponseItem {
+  delete: boolean;
+  find: boolean;
+  modify: boolean;
+  own: boolean;
+  read: boolean;
+  share: boolean;
+}
+
+/**
  * Set project permissions request
  */
 export interface SetProjectPermissionsRequest {
@@ -377,6 +389,22 @@ export class ProjectsClient {
       "POST",
       `/${projectId}/permissions`,
       request
+    );
+  }
+
+  /**
+   * Get my permissions for a project
+   *
+   * Swagger path: /{project_id}/permissions/my (GET)
+   * Returns the permissions for the current authenticated user.
+   *
+   * @param projectId - The project ID
+   * @returns Permissions for the current user
+   */
+  async getMyPermissions(projectId: string): Promise<MyPermissionResponseItem> {
+    return this.request<MyPermissionResponseItem>(
+      "GET",
+      `/${projectId}/permissions/my`
     );
   }
 

@@ -145,9 +145,13 @@ export class AnacondaPermissionsProvider implements PermissionsProvider {
     }
     return permissions;
   }
-  async isOwner(userId: string, notebookId: string): Promise<boolean> {
-    let userPermission = await this.checkPermission(userId, notebookId);
-    return userPermission.hasAccess && userPermission.level === "owner";
+  async isOwner(_userId: string, notebookId: string): Promise<boolean> {
+    let projectId = await getProjectIdForNotebook(this.db, notebookId);
+    if (!projectId) {
+      return false;
+    }
+    let userPermission = await this.client.getMyPermissions(projectId);
+    return userPermission.own;
   }
 
   async listAccessibleResources(
