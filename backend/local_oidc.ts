@@ -94,24 +94,17 @@ export async function generateOpenIdConfiguration(
 ): Promise<OpenIdConfiguration> {
   // If external OIDC is configured, fetch and return its configuration
   if (env.EXTERNAL_OIDC_URL) {
-    try {
-      const response = await fetch(
-        `${env.EXTERNAL_OIDC_URL}/.well-known/openid-configuration`
-      );
-      if (response.ok) {
-        const config = await response.json();
-        console.log("Using external OIDC provider:", env.EXTERNAL_OIDC_URL);
-        return config;
-      }
-    } catch (error) {
-      console.warn(
-        "Failed to fetch external OIDC config, falling back to local:",
-        error
-      );
+    const response = await fetch(
+      `${env.EXTERNAL_OIDC_URL}/.well-known/openid-configuration`
+    );
+    if (response.ok) {
+      const config = await response.json();
+      console.log("Using external OIDC provider:", env.EXTERNAL_OIDC_URL);
+      return config;
     }
   }
 
-  // Fall back to local OIDC configuration
+  // If no external OIDC is configured, use local OIDC configuration
   return {
     issuer: `${baseUrl}/local_oidc`,
     authorization_endpoint:
