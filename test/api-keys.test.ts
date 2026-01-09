@@ -97,7 +97,7 @@ describe("API Key System", () => {
     it("should validate valid create request", () => {
       const validRequest = {
         scopes: [Scope.RuntExecute],
-        expiresAt: "2025-12-31T23:59:59Z",
+        expiresAt: "2027-12-31T23:59:59Z",
         userGenerated: true,
         name: "Test Key",
       };
@@ -178,7 +178,7 @@ describe("API Key System", () => {
     it("should accept request with optional resources", () => {
       const validRequest = {
         scopes: [Scope.RuntExecute],
-        expiresAt: "2025-12-31T23:59:59Z",
+        expiresAt: "2027-12-31T23:59:59Z",
         userGenerated: true,
         resources: [{ id: "notebook-123", type: "notebook" }],
       };
