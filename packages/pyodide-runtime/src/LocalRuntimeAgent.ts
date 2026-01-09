@@ -36,6 +36,8 @@ export interface LocalRuntimeConfig {
   syncUrl?: string;
   /** Optional logger configuration */
   logging?: Partial<LoggerConfig>;
+  /** Use Projects service for artifact uploads instead of legacy R2 flow */
+  useProjectsArtifacts?: boolean;
 }
 
 /**
@@ -71,8 +73,7 @@ export abstract class LocalRuntimeAgent {
     }
 
     const useProjectsArtifacts: boolean =
-      this.config.useProjectsArtifacts ??
-      String(import.meta.env.VITE_USE_PROJECTS_ARTIFACTS || "") === "true";
+      this.config.useProjectsArtifacts ?? false;
 
     const runtimeConfig = new RuntimeConfig({
       runtimeId: this.config.runtimeId || this.generateRuntimeId(),

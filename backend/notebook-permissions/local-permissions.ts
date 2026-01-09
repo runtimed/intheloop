@@ -11,7 +11,7 @@ import {
   getUsersByIds,
   toPublicFacingUser,
 } from "../users/utils.ts";
-import { NotebookRow } from "backend/trpc/types.ts";
+import { NotebookRow, TagColor } from "backend/trpc/types.ts";
 
 /**
  * Local permissions provider using D1 database
@@ -412,8 +412,15 @@ export class LocalPermissionsProvider implements PermissionsProvider {
 
             return {
               ...notebook,
-              collaborators,
-              tags,
+              collaborators: collaborators.map((user) => ({
+                id: user.id,
+                givenName: user.givenName ?? "",
+                familyName: user.familyName ?? "",
+              })),
+              tags: tags.map((tag) => ({
+                ...tag,
+                color: tag.color as TagColor,
+              })),
             };
           } catch (error) {
             console.error(
