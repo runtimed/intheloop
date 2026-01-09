@@ -47,6 +47,19 @@ export const appRouter = router({
     return ctx;
   }),
 
+  // Health endpoint - public
+  health: publicProcedure.query(async (opts) => {
+    const { ctx } = opts;
+    return {
+      status: "healthy",
+      framework: "trpc",
+      deployment_env: ctx.env.DEPLOYMENT_ENV,
+      timestamp: new Date().toISOString(),
+      authenticated: ctx.user !== null,
+      user_id: ctx.user?.id || null,
+    };
+  }),
+
   // Get current user (private data)
   me: authedProcedure.query(async (opts) => {
     const { ctx } = opts;

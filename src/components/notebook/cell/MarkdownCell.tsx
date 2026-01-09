@@ -15,7 +15,7 @@ import React, {
   useState,
 } from "react";
 
-import { IframeOutput } from "@/components/outputs/MaybeCellOutputs.js";
+import { IframeOutput } from "@/components/outputs/IframeOutput.js";
 import { Button } from "@/components/ui/button.js";
 import { useFeatureFlag } from "@/contexts/FeatureFlagContext.js";
 import { useUserRegistry } from "@/hooks/useUserRegistry.js";

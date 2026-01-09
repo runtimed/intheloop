@@ -95,9 +95,11 @@ describe("API Key System", () => {
 
   describe("Request Validation", () => {
     it("should validate valid create request", () => {
+      // Use a date that's guaranteed to be in the future
+      const futureDate = new Date(Date.now() + 86400000).toISOString(); // 1 day from now
       const validRequest = {
         scopes: [Scope.RuntExecute],
-        expiresAt: "2027-12-31T23:59:59Z",
+        expiresAt: futureDate,
         userGenerated: true,
         name: "Test Key",
       };
@@ -176,9 +178,11 @@ describe("API Key System", () => {
     });
 
     it("should accept request with optional resources", () => {
+      // Use a date that's guaranteed to be in the future
+      const futureDate = new Date(Date.now() + 86400000).toISOString(); // 1 day from now
       const validRequest = {
         scopes: [Scope.RuntExecute],
-        expiresAt: "2027-12-31T23:59:59Z",
+        expiresAt: futureDate,
         userGenerated: true,
         resources: [{ id: "notebook-123", type: "notebook" }],
       };

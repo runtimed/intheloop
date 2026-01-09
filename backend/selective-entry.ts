@@ -149,6 +149,25 @@ export default {
       );
     }
 
+    // Basic Cloudflare health endpoint (no framework)
+    if (pathname === "/api/cloudflare-health" && request.method === "GET") {
+      return new workerGlobals.Response(
+        JSON.stringify({
+          status: "healthy",
+          service: "cloudflare-worker",
+          timestamp: new Date().toISOString(),
+          deployment_env: env.DEPLOYMENT_ENV,
+        }),
+        {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      );
+    }
+
     // CORS preflight handling
     if (request.method === "OPTIONS") {
       return new workerGlobals.Response(null, {
