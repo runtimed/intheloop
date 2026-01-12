@@ -39,8 +39,9 @@ export class AnacondaPermissionsProvider implements PermissionsProvider {
     return results.results?.map((row) => row.id) ?? [];
   }
 
+  // Only implemented for the scenario of checking permissions for the current user.
   async checkPermission(
-    userId: string,
+    _userId: string,
     notebookId: string
   ): Promise<PermissionResult> {
     let projectId = await getProjectIdForNotebook(this.db, notebookId);
@@ -48,31 +49,15 @@ export class AnacondaPermissionsProvider implements PermissionsProvider {
       return { hasAccess: false, error: "Notebook not found" };
     }
 
-    let permissions: ListPermissionsResponse | undefined = undefined;
-    try {
-      permissions = await this.client.getPermissions(projectId);
-    } catch (error) {
-      return {
-        hasAccess: false,
-        error: error instanceof Error ? error.message : "Unknown error",
-      };
+    let userPermission = await this.client.getMyPermissions(projectId);
+    if (userPermission.own) {
+      return { hasAccess: true, level: "owner" };
+    } else if (userPermission.modify) {
+      return { hasAccess: true, level: "writer" };
     }
 
-    for (const item of permissions.items) {
-      if (item.type === "user_id" && item.id === userId) {
-        if (item.relation === "owner" || item.relation === "writer") {
-          return {
-            hasAccess: true,
-            level: item.relation === "owner" ? "owner" : "writer",
-          };
-        }
-      }
-    }
 
-    return {
-      hasAccess: false,
-      error: "Permission not found",
-    };
+    return { hasAccess: false };
   }
   async grantPermission(input: GrantPermissionInput): Promise<void> {
     if (!(await this.isOwner(input.grantedBy, input.notebookId))) {
@@ -145,6 +130,8 @@ export class AnacondaPermissionsProvider implements PermissionsProvider {
     }
     return permissions;
   }
+
+  // Only implemented for the scenario of getting permissions for the current user.
   async isOwner(_userId: string, notebookId: string): Promise<boolean> {
     let projectId = await getProjectIdForNotebook(this.db, notebookId);
     if (!projectId) {
