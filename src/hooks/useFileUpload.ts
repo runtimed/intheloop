@@ -19,9 +19,10 @@ interface FileUploadOptions {
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
- * Legacy single-step artifact upload (R2-backed)
+ * Single-step artifact upload the backend (deprecated)
+ * @deprecated Use uploadFileViaProjects instead
  */
-async function uploadFileLegacy(
+async function uploadFileToSync(
   file: File,
   notebookId: string,
   accessToken: string,
@@ -148,7 +149,7 @@ export const useFileUpload = ({
             onFileUploaded
           );
         } else {
-          return await uploadFileLegacy(
+          return await uploadFileToSync(
             file,
             notebookId,
             accessToken!,
