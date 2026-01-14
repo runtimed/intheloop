@@ -56,7 +56,6 @@ export class AnacondaPermissionsProvider implements PermissionsProvider {
       return { hasAccess: true, level: "writer" };
     }
 
-
     return { hasAccess: false };
   }
   async grantPermission(input: GrantPermissionInput): Promise<void> {

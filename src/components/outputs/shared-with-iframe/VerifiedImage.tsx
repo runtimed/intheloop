@@ -15,7 +15,11 @@ interface VerifiedImageProps extends ImgHTMLAttributes<HTMLImageElement> {
  * Verifies that an image URL can be loaded before rendering it.
  * Used for images in markdown content.
  */
-export const VerifiedImage: React.FC<VerifiedImageProps> = ({ src, alt, ...props }) => {
+export const VerifiedImage: React.FC<VerifiedImageProps> = ({
+  src,
+  alt,
+  ...props
+}) => {
   const [isReady, setIsReady] = useState(false);
   const [imageSrc, setImageSrc] = useState<string>(src);
   const [retryCount, setRetryCount] = useState(0);
@@ -25,8 +29,12 @@ export const VerifiedImage: React.FC<VerifiedImageProps> = ({ src, alt, ...props
 
   // Only verify fetch for HTTP/HTTPS URLs (not data URIs or base64)
   const shouldVerifyFetch = (url: string): boolean => {
-    return (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")) &&
-           !url.startsWith("data:");
+    return (
+      (url.startsWith("http://") ||
+        url.startsWith("https://") ||
+        url.startsWith("/")) &&
+      !url.startsWith("data:")
+    );
   };
 
   useEffect(() => {
@@ -56,9 +64,10 @@ export const VerifiedImage: React.FC<VerifiedImageProps> = ({ src, alt, ...props
       }
 
       // Add cache-busting parameter for retries
-      const loadUrl = attempt > 0
-        ? `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}_retry=${attempt}&_t=${Date.now()}`
-        : baseUrl;
+      const loadUrl =
+        attempt > 0
+          ? `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}_retry=${attempt}&_t=${Date.now()}`
+          : baseUrl;
 
       const img = new Image();
       imageRef.current = img;
@@ -66,17 +75,17 @@ export const VerifiedImage: React.FC<VerifiedImageProps> = ({ src, alt, ...props
       // Set up timeout
       const timeoutId = window.setTimeout(() => {
         if (!isMountedRef.current) return;
-        
+
         img.onload = null;
         img.onerror = null;
-        
+
         // Retry if we haven't exceeded max retries
         if (attempt < MAX_RETRIES) {
           const delay = Math.min(
             INITIAL_RETRY_DELAY_MS * Math.pow(2, attempt),
             MAX_RETRY_DELAY_MS
           );
-          
+
           setTimeout(() => {
             if (isMountedRef.current) {
               setRetryCount(attempt + 1);
@@ -93,14 +102,14 @@ export const VerifiedImage: React.FC<VerifiedImageProps> = ({ src, alt, ...props
 
       img.onload = () => {
         if (!isMountedRef.current) return;
-        
+
         clearTimeout(timeoutRef.current!);
         timeoutRef.current = null;
-        
+
         // Use original URL for rendering (without cache-busting params)
         setImageSrc(baseUrl);
         setIsReady(true);
-        
+
         // Clean up
         img.onload = null;
         img.onerror = null;
@@ -109,17 +118,17 @@ export const VerifiedImage: React.FC<VerifiedImageProps> = ({ src, alt, ...props
 
       img.onerror = () => {
         if (!isMountedRef.current) return;
-        
+
         clearTimeout(timeoutRef.current!);
         timeoutRef.current = null;
-        
+
         // Retry if we haven't exceeded max retries
         if (attempt < MAX_RETRIES) {
           const delay = Math.min(
             INITIAL_RETRY_DELAY_MS * Math.pow(2, attempt),
             MAX_RETRY_DELAY_MS
           );
-          
+
           setTimeout(() => {
             if (isMountedRef.current) {
               setRetryCount(attempt + 1);
@@ -131,7 +140,7 @@ export const VerifiedImage: React.FC<VerifiedImageProps> = ({ src, alt, ...props
           setImageSrc(baseUrl);
           setIsReady(true);
         }
-        
+
         // Clean up
         img.onload = null;
         img.onerror = null;
@@ -163,13 +172,22 @@ export const VerifiedImage: React.FC<VerifiedImageProps> = ({ src, alt, ...props
   if (!isReady) {
     return (
       <span className="inline-block align-middle text-xs text-gray-500">
-        {retryCount > 0 ? `Loading image... (retry ${retryCount}/${MAX_RETRIES})` : "Loading image..."}
+        {retryCount > 0
+          ? `Loading image... (retry ${retryCount}/${MAX_RETRIES})`
+          : "Loading image..."}
       </span>
     );
   }
 
-  return <img src={imageSrc} alt={alt} className="h-auto max-w-full" style={{ objectFit: "contain" }} {...props} />;
+  return (
+    <img
+      src={imageSrc}
+      alt={alt}
+      className="h-auto max-w-full"
+      style={{ objectFit: "contain" }}
+      {...props}
+    />
+  );
 };
 
 export default VerifiedImage;
-
