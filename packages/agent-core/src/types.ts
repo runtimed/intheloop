@@ -29,8 +29,11 @@ export interface IArtifactClient {
     options: ArtifactSubmissionOptions
   ): Promise<ArtifactSubmissionResult>;
 
-  /** Get artifact URL by ID */
-  getArtifactUrl(artifactId: string): string;
+  /** Get artifact URL from container, using fileUrl if available (Projects) or falling back to legacy endpoint */
+  getArtifactUrl(container: {
+    artifactId: string;
+    metadata?: Record<string, unknown>;
+  }): string;
 }
 
 /** Artifact submission options */
@@ -44,6 +47,8 @@ export interface ArtifactSubmissionOptions {
 /** Artifact submission result */
 export interface ArtifactSubmissionResult {
   artifactId: string;
+  /** Direct URL for Projects-backed artifacts (optional) */
+  fileUrl?: string;
 }
 
 /**
@@ -67,6 +72,8 @@ export interface RuntimeAgentOptions {
   readonly imageArtifactThresholdBytes?: number;
   /** Artifact client for dependency injection (optional) */
   readonly artifactClient?: IArtifactClient;
+  /** Use Projects service for artifact uploads instead of legacy R2 flow */
+  readonly useProjectsArtifacts?: boolean;
   /** LiveStore instance to use (required) */
   readonly store: Store;
   /** User ID for sync payload authorization (must be provided) */

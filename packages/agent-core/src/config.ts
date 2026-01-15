@@ -51,9 +51,17 @@ export class RuntimeConfig {
     this.userId = options.userId;
 
     // Use injected artifact client or create default one
+    // Explicitly handle undefined - if not provided, default to false
+    // The caller (LocalRuntimeAgent) should check the env var and pass the value
+    const useProjectsArtifacts =
+      options.useProjectsArtifacts !== undefined
+        ? options.useProjectsArtifacts
+        : false;
     this.artifactClient =
       options.artifactClient ??
-      new ArtifactClient(this.getArtifactServiceUrl(options.syncUrl));
+      new ArtifactClient(this.getArtifactServiceUrl(options.syncUrl), {
+        useProjectsArtifacts,
+      });
 
     // Generate unique session ID
     this.sessionId = `${this.runtimeType}-${this.runtimeId}-${Date.now()}-${Math.random()

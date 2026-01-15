@@ -12,6 +12,10 @@ vi.mock("../backend/middleware", () => ({
     c.set("isRuntime", false);
     return next();
   }),
+  projectsClientMiddleware: vi.fn((c, next) => {
+    // Mock projects client middleware (no-op for tests)
+    return next();
+  }),
 }));
 
 // Mock auth validation

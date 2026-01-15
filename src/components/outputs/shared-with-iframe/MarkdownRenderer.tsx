@@ -11,6 +11,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { sendFromIframe } from "./comms";
+import { VerifiedImage } from "./VerifiedImage";
 
 interface MarkdownRendererProps {
   content: string;
@@ -118,7 +119,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             if (!src || src === "") {
               return null;
             }
-            return <img src={src} alt={alt} {...props} />;
+            return <VerifiedImage src={src} alt={alt} {...props} />;
           },
           code({ node, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || "");

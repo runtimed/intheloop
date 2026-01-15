@@ -2,11 +2,14 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { ValidatedUser } from "backend/auth";
 import { Env } from "backend/types";
 import { PermissionsProvider } from "backend/notebook-permissions/types";
+import { ProjectsClient } from "../clients/projects-client.ts";
 
 export type TrcpContext = {
   env: Env;
   user: ValidatedUser | null;
   permissionsProvider: PermissionsProvider;
+  bearerToken: string | null;
+  projectsClient?: ProjectsClient;
 };
 
 /**

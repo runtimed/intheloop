@@ -3,6 +3,7 @@ import { type Env } from "./types.ts";
 import * as jose from "jose";
 import { v5 as uuidv5 } from "uuid";
 import { getPassport, parseToken } from "./auth.ts";
+import { generateOpenIdConfiguration } from "./local_oidc.ts";
 
 export interface OpenIdConfiguration {
   issuer: string;
@@ -95,25 +96,6 @@ function getBaseUrl(url: string): string {
   return `${urlObj.protocol}//${urlObj.host}`;
 }
 
-function generateOpenIdConfiguration(
-  baseUrl: string,
-  env: Env
-): OpenIdConfiguration {
-  return {
-    issuer: `${baseUrl}/local_oidc`,
-    authorization_endpoint:
-      env.LOCAL_OIDC_AUTHORIZATION_ENDPOINT ??
-      "http://localhost:5173/local_oidc/authorize",
-    jwks_uri: `${baseUrl}/local_oidc/.well-known/jwks.json`,
-    token_endpoint: `${baseUrl}/local_oidc/token`,
-    userinfo_endpoint: `${baseUrl}/local_oidc/userinfo`,
-    end_session_endpoint: `${baseUrl}/local_oidc/logout`,
-    scopes_supported: ["profile", "email", "openid"],
-    response_types_supported: ["code"],
-    token_endpoint_auth_methods_supported: ["client_secret_post"],
-  };
-}
-
 function getUserId(userData: UserData): string {
   // We want the userId to always be the same for a given email
   const nullNamespace = "00000000-0000-0000-0000-000000000000";
@@ -203,9 +185,9 @@ async function getJwks(env: Env): Promise<JWKS> {
 const localOidcRoutes = new Hono<{ Bindings: Env }>();
 
 // OpenID Connect Configuration endpoint
-localOidcRoutes.get("/.well-known/openid-configuration", (c) => {
+localOidcRoutes.get("/.well-known/openid-configuration", async (c) => {
   const baseUrl = getBaseUrl(c.req.url);
-  const config = generateOpenIdConfiguration(baseUrl, c.env);
+  const config = await generateOpenIdConfiguration(baseUrl, c.env);
 
   return c.json(config, 200, {
     "Content-Type": "application/json",

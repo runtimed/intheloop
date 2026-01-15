@@ -114,6 +114,7 @@ export const events = {
       fileName: Schema.String,
       createdAt: Schema.Date,
       createdBy: Schema.String,
+      fileUrl: Schema.optional(Schema.String), // Direct URL for Projects-backed artifacts
     }),
   }),
 
@@ -730,6 +731,7 @@ export const materializers = State.SQLite.materializers(events, {
     fileName,
     createdBy,
     createdAt,
+    fileUrl,
   }) => [
     tables.files
       .insert({
@@ -738,6 +740,7 @@ export const materializers = State.SQLite.materializers(events, {
         fileName,
         createdBy,
         createdAt,
+        fileUrl,
       })
       // We generate a unique id for each upload to the artifact service
       // It's possible that the same file is uploaded multiple times, so we overwrite it.

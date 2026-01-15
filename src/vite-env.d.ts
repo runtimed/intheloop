@@ -14,6 +14,7 @@ interface ImportMetaEnv {
   VITE_OPENAI_API_KEY?: string;
   VITE_GROQ_API_KEY?: string;
   VITE_LS_DEV?: string;
+  VITE_USE_PROJECTS_ARTIFACTS?: string;
 }
 
 interface ImportMeta {

@@ -78,6 +78,7 @@ jobs:
           VITE_GIT_COMMIT_HASH: ${{ github.sha }}
           VITE_LS_DEV: "true"
           ENABLE_LIVESTORE_DEVTOOLS: ${{ vars.ENABLE_LIVESTORE_DEVTOOLS }}
+          VITE_USE_PROJECTS_ARTIFACTS: ${{ vars.VITE_USE_PROJECTS_ARTIFACTS }}
 
       - name: Build iframe outputs
         run: pnpm run build:iframe

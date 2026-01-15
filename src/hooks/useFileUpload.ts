@@ -3,6 +3,7 @@ import { useAuth, useAuthenticatedUser } from "@/auth";
 import { toast } from "sonner";
 import { useStore } from "@livestore/react";
 import { events } from "@runtimed/schema";
+import { uploadArtifactViaProjects } from "@runtimed/agent-core";
 
 interface FileUploadOptions {
   notebookId: string;
@@ -16,6 +17,101 @@ interface FileUploadOptions {
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Single-step artifact upload the backend (deprecated)
+ * @deprecated Use uploadFileViaProjects instead
+ */
+async function uploadFileToSync(
+  file: File,
+  notebookId: string,
+  accessToken: string,
+  store: ReturnType<typeof useStore>["store"],
+  userId: string,
+  onFileUploaded?: FileUploadOptions["onFileUploaded"]
+): Promise<string> {
+  const response = await fetch("/api/artifacts", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "x-notebook-id": notebookId,
+      "Content-Type": file.type || "application/octet-stream",
+    },
+    body: file,
+  });
+
+  if (!response.ok) {
+    const error = await response
+      .json()
+      .catch(() => ({ error: "Upload failed" }));
+    toast.error(error.error || response.statusText);
+    throw new Error(error.error || response.statusText);
+  }
+
+  const result = await response.json();
+  console.log("legacy artifact upload result", result);
+
+  store.commit(
+    events.fileUploaded({
+      artifactId: result.artifactId,
+      mimeType: file.type,
+      fileName: file.name,
+      createdAt: new Date(),
+      createdBy: userId,
+    })
+  );
+
+  onFileUploaded?.({
+    artifactId: result.artifactId,
+    fileName: file.name,
+  });
+
+  return result.artifactId;
+}
+
+/**
+ * Projects-backed three-step artifact upload
+ */
+async function uploadFileViaProjects(
+  file: File,
+  notebookId: string,
+  accessToken: string,
+  store: ReturnType<typeof useStore>["store"],
+  userId: string,
+  onFileUploaded?: FileUploadOptions["onFileUploaded"]
+): Promise<string> {
+  const commitResult = await uploadArtifactViaProjects({
+    baseUrl: "",
+    notebookId,
+    authToken: accessToken,
+    filename: file.name,
+    mimeType: file.type || "application/octet-stream",
+    body: file,
+  });
+
+  console.log("artifact upload committed", commitResult);
+
+  store.commit(
+    events.fileUploaded({
+      // For Projects-backed uploads, we currently use the fileVersionId
+      // as the artifact identifier. Downstream readers may evolve to
+      // interpret this as a Projects file handle rather than R2 key.
+      artifactId: commitResult.fileVersionId,
+      mimeType: file.type,
+      fileName: commitResult.fileName || file.name,
+      fileUrl: commitResult.fileUrl, // Store the direct URL for Projects-backed artifacts
+      createdAt: new Date(),
+      createdBy: userId,
+    })
+  );
+
+  onFileUploaded?.({
+    artifactId: commitResult.fileVersionId,
+    fileName: commitResult.fileName || file.name,
+  });
+
+  return commitResult.fileVersionId;
+}
 
 export const useFileUpload = ({
   notebookId,
@@ -39,42 +135,32 @@ export const useFileUpload = ({
       setIsUploading(true);
       await sleep(500);
 
-      const response = await fetch("/api/artifacts", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "x-notebook-id": notebookId,
-          "Content-Type": file.type || "application/octet-stream",
-        },
-        body: file,
-      });
+      const useProjectsArtifacts =
+        import.meta.env.VITE_USE_PROJECTS_ARTIFACTS === "true";
 
-      if (!response.ok) {
+      try {
+        if (useProjectsArtifacts) {
+          return await uploadFileViaProjects(
+            file,
+            notebookId,
+            accessToken!,
+            store,
+            userId,
+            onFileUploaded
+          );
+        } else {
+          return await uploadFileToSync(
+            file,
+            notebookId,
+            accessToken!,
+            store,
+            userId,
+            onFileUploaded
+          );
+        }
+      } finally {
         setIsUploading(false);
-        const error = await response
-          .json()
-          .catch(() => ({ error: "Upload failed" }));
-        toast.error(error.error || response.statusText);
-        throw new Error(error.error || response.statusText);
       }
-
-      const result = await response.json();
-      console.log("result", result);
-
-      store.commit(
-        events.fileUploaded({
-          artifactId: result.artifactId,
-          mimeType: file.type,
-          fileName: file.name,
-          createdAt: new Date(),
-          createdBy: userId,
-        })
-      );
-
-      setIsUploading(false);
-      onFileUploaded?.({ artifactId: result.artifactId, fileName: file.name });
-
-      return result.artifactId;
     },
     [accessToken, notebookId, isAuthenticated, onFileUploaded, store, userId]
   );

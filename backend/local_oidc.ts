@@ -88,10 +88,23 @@ function getBaseUrl(request: WorkerRequest): string {
   return `${url.protocol}//${url.host}`;
 }
 
-function generateOpenIdConfiguration(
+export async function generateOpenIdConfiguration(
   baseUrl: string,
   env: Env
-): OpenIdConfiguration {
+): Promise<OpenIdConfiguration> {
+  // If external OIDC is configured, fetch and return its configuration
+  if (env.EXTERNAL_OIDC_URL) {
+    const response = await fetch(
+      `${env.EXTERNAL_OIDC_URL}/.well-known/openid-configuration`
+    );
+    if (response.ok) {
+      const config = await response.json();
+      console.log("Using external OIDC provider:", env.EXTERNAL_OIDC_URL);
+      return config;
+    }
+  }
+
+  // If no external OIDC is configured, use local OIDC configuration
   return {
     issuer: `${baseUrl}/local_oidc`,
     authorization_endpoint:
@@ -112,7 +125,7 @@ async function handleOpenIdConfiguration(
   env: Env
 ): Promise<WorkerResponse> {
   const baseUrl = getBaseUrl(request);
-  const config = generateOpenIdConfiguration(baseUrl, env);
+  const config = await generateOpenIdConfiguration(baseUrl, env);
 
   return new workerGlobals.Response(JSON.stringify(config, null, 2), {
     status: 200,
