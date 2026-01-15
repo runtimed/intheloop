@@ -212,6 +212,7 @@ export class ProjectsClient {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${this.config.bearerToken}`,
+            "User-Agent": "intheloop"
           },
           body: body ? JSON.stringify(body) : undefined,
         });
