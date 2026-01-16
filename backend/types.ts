@@ -59,6 +59,13 @@ export type Env = {
   // Anaconda Projects Service configuration
   ANACONDA_PROJECTS_URL: string;
 
+  // Cloudflare Access headers for service-to-service authentication with Projects service
+  // These are set via:
+  // - GitHub environment secrets (for CI/CD) → Cloudflare Workers secrets (via wrangler secret put)
+  // - Local: Set in .dev.vars file (loaded automatically by wrangler dev)
+  CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID?: string;
+  CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET?: string;
+
   // External OIDC provider for development
   EXTERNAL_OIDC_URL?: string; // e.g., https://auth.stage.anaconda.com/api/auth
 

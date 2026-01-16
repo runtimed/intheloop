@@ -124,10 +124,7 @@ export const projectsClientMiddleware = createMiddleware<{
   if (c.env.PERMISSIONS_PROVIDER === "anaconda") {
     const bearerToken = getBearerToken(c.req);
     if (bearerToken) {
-      const projectsClient = new ProjectsClient({
-        baseUrl: c.env.ANACONDA_PROJECTS_URL,
-        bearerToken,
-      });
+      const projectsClient = new ProjectsClient(c.env, bearerToken);
       c.set("projectsClient", projectsClient);
     }
   }

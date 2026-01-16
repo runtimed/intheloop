@@ -195,10 +195,7 @@ export default {
             // Initialize ProjectsClient per request (separate from auth)
             let projectsClient: ProjectsClient | undefined;
             if (env.PERMISSIONS_PROVIDER === "anaconda" && authToken) {
-              projectsClient = new ProjectsClient({
-                baseUrl: env.ANACONDA_PROJECTS_URL,
-                bearerToken: authToken,
-              });
+              projectsClient = new ProjectsClient(env, authToken);
             }
 
             // Create permissions provider

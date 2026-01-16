@@ -7,11 +7,6 @@
  * - Managing file uploads and downloads
  */
 
-export interface ProjectsConfig {
-  baseUrl: string;
-  bearerToken: string;
-}
-
 class ProjectsError extends Error {
   statusCode: number | undefined;
   constructor(message: string, statusCode?: number) {
@@ -181,10 +176,42 @@ export interface FilePreloadResponse {
  * Main Projects Service Client
  */
 export class ProjectsClient {
-  private config: ProjectsConfig;
+  private baseUrl: string;
+  private bearerToken: string;
+  private cloudflareServiceToken?: {
+    clientId: string;
+    clientSecret: string;
+  };
 
-  constructor(config: ProjectsConfig) {
-    this.config = config;
+  constructor(
+    env: {
+      ANACONDA_PROJECTS_URL: string;
+      CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID?: string;
+      CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET?: string;
+    },
+    bearerToken: string
+  ) {
+    this.baseUrl = env.ANACONDA_PROJECTS_URL;
+    this.bearerToken = bearerToken;
+
+    // Add Cloudflare Access headers if available in environment
+    if (env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID && env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET) {
+      this.cloudflareServiceToken = {
+        clientId: env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID,
+        clientSecret: env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET,
+      };
+      console.log(
+        "ProjectsClient: Cloudflare Access headers configured (client ID present)"
+      );
+    } else {
+      console.log(
+        "ProjectsClient: Cloudflare Access headers not configured",
+        {
+          hasClientId: !!env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID,
+          hasClientSecret: !!env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET,
+        }
+      );
+    }
   }
 
   /**
@@ -202,23 +229,31 @@ export class ProjectsClient {
 
     for (let attempt = 0; attempt < maxRetries; attempt++) {
       console.log(
-        `ProjectsClient request attempt ${attempt + 1} for ${method} ${this.config.baseUrl}${path}`
+        `ProjectsClient request attempt ${attempt + 1} for ${method} ${this.baseUrl}${path}`
       );
       try {
-        const url = `${this.config.baseUrl}${path}`;
+        const url = `${this.baseUrl}${path}`;
+
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+          "User-Agent": "intheloop",
+          Authorization: `Bearer ${this.bearerToken}`,
+        };
+
+        // Add Cloudflare Access headers if configured
+        if (this.cloudflareServiceToken) {
+          headers["CF-Access-Client-Id"] = this.cloudflareServiceToken.clientId;
+          headers["CF-Access-Client-Secret"] = this.cloudflareServiceToken.clientSecret;
+        }
 
         const response = await fetch(url, {
           method,
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${this.config.bearerToken}`,
-            "User-Agent": "intheloop",
-          },
+          headers,
           body: body ? JSON.stringify(body) : undefined,
         });
 
         console.log(
-          `ProjectsClient response status: ${response.status} for ${method} ${this.config.baseUrl}${path}`
+          `ProjectsClient response status: ${response.status} for ${method} ${this.baseUrl}${path}`
         );
 
         if (!response.ok) {
@@ -330,7 +365,7 @@ export class ProjectsClient {
         const queryString = params.toString();
         if (queryString) url += `?${queryString}`;
       } else {
-        url = nextPageUrl.replace(this.config.baseUrl, "");
+        url = nextPageUrl.replace(this.baseUrl, "");
       }
 
       let listResponse: ProjectListResponse =
@@ -457,3 +492,4 @@ export class ProjectsClient {
     );
   }
 }
+

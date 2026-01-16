@@ -47,6 +47,11 @@ ANACONDA_PROJECTS_URL = "https://stage.anaconda.com/api/projects"
 
 EXTERNAL_OIDC_URL = "https://auth.stage.anaconda.com/api/auth"
 
+# Cloudflare Access headers (optional, for local development)
+# Set these in .dev.vars file (git-ignored) to test Cloudflare Access authentication locally
+# CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID = "your-client-id"
+# CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET = "your-client-secret"
+
 VITE_LIVESTORE_SYNC_URL = "/livestore"
 VITE_RUNTIME_COMMAND = "pnpm run dev:runtime"
 VITE_AUTH_URI = "https://auth.stage.anaconda.com/api/auth"

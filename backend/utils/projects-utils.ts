@@ -12,11 +12,7 @@ export async function createProjectIfNeeded(
   if (useProjectsService) {
     try {
       const client =
-        projectsClient ||
-        new ProjectsClient({
-          baseUrl: env.ANACONDA_PROJECTS_URL,
-          bearerToken: bearerToken,
-        });
+        projectsClient || new ProjectsClient(env, bearerToken);
 
       const project = await client.createRandomlyNamedProject();
       projectId = project.id;
