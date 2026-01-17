@@ -120,6 +120,7 @@
     "nanoid": "^5.1.5",
     "openid-client": "^6.6.2",
     "path-to-regexp": "^8.2.0",
+    "pretty-bytes": "^7.1.0",
     "psl": "^1.15.0",
     "react": "19.2.1",
     "react-dom": "19.2.1",
