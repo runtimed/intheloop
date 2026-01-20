@@ -195,7 +195,10 @@ export class ProjectsClient {
     this.bearerToken = bearerToken;
 
     // Add Cloudflare Access headers if available in environment
-    if (env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID && env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET) {
+    if (
+      env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID &&
+      env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET
+    ) {
       this.cloudflareServiceToken = {
         clientId: env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID,
         clientSecret: env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET,
@@ -204,13 +207,10 @@ export class ProjectsClient {
         "ProjectsClient: Cloudflare Access headers configured (client ID present)"
       );
     } else {
-      console.log(
-        "ProjectsClient: Cloudflare Access headers not configured",
-        {
-          hasClientId: !!env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID,
-          hasClientSecret: !!env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET,
-        }
-      );
+      console.log("ProjectsClient: Cloudflare Access headers not configured", {
+        hasClientId: !!env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID,
+        hasClientSecret: !!env.CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET,
+      });
     }
   }
 
@@ -243,7 +243,8 @@ export class ProjectsClient {
         // Add Cloudflare Access headers if configured
         if (this.cloudflareServiceToken) {
           headers["CF-Access-Client-Id"] = this.cloudflareServiceToken.clientId;
-          headers["CF-Access-Client-Secret"] = this.cloudflareServiceToken.clientSecret;
+          headers["CF-Access-Client-Secret"] =
+            this.cloudflareServiceToken.clientSecret;
         }
 
         const response = await fetch(url, {
@@ -492,4 +493,3 @@ export class ProjectsClient {
     );
   }
 }
-

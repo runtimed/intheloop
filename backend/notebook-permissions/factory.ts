@@ -3,9 +3,7 @@ import { NoPermissionsProvider } from "./no-permissions.ts";
 import type { PermissionsProvider } from "./types.ts";
 import { RuntError, ErrorType, type Env } from "../types.ts";
 import { AnacondaPermissionsProvider } from "./anaconda-permissions.ts";
-import {
-  ProjectsClient,
-} from "backend/clients/projects-client.ts";
+import { ProjectsClient } from "backend/clients/projects-client.ts";
 
 // Re-export providers and types for convenience
 export { LocalPermissionsProvider } from "./local-permissions.ts";
@@ -26,8 +24,7 @@ export function createPermissionsProvider(
   switch (serviceProvider) {
     case "anaconda":
       try {
-        const client =
-          projectsClient || new ProjectsClient(env, bearerToken);
+        const client = projectsClient || new ProjectsClient(env, bearerToken);
         return new AnacondaPermissionsProvider(client, env.DB);
       } catch (error) {
         throw new RuntError(ErrorType.ServerMisconfigured, {

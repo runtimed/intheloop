@@ -11,8 +11,7 @@ export async function createProjectIfNeeded(
   let useProjectsService = env.PERMISSIONS_PROVIDER === "anaconda";
   if (useProjectsService) {
     try {
-      const client =
-        projectsClient || new ProjectsClient(env, bearerToken);
+      const client = projectsClient || new ProjectsClient(env, bearerToken);
 
       const project = await client.createRandomlyNamedProject();
       projectId = project.id;
