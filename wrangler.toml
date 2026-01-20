@@ -38,18 +38,28 @@ bucket_name = "anode-artifacts-dev"
 # Environment variables for local development (`wrangler dev`)
 # These are injected into the local worker process. The Vite dev server (`pnpm dev`)
 # will pick up variables from the `.env` file. Ensure they match.
-AUTH_ISSUER = "http://localhost:8787/local_oidc"
+AUTH_ISSUER = "https://auth.stage.anaconda.com/api/auth"
 DEPLOYMENT_ENV = "development"
 SERVICE_PROVIDER = "local"
+PERMISSIONS_PROVIDER = "anaconda"
 EXTENSION_CONFIG = "{}"
+ANACONDA_PROJECTS_URL = "https://stage.anaconda.com/api/projects"
+
+EXTERNAL_OIDC_URL = "https://auth.stage.anaconda.com/api/auth"
+
+# Cloudflare Access headers (optional, for local development)
+# Set these in .dev.vars file (git-ignored) to test Cloudflare Access authentication locally
+# CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID = "your-client-id"
+# CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET = "your-client-secret"
 
 VITE_LIVESTORE_SYNC_URL = "/livestore"
 VITE_RUNTIME_COMMAND = "pnpm run dev:runtime"
-VITE_AUTH_URI = "http://localhost:8787/local_oidc"
-VITE_AUTH_CLIENT_ID = "local-anode-client"
+VITE_AUTH_URI = "https://auth.stage.anaconda.com/api/auth"
+VITE_AUTH_CLIENT_ID = "b7296d39-c1eb-49f4-b9a1-f36e6d5b8b6d"
 VITE_AUTH_REDIRECT_URI = "http://localhost:5173/oidc"
 VITE_AI_PROVIDER = "anaconda"
 VITE_LS_DEV = "true"
+VITE_USE_PROJECTS_ARTIFACTS = "true"
 
 # ---
 # Deployed Environments
@@ -104,9 +114,11 @@ bucket_name = "anode-artifacts-prod"
 # Worker runtime variables
 DEPLOYMENT_ENV = "production"
 SERVICE_PROVIDER = "anaconda"
+PERMISSIONS_PROVIDER = "anaconda"
 ARTIFACT_STORAGE = "r2"
 ARTIFACT_THRESHOLD = "16384"
 AUTH_ISSUER = "https://auth.anaconda.com/api/auth"
+ANACONDA_PROJECTS_URL = "https://anaconda.com/api/projects"
 EXTENSION_CONFIG = '{"apiKeyUrl": "https://anaconda.com/api/iam/api-keys", "userinfoUrl": "https://auth.anaconda.com/api/auth/sessions/whoami"}'
 # Vite build-time variables
 VITE_LIVESTORE_SYNC_URL = "/livestore"
@@ -116,6 +128,7 @@ VITE_AUTH_REDIRECT_URI = "https://app.runt.run/oidc"
 VITE_IFRAME_OUTPUT_URI = "https://runtusercontent.com"
 VITE_AI_PROVIDER = "anaconda"
 VITE_LS_DEV = "true"
+VITE_USE_PROJECTS_ARTIFACTS = "true"
 
 VITE_RUNTIME_COMMAND = "pnpm run dev:runtime"
 
@@ -150,16 +163,20 @@ preview_bucket_name = "anode-artifacts-preview"
 # Worker runtime variables
 DEPLOYMENT_ENV = "preview"
 SERVICE_PROVIDER = "anaconda"
+PERMISSIONS_PROVIDER = "anaconda"
 ARTIFACT_STORAGE = "r2"
 ARTIFACT_THRESHOLD = "16384"
-AUTH_ISSUER = "https://auth.anaconda.com/api/auth"
-EXTENSION_CONFIG = '{"apiKeyUrl": "https://anaconda.com/api/iam/api-keys", "userinfoUrl": "https://auth.anaconda.com/api/auth/sessions/whoami"}'
+AUTH_ISSUER = "https://auth.stage.anaconda.com/api/auth"
+EXTENSION_CONFIG = '{"apiKeyUrl": "https://stage.anaconda.com/api/iam/api-keys", "userinfoUrl": "https://auth.stage.anaconda.com/api/auth/sessions/whoami"}'
 # Vite build-time variables
 VITE_LIVESTORE_SYNC_URL = "/livestore"
 VITE_RUNTIME_COMMAND = "pnpm run dev:runtime"
-VITE_AUTH_URI = "https://auth.anaconda.com/api/auth"
-VITE_AUTH_CLIENT_ID = "6a038ed5-eea7-4c7c-9b65-8e6068a0c84f"
+VITE_AUTH_URI = "https://auth.stage.anaconda.com/api/auth"
+VITE_AUTH_CLIENT_ID = "cec4781f-853c-4267-bf09-4bc59a2a3750"
 VITE_AUTH_REDIRECT_URI = "https://preview.runt.run/oidc"
 VITE_IFRAME_OUTPUT_URI = "https://preview.runtusercontent.com"
 VITE_AI_PROVIDER = "anaconda"
 VITE_LS_DEV = "true"
+ANACONDA_PROJECTS_URL = "https://stage.anaconda.com/api/projects"
+EXTERNAL_OIDC_URL = "https://auth.stage.anaconda.com/api/auth"
+VITE_USE_PROJECTS_ARTIFACTS = "true"

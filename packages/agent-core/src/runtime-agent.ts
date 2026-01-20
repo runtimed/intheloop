@@ -1019,6 +1019,7 @@ export class RuntimeAgent {
       logger.debug("Image successfully uploaded as artifact", {
         mimeType,
         artifactId: result.artifactId,
+        fileUrl: result.fileUrl,
         imageSizeBytes,
       });
 
@@ -1029,6 +1030,8 @@ export class RuntimeAgent {
           ...metadata,
           originalSizeBytes: imageSizeBytes,
           uploadedAt: new Date().toISOString(),
+          // Store fileUrl in metadata for Projects-backed artifacts
+          ...(result.fileUrl && { fileUrl: result.fileUrl }),
         },
       };
     } catch (error) {
@@ -1059,14 +1062,14 @@ export class RuntimeAgent {
   ): void {
     for (const [mimeType, container] of Object.entries(representations)) {
       if (isImageMimeType(mimeType) && container.type === "artifact") {
+        // Use ArtifactClient to determine the correct URL (handles Projects vs legacy)
+        const artifactUrl = this.artifactClient.getArtifactUrl(container);
+
         // NOTE: This will use the "last" artifact to set in the text/plain representation
         //       without regard for the display order of the receiving client(s).
         //
         //       However, this is mainly a fallback for clients that do not support images/html.
         if (!representations["text/plain"]) {
-          const artifactUrl = this.artifactClient.getArtifactUrl(
-            container.artifactId
-          );
           representations["text/plain"] = {
             type: "inline",
             data: `${mimeType} artifact: ${artifactUrl}`,
@@ -1075,10 +1078,6 @@ export class RuntimeAgent {
         }
 
         if (!representations["text/markdown"]) {
-          const artifactUrl = this.artifactClient.getArtifactUrl(
-            container.artifactId
-          );
-
           // Convert name shown to something displayable in markdown (escapsing as necessary) relying on
           // the mimetype and or artifact ID
           const name =

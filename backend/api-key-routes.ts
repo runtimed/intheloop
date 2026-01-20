@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { type Env } from "./types.ts";
-import { authMiddleware, type AuthContext } from "./middleware.ts";
+import { authMiddleware, type RequestContext } from "./middleware.ts";
 import {
   createApiKeyProvider,
   isUsingLocalProvider,
@@ -16,8 +16,9 @@ import {
 import { RuntError, ErrorType } from "./types.ts";
 import { D1Driver } from "@japikey/cloudflare";
 import { JSONWebKeySet } from "jose";
+import { getBearerToken } from "./utils/request-utils.ts";
 
-const apiKeyRoutes = new Hono<{ Bindings: Env; Variables: AuthContext }>();
+const apiKeyRoutes = new Hono<{ Bindings: Env; Variables: RequestContext }>();
 
 /**
  * Middleware to ensure OAuth authentication (not API key) for sensitive operations
@@ -38,7 +39,7 @@ const oauthOnlyMiddleware = async (c: any, next: any) => {
   }
 
   // Check if this was authenticated via API key
-  const authToken = c.req.header("Authorization")?.replace("Bearer ", "");
+  const authToken = getBearerToken(c.req);
   if (authToken) {
     const provider = createApiKeyProvider(c.env);
     const providerContext = createProviderContext(c.env, authToken);
@@ -85,7 +86,7 @@ apiKeyRoutes.get("/:kid/.well-known/jwks.json", async (c) => {
  */
 apiKeyRoutes.post("/", oauthOnlyMiddleware, async (c) => {
   const passport = c.get("passport");
-  const authToken = c.req.header("Authorization")?.replace("Bearer ", "");
+  const authToken = getBearerToken(c.req);
 
   if (!passport || !authToken) {
     return c.json(
@@ -138,7 +139,7 @@ apiKeyRoutes.post("/", oauthOnlyMiddleware, async (c) => {
 apiKeyRoutes.get("/:id", authMiddleware, async (c) => {
   const keyId = c.req.param("id");
   const passport = c.get("passport");
-  const authToken = c.req.header("Authorization")?.replace("Bearer ", "");
+  const authToken = getBearerToken(c.req);
 
   if (!passport || !authToken) {
     return c.json(
@@ -193,7 +194,7 @@ apiKeyRoutes.get("/:id", authMiddleware, async (c) => {
  */
 apiKeyRoutes.get("/", authMiddleware, async (c) => {
   const passport = c.get("passport");
-  const authToken = c.req.header("Authorization")?.replace("Bearer ", "");
+  const authToken = getBearerToken(c.req);
 
   if (!passport || !authToken) {
     return c.json(
@@ -271,7 +272,7 @@ apiKeyRoutes.get("/", authMiddleware, async (c) => {
 apiKeyRoutes.delete("/:id", authMiddleware, async (c) => {
   const keyId = c.req.param("id");
   const passport = c.get("passport");
-  const authToken = c.req.header("Authorization")?.replace("Bearer ", "");
+  const authToken = getBearerToken(c.req);
 
   if (!passport || !authToken) {
     return c.json(
@@ -335,7 +336,7 @@ apiKeyRoutes.delete("/:id", authMiddleware, async (c) => {
 apiKeyRoutes.patch("/:id", authMiddleware, async (c) => {
   const keyId = c.req.param("id");
   const passport = c.get("passport");
-  const authToken = c.req.header("Authorization")?.replace("Bearer ", "");
+  const authToken = getBearerToken(c.req);
 
   if (!passport || !authToken) {
     return c.json(

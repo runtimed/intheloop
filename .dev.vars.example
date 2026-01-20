@@ -1,7 +1,7 @@
 # This is an example file for local Worker development.
 # Copy this file to .dev.vars and fill in the values.
 # This file SHOULD NOT contain real production secrets.
-AUTH_ISSUER="http://localhost:8787/local_oidc"
+AUTH_ISSUER="https://auth.stage.anaconda.com/api/auth"
 
 # Local authentication control
 # Set to "true" to enable local OIDC endpoints for development
@@ -19,3 +19,8 @@ ALLOW_LOCAL_AUTH="true"
 # - VITE_CLIENT_ID: Your OAuth client ID
 #
 # The backend expects RS256 JWT tokens from the OIDC provider.
+
+# Cloudflare Access headers for service-to-service authentication with Projects service
+# These are optional - only needed if you want to test Cloudflare Access authentication locally
+# CLOUDFLARE_SERVICE_TOKEN_CLIENT_ID="your-client-id"
+# CLOUDFLARE_SERVICE_TOKEN_CLIENT_SECRET="your-client-secret"

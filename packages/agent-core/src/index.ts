@@ -24,6 +24,11 @@ export {
   createArtifactClient,
   PngProcessor,
 } from "./artifact-client.ts";
+export {
+  uploadArtifactViaProjects,
+  type ProjectsArtifactUploadParams,
+  type ProjectsArtifactUploadResult,
+} from "./projects-artifacts.ts";
 
 export type {
   ArtifactSubmissionOptions,
