@@ -7,8 +7,8 @@ import {
 } from "maplibre-react-components";
 import { useId, useMemo } from "react";
 import { useMeasure } from "react-use";
-import { mapFitFeatures2, normalizeData } from "./geojson-utils";
-import { MapFeature } from "./MapFeature";
+import { mapFitFeatures2, normalizeData } from "./geojson-utils.js";
+import { MapFeature } from "./MapFeature.js";
 
 interface GeoJsonMapProps {
   data: unknown;

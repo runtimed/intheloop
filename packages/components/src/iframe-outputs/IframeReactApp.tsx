@@ -1,7 +1,7 @@
-import { OutputsContainer } from "@/components/outputs/shared-with-iframe/OutputsContainer";
-import { SingleOutput } from "@/components/outputs/shared-with-iframe/SingleOutput";
-import { SuspenseSpinner } from "@/components/outputs/shared-with-iframe/SuspenseSpinner";
-import { useIframeCommsChild } from "@/components/outputs/shared-with-iframe/comms";
+import { OutputsContainer } from "../outputs/OutputsContainer.js";
+import { SingleOutput } from "../outputs/SingleOutput.js";
+import { SuspenseSpinner } from "../outputs/SuspenseSpinner.js";
+import { useIframeCommsChild } from "../outputs/comms.js";
 import React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 

@@ -1,7 +1,9 @@
 import {
   mapFitFeatures2,
   normalizeData,
-} from "@/components/outputs/shared-with-iframe/geojson/geojson-utils";
+  MapFeature,
+  GeoJsonMapOutput,
+} from "@runtimed/components";
 import { bartTestData } from "./example-data/bart";
 import {
   bicycleRental,
@@ -11,9 +13,7 @@ import {
 } from "./example-data/campus";
 import { geometryCollection } from "./example-data/geomtry-collection";
 import { wikipediaTestData } from "./example-data/wikipdedia";
-import { MapFeature } from "@/components/outputs/shared-with-iframe/geojson/MapFeature";
 import { RMap } from "maplibre-react-components";
-import { GeoJsonMapOutput } from "@/components/outputs/shared-with-iframe/geojson/GeoJsonMapOutput";
 
 export const GeoJsonDemoPage = () => {
   return (

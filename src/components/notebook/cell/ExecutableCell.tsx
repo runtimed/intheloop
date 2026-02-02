@@ -43,7 +43,7 @@ import { SqlToolbar } from "./toolbars/SqlToolbar.js";
 
 import { MaybeCellOutputs } from "@/components/outputs/MaybeCellOutputs.js";
 import { useToolApprovals } from "@/hooks/useToolApprovals.js";
-import { AiToolApprovalOutput } from "../../outputs/shared-with-iframe/AiToolApprovalOutput.js";
+import { AiToolApprovalOutput } from "@runtimed/components";
 import { cn } from "@/lib/utils.js";
 import { generateQueueId } from "@/util/queue-id.js";
 import { useTrpc } from "@/components/TrpcProvider.js";

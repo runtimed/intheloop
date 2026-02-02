@@ -109,6 +109,7 @@ export function mapFitFeatures2(
     return mapFitFeatures(data, size, options);
   } catch (error) {
     // Fallback to no zoom if there's an error
+    console.error("Error fitting features", error);
     return noZoomResult;
   }
 }

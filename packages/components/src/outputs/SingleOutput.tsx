@@ -1,31 +1,25 @@
 import React from "react";
 
-import {
-  AnsiErrorOutput,
-  AnsiStreamOutput,
-} from "@/components/outputs/shared-with-iframe/AnsiOutput";
+import { AnsiErrorOutput, AnsiStreamOutput } from "./AnsiOutput.js";
 import {
   AI_TOOL_CALL_MIME_TYPE,
   AI_TOOL_RESULT_MIME_TYPE,
   APPLICATION_MIME_TYPES,
   IMAGE_MIME_TYPES,
   JUPYTER_MIME_TYPES,
-  MediaContainer,
-  OutputData,
   TEXT_MIME_TYPES,
   isArtifactContainer,
   isInlineContainer,
 } from "@runtimed/schema";
-import PlainTextOutput from "./PlainTextOutput";
-import { RichOutputContent } from "./RichOutputContent";
+import type { MediaContainer, OutputData } from "@runtimed/schema";
+import PlainTextOutput from "./PlainTextOutput.js";
+import { RichOutputContent } from "./RichOutputContent.js";
 
 // Dynamic imports for heavy components
 const MarkdownRenderer = React.lazy(() =>
-  import("@/components/outputs/shared-with-iframe/MarkdownRenderer").then(
-    (m) => ({
-      default: m.MarkdownRenderer,
-    })
-  )
+  import("./MarkdownRenderer.js").then((m) => ({
+    default: m.MarkdownRenderer,
+  }))
 );
 
 /**
@@ -174,6 +168,8 @@ export const SingleOutput: React.FC<{
       </div>
     );
   }
+
+  // outputType is now always "multimedia_display" or "multimedia_result"
 
   return (
     <div className="rich-output">

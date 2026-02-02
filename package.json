@@ -88,6 +88,7 @@
     "@react-spring/web": "^10.0.1",
     "@runtimed/agent-core": "workspace:*",
     "@runtimed/ai-core": "workspace:*",
+    "@runtimed/components": "workspace:*",
     "@runtimed/pyodide-runtime": "workspace:*",
     "@runtimed/schema": "workspace:*",
     "@tanstack/react-query": "^5.85.5",

@@ -1,7 +1,7 @@
 // NOTE: code here is shared between the iframe and the parent page.
 // It's done to colocate types to ensure typesafety across the two bundles.
 
-import { OutputData } from "@runtimed/schema";
+import type { OutputData } from "@runtimed/schema";
 import { useEffect, useRef, useState } from "react";
 
 type UpdateOutputsEvent = {
@@ -176,7 +176,7 @@ export function useIframeCommsChild() {
       // Fire once all current fonts are ready
       (document as any).fonts.ready
         .then(() => {
-          if (document.fonts.size > 0) {
+          if ((document.fonts as any).size > 0) {
             sendHeight();
           }
         })

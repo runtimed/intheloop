@@ -354,11 +354,10 @@ export default [
   },
   {
     ignores: [
-      "dist/**",
-      "node_modules/**",
-      "*.d.ts",
+      "**/dist/**",
+      "**/node_modules/**",
+      "**/*.d.ts",
       "scripts/**",
-      "iframe-outputs/worker/dist/**",
       "iframe-outputs/worker/.wrangler/**",
     ],
   },

@@ -12,6 +12,7 @@ COPY packages/agent-core/package.json ./packages/agent-core/
 COPY packages/ai-core/package.json ./packages/ai-core/
 COPY packages/pyodide-runtime/package.json ./packages/pyodide-runtime/
 COPY packages/schema/package.json ./packages/schema/
+COPY packages/components/package.json ./packages/components/
 
 # Install dependencies with cache mount
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \

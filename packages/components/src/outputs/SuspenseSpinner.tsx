@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Spinner, type SpinnerSize } from "../../ui/Spinner";
+import { Spinner, type SpinnerSize } from "../ui/Spinner.js";
 
 import React from "react";
 import { useTimeout } from "react-use";
@@ -11,7 +11,6 @@ export function DelayedSpinner({
   size?: SpinnerSize;
   delay?: number;
 }) {
-  // eslint-disable-next-line react-compiler/react-compiler
   "use no memo";
 
   const [isReady] = useTimeout(delay);

@@ -12,61 +12,51 @@ import {
 
 // Dynamic imports for heavy components
 const MarkdownRenderer = React.lazy(() =>
-  import("@/components/outputs/shared-with-iframe/MarkdownRenderer").then(
-    (m) => ({
-      default: m.MarkdownRenderer,
-    })
-  )
+  import("./MarkdownRenderer.js").then((m) => ({
+    default: m.MarkdownRenderer,
+  }))
 );
 const JsonOutput = React.lazy(() =>
-  import("@/components/outputs/shared-with-iframe/JsonOutput").then((m) => ({
+  import("./JsonOutput.js").then((m) => ({
     default: m.JsonOutput,
   }))
 );
 const HtmlOutput = React.lazy(() =>
-  import("@/components/outputs/shared-with-iframe/HtmlOutput").then((m) => ({
+  import("./HtmlOutput.js").then((m) => ({
     default: m.HtmlOutput,
   }))
 );
 const ImageOutput = React.lazy(() =>
-  import("@/components/outputs/shared-with-iframe/ImageOutput").then((m) => ({
+  import("./ImageOutput.js").then((m) => ({
     default: m.ImageOutput,
   }))
 );
 const SvgOutput = React.lazy(() =>
-  import("@/components/outputs/shared-with-iframe/SvgOutput").then((m) => ({
+  import("./SvgOutput.js").then((m) => ({
     default: m.SvgOutput,
   }))
 );
 const PlainTextOutput = React.lazy(() =>
-  import("@/components/outputs/shared-with-iframe/PlainTextOutput").then(
-    (m) => ({
-      default: m.PlainTextOutput,
-    })
-  )
+  import("./PlainTextOutput.js").then((m) => ({
+    default: m.PlainTextOutput,
+  }))
 );
 const GeoJsonMapOutput = React.lazy(() =>
-  import(
-    "@/components/outputs/shared-with-iframe/geojson/GeoJsonMapOutput"
-  ).then((m) => ({
+  import("./geojson/GeoJsonMapOutput.js").then((m) => ({
     default: m.GeoJsonMapOutput,
   }))
 );
 
 // Dynamic imports for AI outputs
 const AiToolCallOutput = React.lazy(() =>
-  import("@/components/outputs/shared-with-iframe/AiToolCallOutput").then(
-    (m) => ({
-      default: m.AiToolCallOutput,
-    })
-  )
+  import("./AiToolCallOutput.js").then((m) => ({
+    default: m.AiToolCallOutput,
+  }))
 );
 const AiToolResultOutput = React.lazy(() =>
-  import("@/components/outputs/shared-with-iframe/AiToolResultOutput").then(
-    (m) => ({
-      default: m.AiToolResultOutput,
-    })
-  )
+  import("./AiToolResultOutput.js").then((m) => ({
+    default: m.AiToolResultOutput,
+  }))
 );
 
 export function RichOutputContent({

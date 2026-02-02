@@ -1,5 +1,5 @@
-import ReactJsonView from "@microlink/react-json-view";
 import React from "react";
+import JsonView from "@uiw/react-json-view";
 
 interface JsonOutputProps {
   data: unknown;
@@ -10,20 +10,15 @@ export const JsonOutput: React.FC<JsonOutputProps> = ({
   data,
   compact = false,
 }) => {
-  // Ensure data is an object for react-json-view
   const jsonData = data && typeof data === "object" ? data : { value: data };
 
   return (
     <div className="rounded bg-gray-50/50 p-2">
-      <ReactJsonView
-        src={jsonData}
-        theme="rjv-default"
+      <JsonView
+        value={jsonData}
         collapsed={compact ? 1 : false}
         displayDataTypes={false}
-        displayObjectSize={false}
-        enableClipboard={true}
         indentWidth={2}
-        iconStyle="triangle"
         style={{
           backgroundColor: "transparent",
           fontSize: "0.875rem",
