@@ -15,7 +15,7 @@ import React, {
   useState,
 } from "react";
 
-import { IframeOutput } from "@runtimed/components";
+import { IframeOutput } from "@/components/outputs/IframeOutput.js";
 import { Button } from "@/components/ui/button.js";
 import { useFeatureFlag } from "@/contexts/FeatureFlagContext.js";
 import { useUserRegistry } from "@/hooks/useUserRegistry.js";
@@ -335,7 +335,6 @@ export const MarkdownCell: React.FC<MarkdownCellProps> = ({
         >
           {/* Send markdown content to iframe */}
           <IframeOutput
-            iframeUri={import.meta.env.VITE_IFRAME_OUTPUT_URI || ""}
             onDoubleClick={() => setIsEditing(true)}
             onMarkdownRendered={() => setReadyToShowRendered(true)}
             outputs={[

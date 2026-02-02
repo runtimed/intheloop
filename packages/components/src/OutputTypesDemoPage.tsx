@@ -27,7 +27,9 @@ const createOutput = (
   } as OutputData;
 };
 
-export const OutputTypesDemoPage: React.FC = () => {
+export const OutputTypesDemoPage: React.FC<{ iframeUri: string }> = ({
+  iframeUri,
+}) => {
   // Terminal outputs
   const stdoutOutput: OutputData = createOutput("terminal-stdout", "terminal", {
     streamName: "stdout",
@@ -311,7 +313,7 @@ def hello():
                 {section.type === "html" || section.type === "svg" ? (
                   <div className="border border-dotted border-gray-300">
                     <IframeOutput
-                      iframeUri="."
+                      iframeUri={iframeUri ?? "."}
                       outputs={section.outputs}
                       className="min-h-[200px] w-full"
                       isReact={true}

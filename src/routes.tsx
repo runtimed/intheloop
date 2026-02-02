@@ -155,7 +155,16 @@ export const App: React.FC = () => {
                 }
               />
               <Route path="/feature-flags" element={<FeatureFlagsPage />} />
-              <Route path="/demo/outputs" element={<OutputTypesDemoPage />} />
+              <Route
+                path="/demo/outputs"
+                element={
+                  <OutputTypesDemoPage
+                    iframeUri={
+                      (import.meta.env.VITE_IFRAME_OUTPUT_URI as string) || "."
+                    }
+                  />
+                }
+              />
             </Routes>
             <FPSMeter />
             <Toaster />

@@ -169,7 +169,7 @@ The package includes a demo page for testing all output types:
 ```tsx
 import { OutputTypesDemoPage } from "@runtimed/components";
 
-<OutputTypesDemoPage />;
+<OutputTypesDemoPage iframeUri="localhost:8000" />;
 ```
 
 ## License
