@@ -307,7 +307,7 @@ def hello():
               </div>
 
               {/* Render HTML and SVG using IframeOutput */}
-              <div className="py-3">
+              <div className="min-h-[200px] py-3">
                 {section.type === "html" || section.type === "svg" ? (
                   <div className="border border-dotted border-gray-300">
                     <IframeOutput
