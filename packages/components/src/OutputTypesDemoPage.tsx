@@ -312,6 +312,9 @@ def hello():
               <div className="py-3">
                 {section.type === "html" || section.type === "svg" ? (
                   <div className="border border-dotted border-gray-300">
+                    <pre className="bg-gray-100 p-1 text-xs">
+                      {iframeUri}/react.html
+                    </pre>
                     <IframeOutput
                       iframeUri={iframeUri ?? "."}
                       outputs={section.outputs}
