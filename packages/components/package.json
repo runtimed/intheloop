@@ -1,6 +1,6 @@
 {
   "name": "@runtimed/components",
-  "version": "0.3.0-alpha.3",
+  "version": "0.3.0-beta.0",
   "description": "React components for rendering notebook cell outputs",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
