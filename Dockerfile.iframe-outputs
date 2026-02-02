@@ -7,8 +7,9 @@ WORKDIR /app
 # Copy workspace files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
-# Copy schema package.json (only workspace dependency needed for iframe)
+# Copy workspace package.json files (needed for pnpm workspace resolution)
 COPY packages/schema/package.json packages/schema/tsconfig.json ./packages/schema/
+COPY packages/components/package.json packages/components/tsconfig.json ./packages/components/
 
 # Install dependencies with cache mount
 RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
@@ -19,9 +20,12 @@ COPY packages/schema/src ./packages/schema/src
 COPY src/components/ui ./src/components/ui
 COPY src/lib ./src/lib
 COPY src/util/iframe.ts ./src/util/iframe.ts
-COPY src/components/outputs/shared-with-iframe ./src/components/outputs/shared-with-iframe
+COPY packages/components ./packages/components
 COPY iframe-outputs ./iframe-outputs
 COPY vite.config.ts tsconfig.json tsconfig.node.json ./
+
+# Build the components package first (required for iframe-outputs)
+RUN pnpm --filter @runtimed/components build
 
 # Build the iframe outputs
 RUN pnpm build:iframe

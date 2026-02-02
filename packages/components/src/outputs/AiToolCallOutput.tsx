@@ -2,7 +2,7 @@ import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { ChevronDown, Edit, FilePlus, Info } from "lucide-react";
-import { AiToolCallData } from "@runtimed/schema";
+import type { AiToolCallData } from "@runtimed/schema";
 
 interface AiToolCallOutputProps {
   toolData: AiToolCallData;

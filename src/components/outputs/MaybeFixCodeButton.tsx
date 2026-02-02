@@ -3,7 +3,7 @@ import { OutputData } from "@runtimed/schema";
 import { Bug } from "lucide-react";
 import { useCallback } from "react";
 import { Button } from "../ui/button";
-import { OutputsContainer } from "./shared-with-iframe/OutputsContainer";
+import { OutputsContainer } from "@runtimed/components";
 
 export function MaybeFixCodeButton({
   isLoading,

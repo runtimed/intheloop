@@ -1,4 +1,4 @@
-import { throwIfNotInIframe } from "@/util/iframe";
+import { throwIfNotInIframe } from "../utils/iframe.js";
 import React, { useEffect, useRef } from "react";
 
 interface HtmlOutputProps {

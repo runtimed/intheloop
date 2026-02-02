@@ -1,3 +1,5 @@
+import React from "react";
+
 /**
  * We don't want to render this until the contents are ready to be displayed because it has a non-zero height.
  * For example, we want to render this inside the suspense boundary.

@@ -15,6 +15,10 @@ COPY packages/ai-core/package.json ./packages/ai-core/
 COPY packages/pyodide-runtime/package.json ./packages/pyodide-runtime/
 COPY packages/schema/package.json ./packages/schema/
 
+# Remove @runtimed/components from dependencies (sync service doesn't need it)
+# This allows pnpm install to succeed without the components package
+RUN node -e "const pkg = require('./package.json'); delete pkg.dependencies['@runtimed/components']; require('fs').writeFileSync('./package.json', JSON.stringify(pkg, null, 2));"
+
 # Install dependencies
 RUN pnpm install
 

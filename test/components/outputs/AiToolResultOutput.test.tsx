@@ -2,7 +2,7 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect } from "vitest";
 import type { AiToolResultData } from "@runtimed/schema";
-import { AiToolResultOutput } from "../../../src/components/outputs/shared-with-iframe/AiToolResultOutput";
+import { AiToolResultOutput } from "@runtimed/components";
 
 describe("AiToolResultOutput", () => {
   it("renders success result correctly", () => {

@@ -4,9 +4,11 @@ import { CellType, OutputData, SAFE_MIME_TYPES } from "@runtimed/schema";
 import { groupConsecutiveStreamOutputs } from "@/util/output-grouping";
 import { useQuery } from "@livestore/react";
 import { useMemo } from "react";
-import { SingleOutput } from "./shared-with-iframe/SingleOutput";
-import { OutputsContainer } from "./shared-with-iframe/OutputsContainer";
-import { SuspenseSpinner } from "./shared-with-iframe/SuspenseSpinner";
+import {
+  SingleOutput,
+  OutputsContainer,
+  SuspenseSpinner,
+} from "@runtimed/components";
 import { MaybeFixCodeButton } from "./MaybeFixCodeButton";
 import { IframeOutput } from "./IframeOutput";
 

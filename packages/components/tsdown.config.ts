@@ -1,0 +1,33 @@
+import { defineConfig } from "tsdown";
+
+export default defineConfig({
+  entry: ["src/index.ts"],
+  format: ["esm", "cjs"],
+  dts: true,
+  sourcemap: true,
+  clean: true,
+  external: [
+    "react",
+    "react-dom",
+    "@uiw/react-json-view",
+    "@radix-ui/react-slot",
+    "@runtimed/schema",
+    "ansi-to-react",
+    "class-variance-authority",
+    "clsx",
+    "geojson-map-fit-mercator",
+    "katex",
+    "lucide-react",
+    "maplibre-gl",
+    "maplibre-react-components",
+    "react-markdown",
+    "react-syntax-highlighter",
+    "react-use",
+    "rehype-katex",
+    "rehype-raw",
+    "remark-gfm",
+    "remark-math",
+    "tailwind-merge",
+  ],
+  platform: "browser",
+});

@@ -1,12 +1,10 @@
 # Basic idea
 
-Outputs in this folder are built for both the iframe and non-iframe. `MaybeCellOutputs` has a prop to decide if outputs should be rendered in an iframe or not. Ths goal here is to make it a little more obvious to other places in the codebase that code here can end up in multiple bundles.
-
-Realistically, we can't put all shared code into this folder. We still depend on shadcn UI components.
+Outputs in this folder are built for both the iframe and non-iframe.
 
 🚨 IMPORTANT: do not depend on any LiveStore hooks in this folder like `useQuery`. Components in an iframe don't get access to React Context from the rest of the page.
 
-🚨 IMPORTANT: tailwind styles will not get picked up in the iframe build unless they're in the `shared-with-iframe` folder. See: `iframe-outputs/src/style.css`.
+🚨 IMPORTANT: tailwind styles will not get picked up in the iframe build unless they're targetted directly. See: `iframe-outputs/src/style.css`.
 
 # Thoughts for the future
 
@@ -15,10 +13,6 @@ Realistically, we can't put all shared code into this folder. We still depend on
 There's a lot of ceremony around supporting multiple bundles because of the iframes. This adds complexity to the codebase. Sending raw HTML strings isn't going to work because that wouldn't address adding complex interactions, and would introduce a difference set of complexity around builds if we went that way.
 
 One idea is to use the iframe as a portal target. Not sure how events would work, and how JS and CSS would get injected. However, if we can send something like a VDOM with all the components to be rendered already resolved, this could help make the iframes much lighter. They would have some hooks to accept vDOM via message passing and then render this vDOM into the iframe. No need to build React components that can work in multiple bundles.
-
-## Move `shared-with-iframe` up a few dir levels
-
-This would allow including things like shadcn components that are shared.
 
 ## Keeping memory usage low with light bundles
 
@@ -63,7 +57,7 @@ We could render the unsafe outputs like so:
   - JSON: safe
 - SVG: iframe
 
-What if we have two unsafe outputs sandwhiching safe outputs? Iframes can be heavy and we don't want to render too many:
+What if we have two unsafe outputs sandwiching safe outputs? Iframes can be heavy and we don't want to render too many:
 
 - HTML: iframe
 - safe (normal React render):

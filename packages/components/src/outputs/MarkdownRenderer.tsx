@@ -10,7 +10,7 @@ import rehypeRaw from "rehype-raw";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
-import { sendFromIframe } from "./comms";
+import { sendFromIframe } from "./comms.js";
 import { VerifiedImage } from "./VerifiedImage";
 
 interface MarkdownRendererProps {
@@ -121,7 +121,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             }
             return <VerifiedImage src={src} alt={alt} {...props} />;
           },
-          code({ node, className, children, ...props }) {
+          code({ className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || "");
             const language = match ? match[1] : "";
             const codeContent = String(children).replace(/\n$/, "");

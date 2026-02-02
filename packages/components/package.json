@@ -1,0 +1,96 @@
+{
+  "name": "@runtimed/components",
+  "version": "0.3.0-beta.1",
+  "description": "React components for rendering notebook cell outputs",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.mjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit --allowImportingTsExtensions",
+    "lint": "eslint src/",
+    "lint:check": "eslint src/ --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "build": "tsdown; pnpm build:css",
+    "build:css": "tailwindcss -i src/styles.css -o dist/styles.css --minify",
+    "dev": "tsdown --watch & tailwindcss -i src/styles.css -o dist/styles.css --watch",
+    "prepublishOnly": "pnpm build"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "@uiw/react-json-view": "2.0.0-alpha.40",
+    "react-error-boundary": "^6.0.0",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@runtimed/schema": "workspace:*",
+    "ansi-to-react": "^6.1.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "geojson-map-fit-mercator": "^1.1.0",
+    "katex": "^0.16.22",
+    "lucide-react": "^0.545.0",
+    "maplibre-gl": "^5.7.1",
+    "maplibre-react-components": "^0.2.6",
+    "react-markdown": "^10.1.0",
+    "react-syntax-highlighter": "^15.6.1",
+    "react-use": "^17.6.0",
+    "rehype-katex": "^7.0.1",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.10",
+    "@types/node": "^24.0.10",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@types/react-syntax-highlighter": "^15.5.13",
+    "@typescript-eslint/eslint-plugin": "^8.35.1",
+    "@typescript-eslint/parser": "^8.35.1",
+    "eslint": "^9.30.1",
+    "prettier": "^3.6.0",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "tsdown": "0.20.0-beta.1",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=23.0.0",
+    "pnpm": ">=10.9.0"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "notebook",
+    "outputs",
+    "runt",
+    "anode"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/runtimed/anode.git",
+    "directory": "packages/components"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Runt Team",
+  "license": "MIT"
+}

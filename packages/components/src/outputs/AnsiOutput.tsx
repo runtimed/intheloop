@@ -1,5 +1,12 @@
 import React from "react";
-import Ansi from "ansi-to-react";
+import AnsiModule from "ansi-to-react";
+
+// Handle nested default export from ansi-to-react
+// Some bundlers create mod.default.default structure
+const Ansi =
+  (AnsiModule as any).default?.default ||
+  (AnsiModule as any).default ||
+  AnsiModule;
 
 interface AnsiOutputProps {
   children: string;

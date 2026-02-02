@@ -1,7 +1,7 @@
 // NOTE: code here is shared between the iframe and the parent page.
 // It's done to colocate types to ensure typesafety across the two bundles.
 
-import { OutputData } from "@runtimed/schema";
+import type { OutputData } from "@runtimed/schema";
 import { useEffect, useRef, useState } from "react";
 
 type UpdateOutputsEvent = {
@@ -156,13 +156,14 @@ export function useIframeCommsChild() {
     sendHeight();
 
     // Handle incoming content updates
-    window.addEventListener("message", (event: MessageEvent<ToIframeEvent>) => {
+    const messageHandler = (event: MessageEvent<ToIframeEvent>) => {
       const data = event.data;
       if (data && data.type === "update-outputs") {
         setOutputs(data.outputs || []);
         setTimeout(sendHeight, 50);
       }
-    });
+    };
+    window.addEventListener("message", messageHandler);
 
     // After the MutationObserver setup
     const resizeObserver = new ResizeObserver(sendHeight);
@@ -176,7 +177,7 @@ export function useIframeCommsChild() {
       // Fire once all current fonts are ready
       (document as any).fonts.ready
         .then(() => {
-          if (document.fonts.size > 0) {
+          if ((document.fonts as any).size > 0) {
             sendHeight();
           }
         })
@@ -184,6 +185,7 @@ export function useIframeCommsChild() {
     }
 
     return () => {
+      window.removeEventListener("message", messageHandler);
       resizeObserver.disconnect();
       document.removeEventListener("load", sendHeight, true);
     };
