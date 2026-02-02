@@ -27,7 +27,7 @@
     "format:check": "prettier --check .",
     "build": "tsdown; pnpm build:css",
     "build:css": "tailwindcss -i src/styles.css -o dist/styles.css --minify",
-    "dev": "tsdown --watch",
+    "dev": "tsdown --watch & tailwindcss -i src/styles.css -o dist/styles.css --watch",
     "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {
