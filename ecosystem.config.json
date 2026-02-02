@@ -23,6 +23,14 @@
       "env": {
         "NODE_ENV": "development"
       }
+    },
+    {
+      "name": "components",
+      "script": "pnpm",
+      "args": "--filter @runtimed/components dev",
+      "env": {
+        "NODE_ENV": "development"
+      }
     }
   ]
 }
