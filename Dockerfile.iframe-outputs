@@ -20,9 +20,12 @@ COPY packages/schema/src ./packages/schema/src
 COPY src/components/ui ./src/components/ui
 COPY src/lib ./src/lib
 COPY src/util/iframe.ts ./src/util/iframe.ts
-COPY packages/components/src ./packages/components/src
+COPY packages/components ./packages/components
 COPY iframe-outputs ./iframe-outputs
 COPY vite.config.ts tsconfig.json tsconfig.node.json ./
+
+# Build the components package first (required for iframe-outputs)
+RUN pnpm --filter @runtimed/components build
 
 # Build the iframe outputs
 RUN pnpm build:iframe
