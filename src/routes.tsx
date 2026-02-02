@@ -56,7 +56,7 @@ const FeatureFlagsPage = React.lazy(() =>
   }))
 );
 const OutputTypesDemoPage = React.lazy(() =>
-  import("./pages/OutputTypesDemoPage").then((mod) => ({
+  import("@runtimed/components").then((mod) => ({
     default: mod.OutputTypesDemoPage,
   }))
 );
