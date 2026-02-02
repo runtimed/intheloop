@@ -52,6 +52,9 @@ jobs:
       - name: Lint check
         run: pnpm lint
 
+      - name: Build workspace packages
+        run: pnpm --filter @runtimed/components build
+
       - name: Type check
         run: pnpm type-check
 
