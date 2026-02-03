@@ -23,6 +23,7 @@ import { useNavigateToCanonicalUrl, useNotebook } from "./helpers.js";
 import { NotebookHeader } from "./NotebookHeader.js";
 import { AvailableAiModelsProvider } from "@/util/ai-models.js";
 import { SidebarItemProvider } from "@/contexts/SidebarItemContext.js";
+import { CellFilterProvider } from "@/contexts/CellFilterContext.js";
 
 export const NotebookPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,11 +32,13 @@ export const NotebookPage: React.FC = () => {
 
   return (
     <CustomLiveStoreProvider storeId={id}>
-      <ChatModeProvider>
-        <SidebarItemProvider>
-          <NotebookPageWithId id={id} />
-        </SidebarItemProvider>
-      </ChatModeProvider>
+      <CellFilterProvider>
+        <ChatModeProvider>
+          <SidebarItemProvider>
+            <NotebookPageWithId id={id} />
+          </SidebarItemProvider>
+        </ChatModeProvider>
+      </CellFilterProvider>
     </CustomLiveStoreProvider>
   );
 };

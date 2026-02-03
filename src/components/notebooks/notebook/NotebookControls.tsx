@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import { useConfirm } from "@/components/ui/confirm";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -21,6 +24,7 @@ import type { NotebookProcessed } from "../types";
 import { useAuthenticatedUser } from "@/auth/index.js";
 import { useDebug } from "@/components/debug/debug-mode";
 import { Spinner } from "@/components/ui/Spinner";
+import { useCellFilter } from "@/contexts/CellFilterContext.js";
 import { useRuntimeHealth } from "@/hooks/useRuntimeHealth";
 import { runnableCellsWithIndices$, runningCells$ } from "@/queries";
 import { generateQueueId } from "@/util/queue-id";
@@ -80,18 +84,32 @@ export function NotebookControls({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           {allowBulkNotebookControls && (
-            <BulkNotebookActions
-              cellQueue={cellQueue}
-              onCancelAll={handleCancelAll}
-              onClearAllOutputs={handleClearAllOutputs}
-            />
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>Execution</DropdownMenuLabel>
+              <BulkNotebookActions
+                cellQueue={cellQueue}
+                onCancelAll={handleCancelAll}
+                onClearAllOutputs={handleClearAllOutputs}
+              />
+            </DropdownMenuGroup>
           )}
-          <CreateNotebookAction />
-          <DuplicateAction notebook={notebook} />
-          {exportEnabled && <ExportAction />}
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>View</DropdownMenuLabel>
+            <CellFilterActions />
+          </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          {debug.enabled && <DeleteAllCellsAction />}
-          <DeleteAction notebook={notebook} />
+          <DropdownMenuGroup>
+            {/* <DropdownMenuLabel>Notebook</DropdownMenuLabel> */}
+            <CreateNotebookAction />
+            <DuplicateAction notebook={notebook} />
+            {exportEnabled && <ExportAction />}
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            {/* <DropdownMenuLabel>Danger Zone</DropdownMenuLabel> */}
+            {debug.enabled && <DeleteAllCellsAction />}
+            <DeleteAction notebook={notebook} />
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -349,4 +367,25 @@ function useRestartAndRunAllCells() {
   }, [hasActiveRuntime]);
 
   return { restartAndRunAllCells };
+}
+
+function CellFilterActions() {
+  const { filters, setShowCodeCells, setShowAiCells } = useCellFilter();
+
+  return (
+    <>
+      <DropdownMenuCheckboxItem
+        checked={filters.showCodeCells}
+        onCheckedChange={setShowCodeCells}
+      >
+        Show Code Cells
+      </DropdownMenuCheckboxItem>
+      <DropdownMenuCheckboxItem
+        checked={filters.showAiCells}
+        onCheckedChange={setShowAiCells}
+      >
+        Show AI Cells
+      </DropdownMenuCheckboxItem>
+    </>
+  );
 }

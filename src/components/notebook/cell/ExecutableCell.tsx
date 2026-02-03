@@ -52,6 +52,7 @@ import { useFeatureFlag } from "@/contexts/FeatureFlagContext.js";
 import { findBestAiModelForCell } from "./toolbars/ai-model-utils.js";
 import { useAvailableAiModels } from "@/util/ai-models.js";
 import { toast } from "sonner";
+import { useCellFilter } from "@/contexts/CellFilterContext.js";
 
 // Cell-specific styling configuration
 const getCellStyling = (cellType: "code" | "sql" | "ai") => {
@@ -101,6 +102,10 @@ export const ExecutableCell: React.FC<ExecutableCellProps> = ({
 
   const hasRunRef = useRef(false);
   const cellRef = useRef<HTMLDivElement>(null);
+
+  const {
+    filters: { showCodeCells },
+  } = useCellFilter();
 
   const {
     registerEditor,
@@ -477,7 +482,7 @@ export const ExecutableCell: React.FC<ExecutableCellProps> = ({
       focusBorderColor={focusBorderColor}
     >
       {/* Cell Header */}
-      {!isSourceLessAiOutput && (
+      {!isSourceLessAiOutput && showCodeCells && (
         <CellHeader
           cellId={cell.id}
           leftContent={
@@ -565,7 +570,7 @@ export const ExecutableCell: React.FC<ExecutableCellProps> = ({
       )}
 
       {/* Cell Content with Left Gutter Play Button - Desktop Only */}
-      {!isSourceLessAiOutput && (
+      {!isSourceLessAiOutput && showCodeCells && (
         <div className="relative">
           {/* Play Button Breaking Through Left Border - Desktop Only */}
           <div
@@ -594,7 +599,7 @@ export const ExecutableCell: React.FC<ExecutableCellProps> = ({
           )}
 
           {/* Editor Content Area */}
-          {cell.sourceVisible && (
+          {cell.sourceVisible && showCodeCells && (
             <div className="cell-content max-w-full overflow-x-auto bg-white py-1 pl-4 transition-colors">
               <ErrorBoundary fallback={<div>Error rendering editor</div>}>
                 <Editor
@@ -624,63 +629,64 @@ export const ExecutableCell: React.FC<ExecutableCellProps> = ({
       {/* Execution Summary - appears after input */}
       {(cell.executionCount ||
         cell.executionState === "running" ||
-        cell.executionState === "queued") && (
-        <div className="cell-content flex h-7 items-center justify-stretch pr-1 pl-6 sm:pr-4">
-          <div
-            className={cn(
-              "text-muted-foreground flex w-full items-center justify-between text-xs"
-            )}
-          >
-            <span
-              key={cell.executionCount}
-              className="animate-in fade-in duration-300 ease-in-out"
+        cell.executionState === "queued") &&
+        showCodeCells && (
+          <div className="cell-content flex h-7 items-center justify-stretch pr-1 pl-6 sm:pr-4">
+            <div
+              className={cn(
+                "text-muted-foreground flex w-full items-center justify-between text-xs"
+              )}
             >
-              {cell.executionState === "running"
-                ? "Executing..."
-                : cell.executionState === "queued"
-                  ? // Show count in case runtime is not responsive, to show that at least something is happening
-                    `Queued for execution (execution count: ${cell.executionCount})`
-                  : cell.executionCount
-                    ? cell.lastExecutionDurationMs
-                      ? `Executed in ${
-                          cell.lastExecutionDurationMs < 1000
-                            ? `${cell.lastExecutionDurationMs}ms`
-                            : `${(cell.lastExecutionDurationMs / 1000).toFixed(1)}s`
-                        }`
-                      : "Executed"
-                    : null}
-            </span>
-            {(outputs.length > 0 || cell.executionState === "running") && (
-              <div className="flex items-center gap-2">
-                {!cell.outputVisible && hasOutputs && (
-                  <span className="text-muted-foreground text-xs">
-                    {outputs.length === 1
-                      ? "1 result hidden"
-                      : `${outputs.length} results hidden`}
-                  </span>
-                )}
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleOutputVisibility}
-                  className={`hover:bg-muted/80 h-6 w-6 p-0 transition-opacity sm:h-5 sm:w-5 ${
-                    autoFocus
-                      ? "opacity-100"
-                      : "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
-                  } ${cell.outputVisible ? "" : "text-muted-foreground/60"}`}
-                  title={cell.outputVisible ? "Hide results" : "Show results"}
-                >
-                  {cell.outputVisible ? (
-                    <ChevronUp className="h-4 w-4 sm:h-3 sm:w-3" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4 sm:h-3 sm:w-3" />
+              <span
+                key={cell.executionCount}
+                className="animate-in fade-in duration-300 ease-in-out"
+              >
+                {cell.executionState === "running"
+                  ? "Executing..."
+                  : cell.executionState === "queued"
+                    ? // Show count in case runtime is not responsive, to show that at least something is happening
+                      `Queued for execution (execution count: ${cell.executionCount})`
+                    : cell.executionCount
+                      ? cell.lastExecutionDurationMs
+                        ? `Executed in ${
+                            cell.lastExecutionDurationMs < 1000
+                              ? `${cell.lastExecutionDurationMs}ms`
+                              : `${(cell.lastExecutionDurationMs / 1000).toFixed(1)}s`
+                          }`
+                        : "Executed"
+                      : null}
+              </span>
+              {(outputs.length > 0 || cell.executionState === "running") && (
+                <div className="flex items-center gap-2">
+                  {!cell.outputVisible && hasOutputs && (
+                    <span className="text-muted-foreground text-xs">
+                      {outputs.length === 1
+                        ? "1 result hidden"
+                        : `${outputs.length} results hidden`}
+                    </span>
                   )}
-                </Button>
-              </div>
-            )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleOutputVisibility}
+                    className={`hover:bg-muted/80 h-6 w-6 p-0 transition-opacity sm:h-5 sm:w-5 ${
+                      autoFocus
+                        ? "opacity-100"
+                        : "opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
+                    } ${cell.outputVisible ? "" : "text-muted-foreground/60"}`}
+                    title={cell.outputVisible ? "Hide results" : "Show results"}
+                  >
+                    {cell.outputVisible ? (
+                      <ChevronUp className="h-4 w-4 sm:h-3 sm:w-3" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4 sm:h-3 sm:w-3" />
+                    )}
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Output Area */}
 
