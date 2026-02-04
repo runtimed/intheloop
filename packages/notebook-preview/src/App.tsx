@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Button, JsonOutput } from "@runtimed/components";
+import { NotebookRenderer, type JupyterNotebook } from "./NotebookRenderer";
 
 export function App() {
-  const [count, setCount] = useState(0);
-  const [notebookData, setNotebookData] = useState<unknown>(null);
+  const [notebookData, setNotebookData] = useState<JupyterNotebook | null>(
+    null
+  );
 
   useEffect(() => {
     // Notify parent that iframe is ready
@@ -11,15 +12,12 @@ export function App() {
 
     // Accept messages from any origin
     const handleMessage = (event: MessageEvent) => {
-      if (typeof event.data?.count === "number") {
-        setCount(event.data.count);
-      }
       if (event.data?.json !== undefined) {
         const json =
           typeof event.data.json === "string"
             ? JSON.parse(event.data.json)
             : event.data.json;
-        setNotebookData(json);
+        setNotebookData(json as JupyterNotebook);
       }
     };
 
@@ -27,10 +25,13 @@ export function App() {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  return (
-    <>
-      <Button onClick={() => setCount((c) => c + 1)}>Count is {count}</Button>
-      {notebookData && <JsonOutput data={notebookData} />}
-    </>
-  );
+  if (!notebookData) {
+    return (
+      <div className="p-4 text-center text-gray-500">
+        Waiting for notebook data...
+      </div>
+    );
+  }
+
+  return <NotebookRenderer notebook={notebookData} />;
 }
