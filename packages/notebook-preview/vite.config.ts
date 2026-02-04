@@ -21,6 +21,7 @@ export default defineConfig({
       input: {
         index: resolve(__dirname, "index.html"),
         react: resolve(__dirname, "react.html"),
+        demo: resolve(__dirname, "demo.html"),
       },
     },
   },
