@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Health Check</title>
+    <style>
+      pre {
+        padding: 1rem;
+        background-color: #f0f0f0;
+      }
+    </style>
   </head>
   <body>
     <h1>Health Check</h1>
@@ -11,9 +17,7 @@
       Put this page in an iframe and send a message to the iframe to check
       health.
     </p>
-    <pre>
-      iframe.contentWindow?.postMessage({ healthy: true }, "*");
-    </pre>
+    <pre>iframe.contentWindow?.postMessage({ healthy: true }, "*");</pre>
     <p>Messages received:</p>
     <pre id="message">No message received</pre>
     <script>
