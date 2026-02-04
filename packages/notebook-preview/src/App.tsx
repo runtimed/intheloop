@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
-import { Button, OutputTypesDemoPage, JsonOutput } from "@runtimed/components";
+import { Button, JsonOutput } from "@runtimed/components";
 
 export function App() {
   const [count, setCount] = useState(0);
   const [notebookData, setNotebookData] = useState<unknown>(null);
 
   useEffect(() => {
+    // Notify parent that iframe is ready
+    window.parent.postMessage({ type: "iframe-loaded" }, "*");
+
     // Accept messages from any origin
     const handleMessage = (event: MessageEvent) => {
       if (typeof event.data?.count === "number") {
@@ -28,7 +31,6 @@ export function App() {
     <>
       <Button onClick={() => setCount((c) => c + 1)}>Count is {count}</Button>
       {notebookData && <JsonOutput data={notebookData} />}
-      <OutputTypesDemoPage />
     </>
   );
 }
