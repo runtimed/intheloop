@@ -27,7 +27,7 @@ const createOutput = (
   } as OutputData;
 };
 
-export const OutputTypesDemoPage: React.FC<{ iframeUri: string }> = ({
+export const OutputTypesDemoPage: React.FC<{ iframeUri?: string }> = ({
   iframeUri,
 }) => {
   const finalIframeUriPrefix = iframeUri ?? ".";
