@@ -9,7 +9,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@runtimed/components": "^0.3.0-beta.1",
+    "@runtimed/components": "workspace:*",
     "react": "19.2.1",
     "react-dom": "19.2.1"
   },
