@@ -18,6 +18,8 @@ export function App() {
             ? JSON.parse(event.data.json)
             : event.data.json;
         setNotebookData(json as JupyterNotebook);
+        // Scroll to top when new notebook data arrives
+        window.scrollTo({ top: 0, behavior: "instant" });
       }
     };
 
