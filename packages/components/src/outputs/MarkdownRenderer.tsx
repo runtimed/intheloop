@@ -71,7 +71,10 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             const isBlockCode = codeContent.includes("\n") || className;
 
             return isBlockCode ? (
-              <SyntaxHighlighter language={language} enableCopy={enableCopyCode}>
+              <SyntaxHighlighter
+                language={language}
+                enableCopy={enableCopyCode}
+              >
                 {codeContent}
               </SyntaxHighlighter>
             ) : (
