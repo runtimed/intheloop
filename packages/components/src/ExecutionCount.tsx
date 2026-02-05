@@ -11,11 +11,11 @@ export function ExecutionCount({
   isExecuting,
   className,
 }: ExecutionCountProps) {
-  const display = isExecuting ? "*" : count ?? " ";
+  const display = isExecuting ? "*" : (count ?? " ");
   return (
     <span
       data-slot="execution-count"
-      className={cn("font-mono text-sm text-muted-foreground", className)}
+      className={cn("text-muted-foreground font-mono text-sm", className)}
     >
       [{display}]:
     </span>
