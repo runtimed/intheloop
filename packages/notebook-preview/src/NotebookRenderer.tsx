@@ -142,13 +142,7 @@ function getNotebookLanguage(metadata?: Record<string, unknown>): string {
 }
 
 // Code cell component
-function CodeCell({
-  cell,
-  language,
-}: {
-  cell: JupyterCell;
-  language: string;
-}) {
+function CodeCell({ cell, language }: { cell: JupyterCell; language: string }) {
   const source = joinSource(cell.source);
   const outputs = (cell.outputs || [])
     .map((output, i) => convertJupyterOutput(output, cell.id, i))
@@ -244,7 +238,7 @@ export function NotebookRenderer({ notebook }: { notebook: JupyterNotebook }) {
   const language = getNotebookLanguage(notebook.metadata);
 
   return (
-    <div className="notebook-preview p-4">
+    <div className="notebook-preview py-4 pr-4 pl-2">
       {notebook.cells.map((cell, index) => {
         switch (cell.cell_type) {
           case "code":
