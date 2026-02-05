@@ -4,6 +4,7 @@ import {
   OutputsContainer,
   SuspenseSpinner,
   ExecutionCount,
+  SyntaxHighlighter,
 } from "@runtimed/components";
 
 // Jupyter notebook types
@@ -122,8 +123,32 @@ function convertJupyterOutput(
   }
 }
 
+// Extract language from notebook metadata
+function getNotebookLanguage(metadata?: Record<string, unknown>): string {
+  // Try kernelspec name first (e.g., "python3", "ir", "julia")
+  const kernelspec = metadata?.kernelspec as
+    | { language?: string; name?: string }
+    | undefined;
+  if (kernelspec?.language) {
+    return kernelspec.language;
+  }
+  // Try language_info (more detailed)
+  const languageInfo = metadata?.language_info as { name?: string } | undefined;
+  if (languageInfo?.name) {
+    return languageInfo.name;
+  }
+  // Default to python
+  return "python";
+}
+
 // Code cell component
-function CodeCell({ cell }: { cell: JupyterCell }) {
+function CodeCell({
+  cell,
+  language,
+}: {
+  cell: JupyterCell;
+  language: string;
+}) {
   const source = joinSource(cell.source);
   const outputs = (cell.outputs || [])
     .map((output, i) => convertJupyterOutput(output, cell.id, i))
@@ -138,10 +163,10 @@ function CodeCell({ cell }: { cell: JupyterCell }) {
         </div>
         <div className="min-w-0 flex-1">
           {/* Input */}
-          <div className="overflow-hidden rounded border border-gray-200 bg-gray-50">
-            <pre className="overflow-x-auto p-3 text-sm">
-              <code>{source}</code>
-            </pre>
+          <div className="overflow-hidden rounded border border-gray-200">
+            <SyntaxHighlighter language={language} enableCopy={true}>
+              {source}
+            </SyntaxHighlighter>
           </div>
 
           {/* Outputs */}
@@ -216,12 +241,20 @@ function RawCell({ cell }: { cell: JupyterCell }) {
 
 // Notebook renderer
 export function NotebookRenderer({ notebook }: { notebook: JupyterNotebook }) {
+  const language = getNotebookLanguage(notebook.metadata);
+
   return (
     <div className="notebook-preview p-4">
       {notebook.cells.map((cell, index) => {
         switch (cell.cell_type) {
           case "code":
-            return <CodeCell key={cell.id || index} cell={cell} />;
+            return (
+              <CodeCell
+                key={cell.id || index}
+                cell={cell}
+                language={language}
+              />
+            );
           case "markdown":
             return <MarkdownCell key={cell.id || index} cell={cell} />;
           case "raw":
