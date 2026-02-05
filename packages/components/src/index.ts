@@ -63,6 +63,7 @@ export {
 } from "./ui/card.js";
 export { Spinner } from "./ui/Spinner.js";
 export type { SpinnerSize } from "./ui/Spinner.js";
+export { ExecutionCount } from "./ExecutionCount.js";
 
 // Utilities
 export { cn } from "./utils/cn.js";

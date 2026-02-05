@@ -3,6 +3,7 @@ import {
   SingleOutput,
   OutputsContainer,
   SuspenseSpinner,
+  ExecutionCount,
 } from "@runtimed/components";
 
 // Jupyter notebook types
@@ -74,10 +75,8 @@ function convertJupyterOutput(
     case "execute_result":
     case "display_data": {
       const outputData = output.data || {};
-      const representations: Record<
-        string,
-        { type: "inline"; data: unknown }
-      > = {};
+      const representations: Record<string, { type: "inline"; data: unknown }> =
+        {};
 
       for (const [mimeType, content] of Object.entries(outputData)) {
         const data = Array.isArray(content) ? content.join("") : content;
@@ -131,23 +130,23 @@ function CodeCell({ cell }: { cell: JupyterCell }) {
     .filter((o): o is OutputData => o !== null);
 
   return (
-    <div className="cell code-cell border-l-2 border-blue-400 mb-4">
+    <div className="cell code-cell mb-4">
       {/* Execution count badge */}
       <div className="flex items-start gap-2">
-        <div className="w-12 flex-shrink-0 text-right text-gray-500 text-sm py-2 pr-2">
-          [{cell.execution_count ?? " "}]
+        <div className="w-12 flex-shrink-0 text-right">
+          <ExecutionCount count={cell.execution_count ?? null} />
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {/* Input */}
-          <div className="bg-gray-50 border border-gray-200 rounded overflow-hidden">
-            <pre className="p-3 text-sm overflow-x-auto">
+          <div className="overflow-hidden rounded border border-gray-200 bg-gray-50">
+            <pre className="overflow-x-auto p-3 text-sm">
               <code>{source}</code>
             </pre>
           </div>
 
           {/* Outputs */}
           {outputs.length > 0 && (
-            <div className="mt-2 bg-white border border-gray-100 rounded">
+            <div className="mt-2 rounded border border-gray-100 bg-white">
               <SuspenseSpinner>
                 <OutputsContainer>
                   {outputs.map((output) => (
@@ -184,10 +183,10 @@ function MarkdownCell({ cell }: { cell: JupyterCell }) {
   };
 
   return (
-    <div className="cell markdown-cell border-l-2 border-green-400 mb-4">
+    <div className="cell markdown-cell mb-4">
       <div className="flex items-start gap-2">
         <div className="w-12 flex-shrink-0" />
-        <div className="flex-1 min-w-0 p-3">
+        <div className="min-w-0 flex-1 p-3">
           <SuspenseSpinner>
             <SingleOutput output={markdownOutput} />
           </SuspenseSpinner>
@@ -202,11 +201,11 @@ function RawCell({ cell }: { cell: JupyterCell }) {
   const source = joinSource(cell.source);
 
   return (
-    <div className="cell raw-cell border-l-2 border-gray-400 mb-4">
+    <div className="cell raw-cell mb-4">
       <div className="flex items-start gap-2">
         <div className="w-12 flex-shrink-0" />
-        <div className="flex-1 min-w-0">
-          <pre className="p-3 bg-gray-100 text-sm overflow-x-auto rounded">
+        <div className="min-w-0 flex-1">
+          <pre className="overflow-x-auto rounded bg-gray-100 p-3 text-sm">
             {source}
           </pre>
         </div>
@@ -216,11 +215,7 @@ function RawCell({ cell }: { cell: JupyterCell }) {
 }
 
 // Notebook renderer
-export function NotebookRenderer({
-  notebook,
-}: {
-  notebook: JupyterNotebook;
-}) {
+export function NotebookRenderer({ notebook }: { notebook: JupyterNotebook }) {
   return (
     <div className="notebook-preview p-4">
       {notebook.cells.map((cell, index) => {
