@@ -158,7 +158,11 @@ function CodeCell({ cell, language }: { cell: JupyterCell; language: string }) {
         <div className="min-w-0 flex-1">
           {/* Input */}
           <div className="overflow-hidden rounded border border-gray-200">
-            <SyntaxHighlighter language={language} enableCopy={true}>
+            <SyntaxHighlighter
+              language={language}
+              enableCopy={true}
+              customStyle={{ fontSize: "0.8rem" }}
+            >
               {source}
             </SyntaxHighlighter>
           </div>
