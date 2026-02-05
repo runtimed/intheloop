@@ -21,7 +21,7 @@ export default defineConfig({
       input: {
         index: resolve(__dirname, "index.html"),
         react: resolve(__dirname, "react.html"),
-        health: resolve(__dirname, "health.html"),
+        health: resolve(__dirname, "demo.html"),
       },
     },
   },
