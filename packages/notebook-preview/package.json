@@ -1,9 +1,10 @@
 {
   "name": "@runtimed/notebook-preview",
-  "version": "0.3.0-alpha.0",
+  "version": "0.3.0-beta.0",
   "type": "module",
   "scripts": {
     "dev": "vite build --watch --mode development",
+    "prebuild": "pnpm --filter @runtimed/components build",
     "build": "vite build",
     "preview": "vite --port 5175",
     "type-check": "tsc --noEmit"
