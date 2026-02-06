@@ -5,6 +5,7 @@ import {
   SuspenseSpinner,
   ExecutionCount,
   SyntaxHighlighter,
+  ErrorBoundary,
 } from "@runtimed/components";
 
 // Jupyter notebook types
@@ -158,25 +159,31 @@ function CodeCell({ cell, language }: { cell: JupyterCell; language: string }) {
         <div className="min-w-0 flex-1">
           {/* Input */}
           <div className="overflow-hidden rounded border border-gray-200">
-            <SyntaxHighlighter
-              language={language}
-              enableCopy={true}
-              customStyle={{ fontSize: "0.8rem" }}
+            <ErrorBoundary
+              fallback={<div>Error rendering syntax highlighter</div>}
             >
-              {source}
-            </SyntaxHighlighter>
+              <SyntaxHighlighter
+                language={language}
+                enableCopy={true}
+                customStyle={{ fontSize: "0.8rem" }}
+              >
+                {source}
+              </SyntaxHighlighter>
+            </ErrorBoundary>
           </div>
 
           {/* Outputs */}
           {outputs.length > 0 && (
             <div className="mt-2 rounded border border-gray-100 bg-white">
-              <SuspenseSpinner>
-                <OutputsContainer>
-                  {outputs.map((output) => (
-                    <SingleOutput key={output.id} output={output} />
-                  ))}
-                </OutputsContainer>
-              </SuspenseSpinner>
+              <ErrorBoundary fallback={<div>Error rendering outputs</div>}>
+                <SuspenseSpinner>
+                  <OutputsContainer>
+                    {outputs.map((output) => (
+                      <SingleOutput key={output.id} output={output} />
+                    ))}
+                  </OutputsContainer>
+                </SuspenseSpinner>
+              </ErrorBoundary>
             </div>
           )}
         </div>
@@ -210,9 +217,11 @@ function MarkdownCell({ cell }: { cell: JupyterCell }) {
       <div className="flex items-start gap-2">
         <div className="w-12 flex-shrink-0" />
         <div className="min-w-0 flex-1 p-3">
-          <SuspenseSpinner>
-            <SingleOutput output={markdownOutput} />
-          </SuspenseSpinner>
+          <ErrorBoundary fallback={<div>Error rendering markdown</div>}>
+            <SuspenseSpinner>
+              <SingleOutput output={markdownOutput} />
+            </SuspenseSpinner>
+          </ErrorBoundary>
         </div>
       </div>
     </div>
@@ -243,24 +252,26 @@ export function NotebookRenderer({ notebook }: { notebook: JupyterNotebook }) {
 
   return (
     <div className="notebook-preview py-4 pr-4 pl-2">
-      {notebook.cells.map((cell, index) => {
-        switch (cell.cell_type) {
-          case "code":
-            return (
-              <CodeCell
-                key={cell.id || index}
-                cell={cell}
-                language={language}
-              />
-            );
-          case "markdown":
-            return <MarkdownCell key={cell.id || index} cell={cell} />;
-          case "raw":
-            return <RawCell key={cell.id || index} cell={cell} />;
-          default:
-            return null;
-        }
-      })}
+      <ErrorBoundary fallback={<div>Error rendering notebook</div>}>
+        {notebook.cells.map((cell, index) => {
+          switch (cell.cell_type) {
+            case "code":
+              return (
+                <CodeCell
+                  key={cell.id || index}
+                  cell={cell}
+                  language={language}
+                />
+              );
+            case "markdown":
+              return <MarkdownCell key={cell.id || index} cell={cell} />;
+            case "raw":
+              return <RawCell key={cell.id || index} cell={cell} />;
+            default:
+              return null;
+          }
+        })}
+      </ErrorBoundary>
     </div>
   );
 }
