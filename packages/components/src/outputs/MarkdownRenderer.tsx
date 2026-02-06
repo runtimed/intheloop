@@ -1,9 +1,6 @@
 import React, { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Check, Copy } from "lucide-react";
 import rehypeRaw from "rehype-raw";
 
 // latex imports
@@ -12,6 +9,7 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { sendFromIframe } from "./comms.js";
 import { VerifiedImage } from "./VerifiedImage";
+import { SyntaxHighlighter } from "./SyntaxHighlighter.js";
 
 interface MarkdownRendererProps {
   content: string;
@@ -19,63 +17,6 @@ interface MarkdownRendererProps {
   enableCopyCode?: boolean;
   generateHeadingIds?: boolean;
 }
-
-interface CodeBlockProps {
-  children: string;
-  language?: string;
-  enableCopy?: boolean;
-}
-
-const CodeBlock: React.FC<CodeBlockProps> = ({
-  children,
-  language = "",
-  enableCopy = true,
-}) => {
-  const [copied, setCopied] = React.useState(false);
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(children);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy code:", err);
-    }
-  };
-
-  return (
-    <div className="group/codeblock relative">
-      <SyntaxHighlighter
-        language={language}
-        style={oneLight}
-        PreTag="div"
-        customStyle={{
-          margin: 0,
-          padding: "0.75rem",
-          fontSize: "0.875rem",
-          overflow: "auto",
-          background: "#fafafa",
-          borderRadius: "0.375rem",
-        }}
-      >
-        {children}
-      </SyntaxHighlighter>
-      {enableCopy && (
-        <button
-          onClick={handleCopy}
-          className="absolute top-2 right-2 z-10 rounded border border-gray-200 bg-white p-1.5 text-gray-600 opacity-0 shadow-sm transition-opacity group-hover/codeblock:opacity-100 hover:bg-gray-50 hover:text-gray-800"
-          title={copied ? "Copied!" : "Copy code"}
-        >
-          {copied ? (
-            <Check className="h-3 w-3" />
-          ) : (
-            <Copy className="h-3 w-3" />
-          )}
-        </button>
-      )}
-    </div>
-  );
-};
 
 const generateSlug = (text: string): string => {
   return text
@@ -130,9 +71,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
             const isBlockCode = codeContent.includes("\n") || className;
 
             return isBlockCode ? (
-              <CodeBlock language={language} enableCopy={enableCopyCode}>
+              <SyntaxHighlighter
+                language={language}
+                enableCopy={enableCopyCode}
+              >
                 {codeContent}
-              </CodeBlock>
+              </SyntaxHighlighter>
             ) : (
               <code
                 className={`${className} rounded bg-gray-100 px-1 py-0.5 text-sm text-gray-800`}

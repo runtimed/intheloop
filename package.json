@@ -19,6 +19,7 @@
     "docker:sync": "wrangler dev --ip 0.0.0.0 --port 8787",
     "dev:runtime": "./scripts/dev-runtime.sh",
     "build:iframe": "cd iframe-outputs && vite build",
+    "prebuild": "pnpm --filter @runtimed/components build",
     "build": "vite build --mode development",
     "bump-schema": "./scripts/bump-schema-version.sh",
     "test-publish": "./scripts/test-publish.sh",

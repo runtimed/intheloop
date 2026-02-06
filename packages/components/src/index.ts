@@ -22,6 +22,8 @@ export { JsonOutput } from "./outputs/JsonOutput.js";
 export { HtmlOutput } from "./outputs/HtmlOutput.js";
 export { ImageOutput } from "./outputs/ImageOutput.js";
 export { SvgOutput } from "./outputs/SvgOutput.js";
+export { SyntaxHighlighter } from "./outputs/SyntaxHighlighter.js";
+export type { SyntaxHighlighterProps } from "./outputs/SyntaxHighlighter.js";
 export { GeoJsonMapOutput } from "./outputs/geojson/GeoJsonMapOutput.js";
 export { MapFeature } from "./outputs/geojson/MapFeature.js";
 export {
@@ -63,6 +65,7 @@ export {
 } from "./ui/card.js";
 export { Spinner } from "./ui/Spinner.js";
 export type { SpinnerSize } from "./ui/Spinner.js";
+export { ExecutionCount } from "./ExecutionCount.js";
 
 // Utilities
 export { cn } from "./utils/cn.js";
