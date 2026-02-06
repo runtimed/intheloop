@@ -76,6 +76,9 @@ export { groupConsecutiveStreamOutputs } from "./utils/output-grouping.js";
 export { OutputTypesDemoPage } from "./OutputTypesDemoPage.js";
 export { Incrementor } from "./Incrementor.js";
 
+// Error boundary
+export { ErrorBoundary } from "react-error-boundary";
+
 // Re-export types from schema for convenience
 export type {
   OutputData,
