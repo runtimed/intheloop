@@ -1,0 +1,11 @@
+--- a/index.js
++++ b/index.js
+@@ -2,7 +2,7 @@
+ 
+ 
+ import { createContext, forwardRef, memo, useCallback, useContext, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from "react";
+-import maplibregl from "maplibre-gl";
++import * as maplibregl from "maplibre-gl";
+ import { jsx, jsxs } from "react/jsx-runtime";
+ import { createPortal } from "react-dom";
+ 

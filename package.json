@@ -116,7 +116,7 @@
     "js-cookie": "^3.0.5",
     "katex": "^0.16.22",
     "lucide-react": "^0.545.0",
-    "maplibre-gl": "^5.7.1",
+    "maplibre-gl": "6.4.1",
     "maplibre-react-components": "^0.2.6",
     "modern-normalize": "^3.0.1",
     "nanoid": "^5.1.5",
@@ -206,7 +206,10 @@
       "msgpackr-extract",
       "sharp",
       "workerd"
-    ]
+    ],
+    "patchedDependencies": {
+      "maplibre-react-components@0.2.6": "patches/maplibre-react-components@0.2.6.patch"
+    }
   },
   "keywords": [
     "runt",
