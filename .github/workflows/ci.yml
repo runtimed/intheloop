@@ -23,7 +23,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: latest
+          version: 10.30.0
 
       - name: Setup Deno
         uses: denoland/setup-deno@v1
@@ -57,6 +57,11 @@ jobs:
 
       - name: Type check
         run: pnpm type-check
+
+      - name: Validate notebook preview package
+        run: |
+          pnpm --filter @runtimed/notebook-preview type-check
+          pnpm --filter @runtimed/notebook-preview build
 
       - name: Build web client
         run: pnpm build

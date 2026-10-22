@@ -1,3 +1,4 @@
+import "./maplibre-worker";
 import { createRoot } from "react-dom/client";
 import { IframeReactApp, sendFromIframe } from "@runtimed/components";
 import "./style.css";

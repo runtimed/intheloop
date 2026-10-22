@@ -1,27 +1,30 @@
 {
   "name": "@runtimed/notebook-preview",
-  "version": "0.3.0-beta.1",
+  "version": "0.3.0-beta.2",
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite build --watch --mode development",
     "prebuild": "pnpm --filter @runtimed/components build",
     "build": "vite build",
     "preview": "vite --port 5175",
-    "type-check": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@runtimed/components": "workspace:*",
-    "react": "19.2.1",
-    "react-dom": "19.2.1"
+    "type-check": "tsc --noEmit",
+    "prepack": "pnpm build"
   },
   "devDependencies": {
+    "@runtimed/components": "workspace:*",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
     "@tailwindcss/vite": "^4.1.10",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.5.2",
     "tailwindcss": "^4.1.10",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "maplibre-gl": "6.4.1"
   },
   "engines": {
     "node": ">=23.0.0",
