@@ -58,6 +58,11 @@ jobs:
       - name: Type check
         run: pnpm type-check
 
+      - name: Validate notebook preview package
+        run: |
+          pnpm --filter @runtimed/notebook-preview type-check
+          pnpm --filter @runtimed/notebook-preview build
+
       - name: Build web client
         run: pnpm build
         env:

@@ -1,5 +1,9 @@
+import { setWorkerUrl } from "maplibre-gl";
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import { createRoot } from "react-dom/client";
 import { IframeReactApp, sendFromIframe } from "@runtimed/components";
+
+setWorkerUrl(maplibreWorkerUrl);
 import "./style.css";
 
 // Main React initialization for iframe outputs
